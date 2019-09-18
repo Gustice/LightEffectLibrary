@@ -17,8 +17,10 @@ typedef struct Color_def {
 #define USEOLD_COLOR NO_COLOR			///< Used old color agreement (if no color pointer)
 #define USEOLD_COLOR_OBJ NO_COLOR_OBJ 	///< Alternative use old color agreement
 
-/***************************************************************************************************
- * @brief Color class defines color data and common operations with the colors
+/***********************************************************************************************//**
+ * @brief 	Color class 
+ * 
+ * @details Defines color data and common operations with the colors
  * 
  **************************************************************************************************/
 class Color
