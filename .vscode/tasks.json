@@ -4,12 +4,12 @@
     "version": "2.0.0",
     "tasks": [
         {
-            "label": "build Project",  /* Label to be modified */
+            "label": "build Project",
             "type": "shell",
             "command": "g++",
             "args": [
                 "-g", 
-                "-o LEL.exe",
+                "-o","LEL.exe",
                 "Source/SampleApp.cpp",
                 "Source/Modules/*.cpp",
                 "-I", "Source/Modules", // Includes
