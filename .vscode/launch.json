@@ -5,6 +5,18 @@
     "version": "0.2.0",
     "configurations": [
         {
+            "name": "Python: Aktuelle Datei",
+            "type": "python",
+            "request": "launch",
+            "program": "${file}",
+            "console": "integratedTerminal",
+            "args": [
+                "Source",
+                "-I ${workspaceFolder}\\Source",
+                "Binary"
+            ]
+        },
+        {
             "name": "Launch LEL Demo",
             "type": "cppdbg",
             "request": "launch",
@@ -25,7 +37,6 @@
             ],
             // Gets sure source is compiled before debugging 
             "preLaunchTask": "build Project" /* Label to be modified */
-
         }
     ]
 }

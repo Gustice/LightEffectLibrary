@@ -6,7 +6,8 @@
             "compilerPath": "C:\\MinGW\\bin\\gcc.exe",
             "includePath": [
                 "${workspaceFolder}/**",
-                "${workspaceFolder}/Source/Modules/**"
+                "${workspaceFolder}/Source/Modules/**",
+                "${workspaceFolder}/Externals/**"
             ],
             "defines": [
                 "_DEBUG",
@@ -16,7 +17,8 @@
             "browse": {
                 "path": [
                     "${workspaceFolder}/**",
-                    "${workspaceFolder}/Source/Modules/**"
+                    "${workspaceFolder}/Source/Modules/**",
+                    "${workspaceFolder}/Externals/**"
                 ],
                 "limitSymbolsToIncludedHeaders": true,
                 "databaseFilename": ""

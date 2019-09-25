@@ -23,6 +23,43 @@
             },
             // Displays compiler errors in problems output
             "problemMatcher": "$gcc"
-        }
+        },
+        {
+            "label": "build all Test-Parts",
+            "type": "shell",
+            "command": "py",
+            "args": [
+                "${workspaceFolder}\\CompileSubProject.py",
+                "Tests",
+                "-I ${workspaceFolder}\\Source",
+            ],
+            "problemMatcher": "$gcc"
+        },
+        {
+            "label": "build Test-Parts without main",
+            "type": "shell",
+            "command": "py",
+            "args": [
+                "${workspaceFolder}\\CompileSubProject.py",
+                "Tests",
+                "-I ${workspaceFolder}\\Source",
+                "TestMain.cpp"
+            ],
+            // Displays compiler errors in problems output
+            "problemMatcher": "$gcc"
+        },
+        {
+            "label": "Execute Tests",
+            "type": "shell",
+            "command": "${workspaceFolder}\\Tests.exe",
+            // "args": [
+            //     "-h",  // for help output
+            //     "-l",  // to list all tests and results
+            // ],
+            "problemMatcher": "$gcc",
+            "dependsOn": [
+                "build Test-Parts without main"
+            ]
+        },
     ]
 }
