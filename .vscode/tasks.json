@@ -61,5 +61,15 @@
                 "build Test-Parts without main"
             ]
         },
+
+        {
+            "label": "Create Docs by Doxygen",
+            "type": "shell",
+            "command": "C:\\Program Files\\doxygen\\bin\\doxygen.exe",
+            "args": [
+                "${workspaceFolder}\\Doc\\LEL.DoxyFile"
+            ],
+            "problemMatcher": "$gcc"
+        }
     ]
 }

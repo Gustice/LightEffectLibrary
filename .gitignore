@@ -39,3 +39,6 @@
 
 # My Logfiles
 **.log
+
+# Doc
+*/html/*
