@@ -7,7 +7,8 @@
             "includePath": [
                 "${workspaceFolder}/**",
                 "${workspaceFolder}/Source/Modules/**",
-                "${workspaceFolder}/Externals/**"
+                "${workspaceFolder}/Externals/**",
+                "${workspaceFolder}/Tests/**"
             ],
             "defines": [
                 "_DEBUG",
@@ -18,7 +19,8 @@
                 "path": [
                     "${workspaceFolder}/**",
                     "${workspaceFolder}/Source/Modules/**",
-                    "${workspaceFolder}/Externals/**"
+                    "${workspaceFolder}/Externals/**",
+                    "${workspaceFolder}/Tests/**"
                 ],
                 "limitSymbolsToIncludedHeaders": true,
                 "databaseFilename": ""
