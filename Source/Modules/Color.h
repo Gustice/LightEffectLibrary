@@ -36,7 +36,7 @@ class Color
 	void SetColor(uint8_t a, uint8_t r, uint8_t g, uint8_t b, uint8_t w);
 	
 	Color_type GetColor(void);
-	void GetByteStrem(uint8_t color[5]);
+	void GetByteStream(uint8_t color[5]);
 	uint8_t getR(void);
 	uint8_t getG(void);
 	uint8_t getB(void);

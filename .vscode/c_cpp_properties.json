@@ -6,6 +6,7 @@
             "compilerPath": "C:\\MinGW\\bin\\gcc.exe",
             "includePath": [
                 "${workspaceFolder}/**",
+                "${workspaceFolder}/Source/**",
                 "${workspaceFolder}/Source/Modules/**",
                 "${workspaceFolder}/Externals/**",
                 "${workspaceFolder}/Tests/**"
@@ -18,6 +19,7 @@
             "browse": {
                 "path": [
                     "${workspaceFolder}/**",
+                    "${workspaceFolder}/Source/**",
                     "${workspaceFolder}/Source/Modules/**",
                     "${workspaceFolder}/Externals/**",
                     "${workspaceFolder}/Tests/**"

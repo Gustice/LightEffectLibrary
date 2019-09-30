@@ -4,7 +4,7 @@
     "version": "2.0.0",
     "tasks": [
         {
-            "label": "build Project",
+            "label": "Manually: build Project",
             "type": "shell",
             "command": "g++",
             "args": [
@@ -25,31 +25,31 @@
             "problemMatcher": "$gcc"
         },
         {
-            "label": "build all Test-Parts",
+            "label": "PyBased: build all Test-Parts",
             "type": "shell",
             "command": "py",
             "args": [
                 "${workspaceFolder}\\CompileSubProject.py",
                 "Tests",
-                "-I ${workspaceFolder}\\Source",
+                "-I ${workspaceFolder}\\Source -I ${workspaceFolder}\\Source\\Modules -I ${workspaceFolder}\\Tests\\Include",
             ],
             "problemMatcher": "$gcc"
         },
         {
-            "label": "build Test-Parts without main",
+            "label": "PyBased: build Test-Parts without main",
             "type": "shell",
             "command": "py",
             "args": [
                 "${workspaceFolder}\\CompileSubProject.py",
                 "Tests",
-                "-I ${workspaceFolder}\\Source",
-                "TestMain.cpp"
+                "-I ${workspaceFolder}\\Source -I ${workspaceFolder}\\Source\\Modules -I ${workspaceFolder}\\Tests\\Include",
+                "TestMain.cpp" 
             ],
             // Displays compiler errors in problems output
             "problemMatcher": "$gcc"
         },
         {
-            "label": "Execute Tests",
+            "label": "PyBased: Execute Tests",
             "type": "shell",
             "command": "${workspaceFolder}\\Tests.exe",
             // "args": [
@@ -63,7 +63,34 @@
         },
 
         {
-            "label": "Create Docs by Doxygen",
+            "label": "CMake: Create Configuration",
+            "type": "shell",
+            "options": {
+                "cwd": "${workspaceFolder}/CMake"
+            },
+            "command": "CMake .."
+        },
+        {
+            "label": "CMake: Build Project",
+            "type": "shell",
+            "options": {
+                "cwd": "${workspaceFolder}/CMake"
+            },
+            "command": "CMake --build .",
+            "dependsOn": "CMake: Create Configuration"
+        },
+        {
+            "label": "CMake: Run Test Project",
+            "type": "shell",
+            "options": {
+                "cwd": "${workspaceFolder}/CMake"
+            },
+            "command": "Tests/Debug/tests.exe",
+            "dependsOn": "CMake: Build Project"
+        },
+
+        {
+            "label": "Doxygen: Create Docs by ",
             "type": "shell",
             "command": "C:\\Program Files\\doxygen\\bin\\doxygen.exe",
             "args": [

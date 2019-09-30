@@ -61,7 +61,7 @@ void Color::SetColor(uint8_t a, uint8_t r, uint8_t g, uint8_t b, uint8_t w) {
 }
 
 
-void Color::GetByteStrem(uint8_t clr[5]) {
+void Color::GetByteStream(uint8_t clr[5]) {
 	clr[0] = _color.alpha;
 	clr[1] = _color.blue;
 	clr[2] = _color.green;

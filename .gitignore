@@ -35,6 +35,7 @@
 # VS-Code metadata
 **/.vscode/ipch
 **/Binary/
+**/CMake/
 **/DoxyGen/
 
 # My Logfiles

@@ -11,9 +11,10 @@
             "program": "${file}",
             "console": "integratedTerminal",
             "args": [
-                "Source",
-                "-I ${workspaceFolder}\\Source",
-                "Binary"
+                "Tests",
+                "-I ${workspaceFolder}\\Source -I ${workspaceFolder}\\Source\\Modules -I ${workspaceFolder}\\Tests\\Include",
+                "Binary",
+                "Source"
             ]
         },
         {
@@ -36,7 +37,7 @@
                 }
             ],
             // Gets sure source is compiled before debugging 
-            "preLaunchTask": "build Project" /* Label to be modified */
+            "preLaunchTask": "Manually: build Project"
         }
     ]
 }

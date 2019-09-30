@@ -1,12 +1,20 @@
 project(hello_tests)
 
+add_subdirectory(Modules)
+add_subdirectory(Include)
+
 # The test program
-add_executable(tests IntegrationTest.cpp)
-target_link_libraries(tests PRIVATE LEL_lib)
+add_executable(tests TestMain.cpp 
+                     IntegrationTest.cpp 
+                     Modules/Color/ColorTest.cpp 
+                )
 
+target_link_libraries(tests LEL_lib 
+                            catch )
 
-# Header only library, therefore INTERFACE
-add_library(catch INTERFACE)
-# INTERFACE targets only have INTERFACE properties
-target_include_directories(catch INTERFACE ${CMAKE_CURRENT_SOURCE_DIR})
-
+                            
+add_library(integrationTests STATIC IntegrationTest.cpp )
+target_include_directories(integrationTests PUBLIC ${CMAKE_CURRENT_SOURCE_DIR})
+target_link_libraries(integrationTests PUBLIC
+                                    LEL_lib 
+                                    catch )

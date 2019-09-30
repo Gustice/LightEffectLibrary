@@ -36,6 +36,12 @@ def CompileFolderContontRecursively(path, relPath, level):
                 localRoot = os.path.join(path,element)
                 relativePath2Root = os.path.join(relPath,element)
                 PrintWithIndent(localLevel, "Sweeping folder structure")
+
+                binaryDirectory = os.path.join(binPathAnchor,relativePath2Root)
+                if ( True != os.path.isdir(binaryDirectory)):
+                    os.mkdir(binaryDirectory)
+                    PrintWithIndent(localLevel, "Generating Folder '{:s}' in Binary Path".format(element))
+
                 CompileFolderContontRecursively(localRoot, relativePath2Root, localLevel)
             else:
                 PrintWithIndent(localLevel, "Skip Binary Folder")
@@ -43,11 +49,7 @@ def CompileFolderContontRecursively(path, relPath, level):
             name, ext = os.path.splitext(element)
             if (ext == '.cpp' or ext == '.c'):
                 PrintWithIndent(localLevel, "SourceCodeFile '{:s}' found".format(element))
-                # Check if Subfolder in Binary already exists
                 binaryDirectory = os.path.join(binPathAnchor,relPath)
-                if ( True != os.path.isdir(binaryDirectory)):
-                    os.mkdir(binaryDirectory)
-                    PrintWithIndent(localLevel, "Generating Folder '{:s}' in Binary Path".format(relPath))
                 targetFile = os.path.join(path,element)
                 outFileName = "{:s}.o".format(name)
                 outputFilePath = os.path.join(binaryDirectory, outFileName)
@@ -112,7 +114,7 @@ compilerLog = os.path.join(binPathAnchor,"CompileLog.log")
 compilerArgs = sys.argv[2]
 
 ignoreFile = ""
-if len(sys.argv) == 4:
+if len(sys.argv) >= 4:
     ignoreFile = sys.argv[3]
 
 # Generate Binary directory if necessary
@@ -128,11 +130,22 @@ maxRecursionDept = 10
 recursionLevel = 0
 relativePath = ""
 
-CompileFolderContontRecursively(prjDir, relativePath, recursionLevel)
+# CompileFolderContontRecursively(prjDir, relativePath, recursionLevel)
 PrintWithIndent(0, "Generate linker call '{:s}'".format(binPathAnchor))
+
+objectFilesSteam = ""
+if len(sys.argv) >= 5:
+    addObjectFiles = sys.argv[4]
+    objDir = os.path.join(rootDir,addObjectFiles)
+    objBinPathAnchor = os.path.join(objDir,"Binary")
+    objectFilesSteam = GenerateLinkCommandRecursively(objBinPathAnchor, recursionLevel)
+
 binaryFilesSteam = GenerateLinkCommandRecursively(binPathAnchor, recursionLevel)
 
-CompilerCall = "g++ -o {:s}.exe {:s}".format(prjFolder, binaryFilesSteam)
+
+
+
+CompilerCall = "g++ -o {:s}.exe {:s} {:s}".format(prjFolder, binaryFilesSteam, objectFilesSteam)
 PrintWithIndent(0, "CompilerCall: {:s}".format(CompilerCall))
 with open(compilerLog, 'w+') as myOutfile:
     subprocess.call(CompilerCall, stdout=myOutfile)
