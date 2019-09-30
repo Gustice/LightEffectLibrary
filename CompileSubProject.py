@@ -160,6 +160,7 @@ if len(sys.argv) <= 2:
 
 scirptPath =sys.argv[0]
 rootDir = os.path.dirname(scirptPath)
+os.chdir(rootDir)
 
 prjArg = sys.argv[1]
 prjArgs = prjArg.split(',')
@@ -193,7 +194,7 @@ relativePath = ""
 ################################################################################
 #### Compiling sourcefiles
 
-# CompileFolderContontRecursively(prjFolder, relativePath, recursionLevel)
+CompileFolderContontRecursively(prjFolder, relativePath, recursionLevel)
 PrintWithIndent(0, "Generate linker call '{:s}'".format(binPathAnchor))
 
 

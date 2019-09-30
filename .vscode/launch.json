@@ -11,14 +11,14 @@
             "program": "${file}",
             "console": "integratedTerminal",
             "cwd": "${workspaceFolder}",
-            "args": [ // Testcase: Compile Tests
-                "Tests,-In Source,-Ex Source\\SampleApp.cpp",
-                "-I Source -I Source\\Modules -I Tests\\Include",
-            ]
-            // "args": [ // Testcase: Compile SampleApp
-            //     "Source",
-            //     "-I Source -I Source\\Modules",
+            // "args": [ // Testcase: Compile Tests
+            //     "Tests,-In Source,-Ex Source\\SampleApp.cpp",
+            //     "-I Source -I Source\\Modules -I Tests\\Include",
             // ]
+            "args": [ // Testcase: Compile SampleApp
+                "Source",
+                "-I Source -I Source\\Modules",
+            ]
 
         },
         {

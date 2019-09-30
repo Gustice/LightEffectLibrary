@@ -9,6 +9,9 @@
  **************************************************************************************************/
 
 #include "SampleApp.h"
+#include <string.h>
+#include <stdio.h>
+
 
 /// Demo Effect Macro
 EffMacro_type eff_TestStdPulse[] = {
@@ -29,6 +32,8 @@ EffMacro_type eff_TestStdPulse[] = {
  **************************************************************************************************/
 int main(int argc, char const *argv[])
 {
+    printf("Sample application running");
+
     Color r1;
     Color g1;
     Color b1;
@@ -57,6 +62,7 @@ int main(int argc, char const *argv[])
     {
         Eff2.Tick();
     }
+
 
 
     /* code */

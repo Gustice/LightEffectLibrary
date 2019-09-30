@@ -3,7 +3,7 @@
     // for the documentation about the tasks.json format
     "version": "2.0.0",
     "tasks": [
-        {
+        { // Build Project to manually degbug the SampleApp
             "label": "Manually: build Project",
             "type": "shell",
             "command": "g++",
@@ -24,31 +24,43 @@
             // Displays compiler errors in problems output
             "problemMatcher": "$gcc"
         },
-        {
+        
+        { // #1 PyBuild Source
+            "label": "PyBased: build all Source-Parts",
+            "type": "shell",
+            "command": "py ",
+            "args": [
+                "${workspaceFolder}\\CompileSubProject.py",
+                "Source",
+                "-I Source -I Source\\Modules",
+            ],
+            "problemMatcher": "$gcc", // Otherwise its annoys you with warnings
+        },
+        { // #2 PyBuild Test-All
             "label": "PyBased: build all Test-Parts",
             "type": "shell",
-            "command": "py",
+            "command": "py ",
             "args": [
                 "${workspaceFolder}\\CompileSubProject.py",
-                "Tests",
-                "-I ${workspaceFolder}\\Source -I ${workspaceFolder}\\Source\\Modules -I ${workspaceFolder}\\Tests\\Include",
+                "Tests,-In Source,-Ex Source\\SampleApp.cpp",
+                "-I Source -I Source\\Modules -I Tests\\Include",
             ],
-            "problemMatcher": "$gcc"
+            "dependsOn": "PyBased: build all Source-Parts",
+            "problemMatcher": "$gcc", // Otherwise its annoys you with warnings
         },
-        {
-            "label": "PyBased: build Test-Parts without main",
+        { // #3 @todo Make it work again
+            "label": "-notFunctional- PyBased: build Test-Parts without main",
             "type": "shell",
-            "command": "py",
+            "command": "py ",
             "args": [
                 "${workspaceFolder}\\CompileSubProject.py",
-                "Tests",
-                "-I ${workspaceFolder}\\Source -I ${workspaceFolder}\\Source\\Modules -I ${workspaceFolder}\\Tests\\Include",
-                "TestMain.cpp" 
+                "Tests,-In Source,-Ex Source\\SampleApp.cpp",
+                "-I Source -I Source\\Modules -I Tests\\Include",
             ],
-            // Displays compiler errors in problems output
-            "problemMatcher": "$gcc"
+            "dependsOn": "PyBased: build all Source-Parts",
+            "problemMatcher": "$gcc", // Otherwise its annoys you with warnings
         },
-        {
+        { // #4 Execute Tests
             "label": "PyBased: Execute Tests",
             "type": "shell",
             "command": "${workspaceFolder}\\Tests.exe",
@@ -65,10 +77,11 @@
         {
             "label": "CMake: Create Configuration",
             "type": "shell",
-            "options": {
+            "options": { 
                 "cwd": "${workspaceFolder}/CMake"
             },
-            "command": "CMake .."
+            "command": "CMake ..",
+            "problemMatcher": "$gcc", // Otherwise its annoys you with warnings
         },
         {
             "label": "CMake: Build Project",
@@ -77,7 +90,8 @@
                 "cwd": "${workspaceFolder}/CMake"
             },
             "command": "CMake --build .",
-            "dependsOn": "CMake: Create Configuration"
+            "dependsOn": "CMake: Create Configuration",
+            "problemMatcher": "$gcc", // Otherwise its annoys you with warnings
         },
         {
             "label": "CMake: Run Test Project",
@@ -86,7 +100,8 @@
                 "cwd": "${workspaceFolder}/CMake"
             },
             "command": "Tests/Debug/tests.exe",
-            "dependsOn": "CMake: Build Project"
+            "dependsOn": "CMake: Build Project",
+            "problemMatcher": "$gcc", // Otherwise its annoys you with warnings
         },
 
         {
