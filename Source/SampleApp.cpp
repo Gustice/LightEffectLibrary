@@ -39,9 +39,9 @@ int main(int argc, char const *argv[])
     Color b1;
     Color all1;
 
-    r1.SetColor(0xFF, 0xFF, 0,0,0);
-    g1.SetColor(0xFF, 0, 0xFF, 0,0);
-    b1.SetColor(0xFF, 0, 0, 0xFF, 0);
+    r1.SetColor(0xFF, 0,0,0);
+    g1.SetColor(0, 0xFF, 0,0);
+    b1.SetColor(0, 0, 0xFF, 0);
 
     all1 = all1 + r1;
     all1 = all1 + g1;

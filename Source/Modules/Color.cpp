@@ -2,91 +2,68 @@
  * _color.cpp
  *
  * Created: 04.01.2019 22:53:27
- *  Author: Jakob
+ *  Author: Gustice
  */ 
 
 #include "Color.h"
 #include <string.h>
 
+const Color_t color_Black =			{0x00, 0x00, 0x00, 0x00};
+const Color_t color_Red =			{0xFF, 0x00, 0x00, 0x00};
+const Color_t color_Green =			{0x00, 0xFF, 0x00, 0x00};
+const Color_t color_Blue =			{0x00, 0x00, 0xFF, 0x00};
+const Color_t color_Magenta =		{0x80, 0x00, 0x80, 0x00};
+const Color_t color_Cyan =			{0x00, 0x80, 0x80, 0x00};
+const Color_t color_Yellow =		{0x80, 0x80, 0x00, 0x00};
+const Color_t color_White =			{0x55, 0x55, 0x55, 0x00};
+const Color_t color_WarmWhite =		{0x7F, 0x4F, 0x4F, 0x00};
+const Color_t color_ColdWhite =		{0x4F, 0x4F, 0x7F, 0x00};
+const Color_t color_SpookyWhite =	{0x4F, 0x7F, 0x4F, 0x00};
 
-
-const Color_type color_Black =			{0xFF, 0x00, 0x00, 0x00, 0x00};
-const Color_type color_Red =			{0xFF, 0xFF, 0x00, 0x00, 0x00};
-const Color_type color_Green =			{0xFF, 0x00, 0xFF, 0x00, 0x00};
-const Color_type color_Blue =			{0xFF, 0x00, 0x00, 0xFF, 0x00};
-const Color_type color_Magenta =		{0xFF, 0x80, 0x00, 0x80, 0x00};
-const Color_type color_Cyan =			{0xFF, 0x00, 0x80, 0x80, 0x00};
-const Color_type color_Yellow =			{0xFF, 0x80, 0x80, 0x00, 0x00};
-const Color_type color_White =			{0xFF, 0x55, 0x55, 0x55, 0x00};
-const Color_type color_WarmWhite =		{0xFF, 0x7F, 0x4F, 0x4F, 0x00};
-const Color_type color_ColdWhite =		{0xFF, 0x4F, 0x4F, 0x7F, 0x00};
-const Color_type color_SpookieWhite =	{0xFF, 0x4F, 0x7F, 0x4F, 0x00};
-
-const Color _ctBlack(0xFF, 0x00, 0x00, 0x00, 0x00);
-const Color _ctRed(0xFF, 0xFF, 0x00, 0x00, 0x00);
-const Color _ctGreen(0xFF, 0x00, 0xFF, 0x00, 0x00);
-const Color _ctBlue(0xFF, 0x00, 0x00, 0xFF, 0x00);
-const Color _ctMagenta(0xFF, 0x80, 0x00, 0x80, 0x00);
-const Color _ctCyan(0xFF, 0x00, 0x80, 0x80, 0x00);
-const Color _ctYellow(0xFF, 0x80, 0x80, 0x00, 0x00);
-const Color _ctWhite(0xFF, 0x55, 0x55, 0x55, 0x00);
-const Color _ctWarmWhite(0xFF, 0x7F, 0x4F, 0x4F, 0x00);
-const Color _ctColdWhite(0xFF, 0x4F, 0x4F, 0x7F, 0x00);
-const Color _ctSpookieWhite(0xFF, 0x4F, 0x7F, 0x4F, 0x00);
-
+const Color _ctBlack(color_Black);
+const Color _ctRed(color_Red);
+const Color _ctGreen(color_Green);
+const Color _ctBlue(color_Blue);
+const Color _ctMagenta(color_Magenta);
+const Color _ctCyan(color_Cyan);
+const Color _ctYellow(color_Yellow);
+const Color _ctWhite(color_White);
+const Color _ctWarmWhite(color_WarmWhite);
+const Color _ctColdWhite(color_ColdWhite);
+const Color _ctSpookyWhite(color_SpookyWhite);
 
 Color::Color(void) {
-	SetColor(0,0,0,0,0);
+	SetColor(0,0,0,0);
 }
 
-Color::Color(uint8_t a, uint8_t r, uint8_t g, uint8_t b, uint8_t w) {
-	SetColor(a,r,g,b,w);
+Color::Color(uint8_t r, uint8_t g, uint8_t b, uint8_t w) {
+	SetColor(r,g,b,w);
 }
 
-Color::Color(uint8_t r, uint8_t g, uint8_t b) {
-	SetColor(0xFF,r,g,b,0);
+Color::Color(Color_t color) {
+	memcpy(&_color, &color, sizeof(Color_t));
 }
 
-void Color::SetColor(Color_type color) {
-	memcpy(&_color, &color, sizeof(Color_type));
+void Color::SetColor(Color_t color) {
+	memcpy(&_color, &color, sizeof(Color_t));
 }
 
-
-void Color::SetColor(uint8_t a, uint8_t r, uint8_t g, uint8_t b, uint8_t w) {
-	_color.alpha = a;
+void Color::SetColor(uint8_t r, uint8_t g, uint8_t b, uint8_t w) {
 	_color.red = r;
 	_color.green = g;
 	_color.blue = b;
 	_color.white = w;
 }
 
-
-void Color::GetByteStream(uint8_t clr[5]) {
-	clr[0] = _color.alpha;
-	clr[1] = _color.blue;
-	clr[2] = _color.green;
-	clr[3] = _color.red;
-	clr[4] = _color.white;
-}
-
-
-Color_type Color::GetColor(void) { 
+Color_t Color::GetColor(void) { 
 	return _color; 
 }
 
-uint8_t Color::getR(void)
-{
-	return _color.red;
-}
-
-uint8_t Color::getG(void)
-{
-	return _color.green;
-}
-
-uint8_t Color::getB(void)
-{
-	return _color.blue;
+void Color::WriteByteStreamTo(uint8_t raw[sizeof(Color_t)]) {
+	raw[0] = _color.blue;
+	raw[1] = _color.green;
+	raw[2] = _color.red;
+	raw[3] = _color.white;
 }
 
 Color operator * (Color c1, uint8_t k) {
@@ -104,4 +81,3 @@ Color operator + (Color c1, Color c2) {
 	c1._color.white = c1._color.white + c2._color.white;
 	return c1;
 }
-

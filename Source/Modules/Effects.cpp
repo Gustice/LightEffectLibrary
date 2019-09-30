@@ -2,7 +2,7 @@
  * Effects.cpp
  *
  * Created: 04.01.2019 22:54:38
- *  Author: Jakob
+ *  Author: Gustice
  */ 
 
 #include "Effects.h"
@@ -85,10 +85,10 @@ const uint8_t cu8_stdFading = 15;
 
 Effect::Effect(void) {
 	EffPV.SetEffect(eff_Dark, 0);
-	_u8_FlickrRange = 30;
+	_u8_FlickerRange = 30;
 }
 
-void Effect::SetEffect(EffMacro_type * sequence, Color_type const * sColor, uint8_t intens) {
+void Effect::SetEffect(EffMacro_type * sequence, Color_t const * sColor, uint8_t intens) {
 	u8_fadingCnt = cu8_stdFading;
 
 	memcpy(&EffPV_old, &EffPV, sizeof(EffPV));
@@ -132,7 +132,7 @@ void Effect::getNextImage(void) {
 	}
 }
 
-void Effect::SetFlickrRange(uint8_t range)
+void Effect::SetFlickerRange(uint8_t range)
 {
 	
 }
@@ -168,9 +168,9 @@ void SingleEffect::genImage(Color * color, EffectMemory * effStat) {
 		*color = effStat->_aColor * effStat->_p_effMac->pu8_wave[cu16_TemplateLength -1 - effStat->ReadTempIdx()] * effStat->_p_effMac->u8_FSintensity;
 		break;
 
-		case Light_Flickr:
+		case Light_Flicker:
 		k = rand();
-		k =  50 + ((int16_t) k * (50 + _u8_FlickrRange) / 0xFF);
+		k =  50 + ((int16_t) k * (50 + _u8_FlickerRange) / 0xFF);
 		//k = smoothFlick.GetNewAverage(k);
 		*color = effStat->_aColor * k;
 		break;
@@ -223,7 +223,7 @@ void DualEffect::genImage(Color * color, EffectMemory * effStat) {
 		color[0] = color[1] = effStat->_aColor * 0;
 		break;
 		
-		case Light_Flickr:
+		case Light_Flicker:
 		case Light_Sparkle:
 		case Light_Freeze:
 		default:
@@ -277,7 +277,7 @@ void MultiEffect::genImage(Color * color, EffectMemory * effStat) {
 		}
 		break;
 		
-		case Light_Flickr:
+		case Light_Flicker:
 		case Light_Sparkle:
 		case Light_Freeze:
 		default:

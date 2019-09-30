@@ -149,7 +149,7 @@ EffMacro::EffMacro(e_EffectPart state,
 /************************************************************************/
 const uint8_t cu8_Fading = 5;
 
-void EffectMemory::SetEffect(EffMacro_type * sequence, Color_type const * sColor, uint8_t intens) {
+void EffectMemory::SetEffect(EffMacro_type * sequence, Color_t const * sColor, uint8_t intens) {
 	if (sColor == NO_COLOR)
 	{
 		_aColor.SetColor(*sequence->color);

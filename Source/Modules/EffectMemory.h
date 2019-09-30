@@ -11,7 +11,7 @@ enum e_EffectPart {
 	Light_Idle = 0,
 	Light_Wave,
 	Light_InvWave,
-	Light_Flickr,
+	Light_Flicker,
 	Light_Sparkle,
 	Light_Freeze,
 	Light_Blank,
@@ -24,7 +24,7 @@ typedef const struct EffectMacroElement_def {
 	uint8_t const * pu8_wave;	// waveform reference
 	uint8_t u8_FSintensity;		// Full-Scale-intensity
 	uint8_t u8_duration;		// Effect duration
-	const Color_type * color;	// SubEffect color
+	const Color_t * color;		// SubEffect color
 	int8_t u8_repeats;			// Num of Repeats
 	int8_t next;				// Next SubEffect 
 } EffMacro_type;
@@ -76,12 +76,12 @@ class EffectMemory {
 	friend class MultiEffect;
 
 	public:
-	void SetEffect(EffMacro_type * sequence, Color_type const * sColor = NO_COLOR, uint8_t intens = gu8_idleIntensity);
+	void SetEffect(EffMacro_type * sequence, Color_t const * sColor = NO_COLOR, uint8_t intens = gu8_idleIntensity);
 	//void SetEffect(EffMacro_type * sequence, Color const * sColor = NO_COLOR_OBJ, uint8_t intens = gu8_idleIntensity);
 	void Tick(void);
 	uint8_t ProceedDissolve (void);
 	
-	private: // @todo change to protected an thest reslts
+	private: // @todo change to protected and tests results
 	EffMacro_type const * _p_effSeq;
 	EffMacro_type const * _p_effMac;
 		
@@ -96,7 +96,7 @@ class EffectMemory {
 	uint8_t _u8_dissCnt;
 	Color _aColor;
 	uint8_t _idleIntens;
-	Color_type const * _fColor;
+	Color_t const * _fColor;
 	
 	void SetIndexes(void);
 	uint8_t ReadTempIdx(void);

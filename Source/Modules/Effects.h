@@ -22,7 +22,7 @@ extern EffMacro_type eff_ShiftAsymPulseInv[];
 
 typedef struct EffectList_def {
 	const EffMacro_type * Macro;		// Macro reference
-	const uint8_t u8_parts;				// Makro-Eintr�ge
+	const uint8_t u8_parts;				// Macro-entries
 }EffectList_type;
 
 
@@ -39,9 +39,9 @@ extern const EffSequence_type em_Idle[];
 class Effect {	
 	public:
 	Effect(void);
-	void SetEffect(EffMacro_type * sequence, Color_type const * sColor = NO_COLOR, uint8_t intens = gu8_idleIntensity);
+	void SetEffect(EffMacro_type * sequence, Color_t const * sColor = NO_COLOR, uint8_t intens = gu8_idleIntensity);
 	void getNextImage(void);
-	void SetFlickrRange(uint8_t range);
+	void SetFlickerRange(uint8_t range);
 	
 	uint8_t _colorSize;
 	Color * _pColor;
@@ -54,7 +54,7 @@ class Effect {
 	
 	EffectMemory EffPV;
 	EffectMemory EffPV_old;
-	uint8_t _u8_FlickrRange;
+	uint8_t _u8_FlickerRange;
 };
 
 #define SINGLEEFFECT_COLORWITH 1
