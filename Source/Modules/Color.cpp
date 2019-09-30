@@ -45,33 +45,33 @@ Color::Color(Color_t color) { memcpy(&_color, &color, sizeof(Color_t)); }
 void Color::SetColor(Color_t color) { memcpy(&_color, &color, sizeof(Color_t)); }
 
 void Color::SetColor(uint8_t r, uint8_t g, uint8_t b, uint8_t w) {
-  _color.red   = r;
-  _color.green = g;
-  _color.blue  = b;
-  _color.white = w;
+    _color.red   = r;
+    _color.green = g;
+    _color.blue  = b;
+    _color.white = w;
 }
 
 Color_t Color::GetColor(void) { return _color; }
 
 void Color::WriteByteStreamTo(uint8_t raw[sizeof(Color_t)]) {
-  raw[0] = _color.blue;
-  raw[1] = _color.green;
-  raw[2] = _color.red;
-  raw[3] = _color.white;
+    raw[0] = _color.blue;
+    raw[1] = _color.green;
+    raw[2] = _color.red;
+    raw[3] = _color.white;
 }
 
 Color operator*(Color c1, uint8_t k) {
-  c1._color.red   = (uint8_t)((uint16_t)c1._color.red * k / 0xFF);
-  c1._color.green = (uint8_t)((uint16_t)c1._color.green * k / 0xFF);
-  c1._color.blue  = (uint8_t)((uint16_t)c1._color.blue * k / 0xFF);
-  c1._color.white = (uint8_t)((uint16_t)c1._color.white * k / 0xFF);
-  return c1;
+    c1._color.red   = (uint8_t)((uint16_t)c1._color.red * k / 0xFF);
+    c1._color.green = (uint8_t)((uint16_t)c1._color.green * k / 0xFF);
+    c1._color.blue  = (uint8_t)((uint16_t)c1._color.blue * k / 0xFF);
+    c1._color.white = (uint8_t)((uint16_t)c1._color.white * k / 0xFF);
+    return c1;
 }
 
 Color operator+(Color c1, Color c2) {
-  c1._color.red   = c1._color.red + c2._color.red;
-  c1._color.green = c1._color.green + c2._color.green;
-  c1._color.blue  = c1._color.blue + c2._color.blue;
-  c1._color.white = c1._color.white + c2._color.white;
-  return c1;
+    c1._color.red   = c1._color.red + c2._color.red;
+    c1._color.green = c1._color.green + c2._color.green;
+    c1._color.blue  = c1._color.blue + c2._color.blue;
+    c1._color.white = c1._color.white + c2._color.white;
+    return c1;
 }

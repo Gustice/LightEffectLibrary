@@ -14,10 +14,10 @@
 #include <stdint.h>
 
 typedef struct Color_def {
-  uint8_t red;
-  uint8_t green;
-  uint8_t blue;
-  uint8_t white;
+    uint8_t red;
+    uint8_t green;
+    uint8_t blue;
+    uint8_t white;
 } Color_t;
 
 #define NO_COLOR ((Color_t *)0)       ///< Pointer constant to "no color"
@@ -34,65 +34,65 @@ typedef struct Color_def {
  * 	\li Return formatted data stream that can be directly sent to an LED
  */
 class Color {
-  friend Color operator+(Color c1, Color c2);
-  friend Color operator*(Color c1, uint8_t k);
+    friend Color operator+(Color c1, Color c2);
+    friend Color operator*(Color c1, uint8_t k);
 
-public:
-  /**
-   * @brief 	Construct a new Color object
-   * @details	Default color will be Black \ref _ctBlack
-   */
-  Color(void);
+  public:
+    /**
+     * @brief 	Construct a new Color object
+     * @details	Default color will be Black \ref _ctBlack
+     */
+    Color(void);
 
-  /**
-   * @brief 	Construct a new Color object according to rgb color-channel-values
-   * @details	This constructor also takes an overlaping white channel
-   * @param r Red channel
-   * @param g Green channel
-   * @param b Blue channel
-   * @param w White channel (zero by default if not assigned)
-   */
-  Color(uint8_t r, uint8_t g, uint8_t b, uint8_t w = 0);
+    /**
+     * @brief 	Construct a new Color object according to rgb color-channel-values
+     * @details	This constructor also takes an overlaping white channel
+     * @param r Red channel
+     * @param g Green channel
+     * @param b Blue channel
+     * @param w White channel (zero by default if not assigned)
+     */
+    Color(uint8_t r, uint8_t g, uint8_t b, uint8_t w = 0);
 
-  /**
-   * @brief Construct a new Color object according to Color_t Array
-   * @param color
-   */
-  Color(Color_t color);
+    /**
+     * @brief Construct a new Color object according to Color_t Array
+     * @param color
+     */
+    Color(Color_t color);
 
-  /**
-   * @brief Set the Color object according to Color_t Array
-   *
-   * @param color
-   */
-  void SetColor(Color_t color);
+    /**
+     * @brief Set the Color object according to Color_t Array
+     *
+     * @param color
+     */
+    void SetColor(Color_t color);
 
-  /**
-   * @brief Set the Color object according to rgb color-channel values
-   *
-   * @param r Red channel
-   * @param g Green channel
-   * @param b Blue channel
-   * @param w White channel (zero by default if not assigned)
-   */
-  void SetColor(uint8_t r, uint8_t g, uint8_t b, uint8_t w = 0);
+    /**
+     * @brief Set the Color object according to rgb color-channel values
+     *
+     * @param r Red channel
+     * @param g Green channel
+     * @param b Blue channel
+     * @param w White channel (zero by default if not assigned)
+     */
+    void SetColor(uint8_t r, uint8_t g, uint8_t b, uint8_t w = 0);
 
-  /**
-   * @brief Returns Color as Color_t structure
-   *
-   * @return Color_t Color
-   */
-  Color_t GetColor(void);
+    /**
+     * @brief Returns Color as Color_t structure
+     *
+     * @return Color_t Color
+     */
+    Color_t GetColor(void);
 
-  /**
-   * @brief Writes Color as formatted bytestream to location
-   *
-   * @param color
-   */
-  void WriteByteStreamTo(uint8_t raw[sizeof(Color_t)]);
+    /**
+     * @brief Writes Color as formatted bytestream to location
+     *
+     * @param color
+     */
+    void WriteByteStreamTo(uint8_t raw[sizeof(Color_t)]);
 
-private:
-  Color_t _color; ///< Color data
+  private:
+    Color_t _color; ///< Color data
 };
 
 /**
@@ -111,7 +111,7 @@ Color operator+(Color c1, Color c2);
  * @brief Scale color by scaling each color-channel by given scale-factor
  *
  * @param c1 Color
- * @param k Scale-factor
+ * @param k Scale-factor uint8_t.Max is fullscale
  * @return Scaled Color
  */
 Color operator*(Color c1, uint8_t k);
