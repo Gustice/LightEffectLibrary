@@ -49,14 +49,14 @@ int main(int argc, char const *argv[])
 
 
     /// Testing State machine
-    EffectMemory Eff1;
+    EffectSM Eff1;
     Eff1.SetEffect(eff_TestStdPulse);
     for(uint8_t i = 0; i < 96; i++)
     {
         Eff1.Tick();
     }
 
-    EffectMemory Eff2;
+    EffectSM Eff2;
     Eff2.SetEffect(eff_StdPulse);
     for(uint8_t i = 0; i < 96; i++)
     {

@@ -9,5 +9,7 @@ add_library(LEL_lib STATIC  Color.cpp
                             EffectStateMachine.h 
                             EffectWaveforms.cpp
                             EffectWaveforms.h
+                            EffectMacro.cpp
+                            EffectMacro.h
                             )
 target_include_directories(LEL_lib PUBLIC ${CMAKE_CURRENT_SOURCE_DIR})

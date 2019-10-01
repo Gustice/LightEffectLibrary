@@ -47,13 +47,13 @@ class Effect {
 	Color * _pColor;
 	Color * _pColorOld;
 
-	virtual void genImage(Color * color, EffectMemory * effStat);
+	virtual void genImage(Color * color, EffectSM * effStat);
 	
 	uint8_t u8_fadingCnt;
 	uint8_t u8_dissCnt;
 	
-	EffectMemory EffPV;
-	EffectMemory EffPV_old;
+	EffectSM EffPV;
+	EffectSM EffPV_old;
 	uint8_t _u8_FlickerRange;
 };
 
@@ -65,7 +65,7 @@ class SingleEffect : public Effect {
 	private:
 	Color _Color[SINGLEEFFECT_COLORWITH];
 	Color _ColorOld[SINGLEEFFECT_COLORWITH];
-	void genImage(Color * color, EffectMemory * effStat);
+	void genImage(Color * color, EffectSM * effStat);
 };
 
 #define DUALEEFFECT_COLORWITH 2
@@ -76,7 +76,7 @@ class DualEffect : public Effect {
 	private:
 	Color _Color[DUALEEFFECT_COLORWITH];
 	Color _ColorOld[DUALEEFFECT_COLORWITH];
-	void genImage(Color * color, EffectMemory * effStat);
+	void genImage(Color * color, EffectSM * effStat);
 };
 
 class MultiEffect : public Effect {
@@ -86,6 +86,6 @@ class MultiEffect : public Effect {
 	private:
 	Color * _pColor;
 	Color * _pColorOld;
-	void genImage(Color * color, EffectMemory * effStat);
+	void genImage(Color * color, EffectSM * effStat);
 };
 

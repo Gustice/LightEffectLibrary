@@ -138,7 +138,7 @@ void Effect::SetFlickerRange(uint8_t range)
 	
 }
 
-void Effect::genImage(Color * color, EffectMemory * effStat)
+void Effect::genImage(Color * color, EffectSM * effStat)
 {
 	// should be pure virtual but compiler doesn't accept it somehow
 }
@@ -153,7 +153,7 @@ SingleEffect::SingleEffect(void) : Effect() {
 	_pColorOld = _ColorOld;
 }
 
-void SingleEffect::genImage(Color * color, EffectMemory * effStat) {
+void SingleEffect::genImage(Color * color, EffectSM * effStat) {
 	uint8_t k, kr;
 	switch (effStat->_state)
 	{
@@ -203,7 +203,7 @@ DualEffect::DualEffect(void) : Effect() {
 	_pColorOld = _ColorOld;
 }
 
-void DualEffect::genImage(Color * color, EffectMemory * effStat) {
+void DualEffect::genImage(Color * color, EffectSM * effStat) {
 	switch (effStat->_state) 
 	{
 		case Light_Idle:
@@ -241,7 +241,7 @@ MultiEffect::MultiEffect(uint8_t u8_Length) : Effect() {
 	//  @todo pointer to external ColorSource
 }
 
-void MultiEffect::genImage(Color * color, EffectMemory * effStat) {
+void MultiEffect::genImage(Color * color, EffectSM * effStat) {
 	uint8_t i;
 	switch (effStat->_state)
 	{

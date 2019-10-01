@@ -2,7 +2,7 @@
 #include "Color.h"
 #include "catch.hpp"
 
-TEST_CASE("Constructing emtpy Color Object", "[Color, Constructing]") {
+TEST_CASE("Constructing emtpy Color Object", "[Color, Constructor]") {
     Color     dut  = Color();
     const int size = sizeof(Color_t);
     uint8_t   stream[size];
@@ -13,7 +13,7 @@ TEST_CASE("Constructing emtpy Color Object", "[Color, Constructing]") {
     }
 }
 
-TEST_CASE("Constructing Color Object by Parameter", "[Color, Constructing]") {
+TEST_CASE("Constructing Color Object by Parameter", "[Color, Constructor]") {
     const int size            = sizeof(Color_t);
     uint8_t   setStream[size] = {0x12, 0x34, 0x56, 0x78};
 
@@ -26,7 +26,7 @@ TEST_CASE("Constructing Color Object by Parameter", "[Color, Constructing]") {
     REQUIRE(c.white == setStream[3]);
 }
 
-TEST_CASE("Constructing Color Object by structure", "[Color, Constructing]") {
+TEST_CASE("Constructing Color Object by structure", "[Color, Constructor]") {
     const int size            = sizeof(Color_t);
     uint8_t   setStream[size] = {0x23, 0x45, 0x67, 0x89};
     Color_t   setColor;
@@ -44,7 +44,7 @@ TEST_CASE("Constructing Color Object by structure", "[Color, Constructing]") {
     REQUIRE(c.white == setStream[3]);
 }
 
-TEST_CASE("White Channel stays zero if white parameter is omitted", "[Color, Constructing]") {
+TEST_CASE("White Channel stays zero if white parameter is omitted", "[Color, Constructor]") {
     const int size            = sizeof(Color_t);
     uint8_t   setStream[size] = {0x9A, 0xBC, 0xDE, 0xF1};
 
@@ -84,7 +84,7 @@ TEST_CASE("Conservate format of WriteByteStreamTo", "[Color, Format]") {
     REQUIRE(c.white == stream[3]);
 }
 
-TEST_CASE("Setting Color by Parameter or by Structure", "[Color, Manipulating]") {
+TEST_CASE("Setting Color by Parameter or by Structure", "[Color, Getter]") {
     Color     dut  = Color();
     const int size = sizeof(Color_t);
     uint8_t   stream[size];

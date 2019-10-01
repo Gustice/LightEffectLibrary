@@ -1,7 +1,7 @@
 /**
  * @file EffectStateMachine.h
  * @author Gustice
- * @brief 
+ * @brief Effect-State-Machine-Class for processing Effect Macros
  * @version 0.1
  * @date 2019-10-01
  * 
@@ -12,72 +12,25 @@
 
 #include <stdint.h>
 #include "Color.h"
+#include "EffectMacro.h"
 
-extern const uint16_t cu16_TemplateLength;
-extern const uint8_t gu8_idleIntensity;
-enum e_EffectPart {
-	Light_Idle = 0,
-	Light_Wave,
-	Light_InvWave,
-	Light_Flicker,
-	Light_Sparkle,
-	Light_Freeze,
-	Light_Blank,
+extern const uint16_t cu16_TemplateLength; // @todo this is bad
+extern const uint8_t gu8_idleIntensity; // @todo this is bad
 
-	Light_States,
-};
-
-typedef const struct EffectMacroElement_def {
-	e_EffectPart state;			// SubEffect
-	uint8_t const * pu8_wave;	// waveform reference
-	uint8_t u8_FSintensity;		// Full-Scale-intensity
-	uint8_t u8_duration;		// Effect duration
-	const Color_t * color;		// SubEffect color
-	int8_t u8_repeats;			// Num of Repeats
-	int8_t next;				// Next SubEffect 
-} EffMacro_type;
-
-class EffMacro {
-    public:
-    EffMacro(
-		e_EffectPart state,
-    	uint8_t const * pu8_wave,
-    	uint8_t u8_FSintensity,
-    	uint8_t u8_duration,
-    	Color const * color,
-    	int8_t u8_repeats,
-    	int8_t next
-    );
-
-	e_EffectPart _state;		// SubEffect
-	uint8_t const * _pu8_wave;	// waveform reference
-	uint8_t _u8_FSintensity;	// Full-Scale-intensity
-	uint8_t _u8_duration;		// Effect duration
-	Color const * _color;	    // SubEffect color
-	int8_t _u8_repeats;			// Num of Repeats
-	int8_t _next;				// Next SubEffect 
-};
-class DualEffMacro : EffMacro {
-	public:
-    DualEffMacro(
-		e_EffectPart state,
-		e_EffectPart stateI,
-    	uint8_t const * pu8_wave,
-    	uint8_t const * pu8_waveI,
-    	uint8_t u8_FSintensity,
-    	uint8_t u8_duration,
-    	Color const * color,
-		Color const * colorI,
-    	int8_t u8_repeats,
-    	int8_t next
-    ); // : EffMacro(state, pu8_wave, u8_FSintensity, u8_duration, color, u8_repeats, next);
-
-	e_EffectPart _stateI;		// SubEffect
-	uint8_t const * _pu8_waveI;	// waveform reference
-	Color const * _colorI;	    // SubEffect color
-};
-
-class EffectMemory {
+/**
+ * @brief Effect State Machine Class
+ * @details Processes Effect macro array Macro entry subsequently
+ * Processing is executed in following manner:
+ *  \li Index-incrementing each Tick
+ *      \li ticks until duration \ref EffMacro is finished
+ *      \li each tick the index incremented by templateLenght/duration
+ *  \li Repeats-processing 
+ *      \li Each repeat the tick and the index are set back to start
+ *      \li Switches to next Macro enty
+ *      \li Next entry is given by 'next' index
+ *      \li Color changes can be executed optionally
+ */
+class EffectSM {
 	public:
 	void SetEffect(EffMacro_type * sequence, Color_t const * sColor = NO_COLOR, uint8_t intens = gu8_idleIntensity);
 	//void SetEffect(EffMacro_type * sequence, Color const * sColor = NO_COLOR_OBJ, uint8_t intens = gu8_idleIntensity);
