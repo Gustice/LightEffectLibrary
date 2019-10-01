@@ -1,5 +1,5 @@
 
-#include "EffectMemory.h"
+#include "EffectStateMachine.h"
 
 
 /************************************************************************/
