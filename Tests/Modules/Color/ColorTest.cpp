@@ -2,6 +2,9 @@
 #include "Color.h"
 #include "catch.hpp"
 
+// @todo LHF color compare function needed
+
+
 TEST_CASE("Constructing emtpy Color Object", "[Color, Constructor]") {
     Color     dut  = Color();
     const int size = sizeof(Color_t);
@@ -336,3 +339,77 @@ TEST_CASE("Using Multiply-Operator with even data", "[Color, Operator]") {
         REQUIRE(c.white == checkStream[3]);
     }
 }
+
+TEST_CASE("Object remains untouched after Add-Operator is used", "[Color, Operator]") {
+    const int size             = sizeof(Color_t);
+    uint8_t   setStream1[size] = {0x12, 0x34, 0x56, 0x78};
+    uint8_t   setStream2[size] = {0x98, 0x76, 0x54, 0x32};
+
+    Color_t setColor1;
+    setColor1.red   = setStream1[0];
+    setColor1.green = setStream1[1];
+    setColor1.blue  = setStream1[2];
+    setColor1.white = setStream1[3];
+
+    Color_t setColor2;
+    setColor2.red   = setStream2[0];
+    setColor2.green = setStream2[1];
+    setColor2.blue  = setStream2[2];
+    setColor2.white = setStream2[3];
+
+    Color dut1 = Color(setColor1);
+    Color dut2 = Color(setColor2);
+
+    Color dut = dut1 + dut2;
+
+    Color_t c = dut.GetColor();
+    REQUIRE(c.red == 0xAA);
+    REQUIRE(c.green == 0xAA);
+    REQUIRE(c.blue == 0xAA);
+    REQUIRE(c.white == 0xAA);
+
+    Color_t c1 = dut1.GetColor();
+    REQUIRE(c1.red == setStream1[0]);
+    REQUIRE(c1.green == setStream1[1]);
+    REQUIRE(c1.blue == setStream1[2]);
+    REQUIRE(c1.white == setStream1[3]);
+
+    Color_t c2 = dut2.GetColor();
+    REQUIRE(c2.red == setStream2[0]);
+    REQUIRE(c2.green == setStream2[1]);
+    REQUIRE(c2.blue == setStream2[2]);
+    REQUIRE(c2.white == setStream2[3]);
+}
+
+TEST_CASE("Object remains untouched after Multiply-Operator is used", "[Color, Operator]") {
+    const int     size            = sizeof(Color_t);
+    const uint8_t setStream[size] = {0xFF, 0x3F, 0x0F, 0x3};
+    uint8_t       checkStream[size];
+
+    Color_t setColor;
+    setColor.red   = setStream[0];
+    setColor.green = setStream[1];
+    setColor.blue  = setStream[2];
+    setColor.white = setStream[3];
+    Color dut1 = Color(setColor);
+
+
+    Color dut = dut1 * 0x7F;
+    for (size_t i = 0; i < size; i++) {
+        checkStream[i] = setStream[i] >> 1;
+    }
+
+    Color_t c = dut.GetColor();
+    REQUIRE(c.red == checkStream[0]);
+    REQUIRE(c.green == checkStream[1]);
+    REQUIRE(c.blue == checkStream[2]);
+    REQUIRE(c.white == checkStream[3]);
+
+    Color_t c1 = dut1.GetColor();
+    REQUIRE(c1.red == setStream[0]);
+    REQUIRE(c1.green == setStream[1]);
+    REQUIRE(c1.blue == setStream[2]);
+    REQUIRE(c1.white == setStream[3]);
+
+}
+

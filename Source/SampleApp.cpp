@@ -1,4 +1,4 @@
-/***********************************************************************************************//**
+/**
  * @file SampleApp.cpp
  * @author Gustice
  * @brief 
@@ -6,12 +6,15 @@
  * @date 2019-09-18
  * 
  * @copyright Copyright (c) 2019
- **************************************************************************************************/
+ */
 
 #include "SampleApp.h"
 #include <string.h>
 #include <stdio.h>
+#include <iostream>
 
+using std::string;
+using std::cout;
 
 /// Demo Effect Macro
 EffMacro_type eff_TestStdPulse[] = {
@@ -20,8 +23,46 @@ EffMacro_type eff_TestStdPulse[] = {
 	{Light_Idle,	    (uint8_t*)0,		0,		32,         USEOLD_COLOR,		0,          0},
 };
 
+void PrintLine(string output) {cout<<output<<std::endl;}
+void PrintColor(string hint, Color_t const c) {
+cout<< hint
+    << " R:" << (int)c.red 
+    << "  G: " << (int)c.green
+    << "  B: " << (int)c.blue 
+    << "  W: " << (int)c.white << std::endl;
+}
 
-/***********************************************************************************************//**
+
+static const Color_t constColorStruct = {0x12, 0x34, 0x56, 0x78};
+static const Color constColorObjByStruct(constColorStruct);
+static const Color constColorObjByParam(0x87, 0x65, 0x43, 0x21);
+
+void ColorDemo(void)
+{
+    PrintLine("## Color Demo");
+    
+    static const Color_t c0 = {0x01, 0x02, 0x03, 0x04};
+    static const Color_t c1 = {0x11, 0x12, 0x13, 0x14};
+    Color colorObj(c0);
+    Color_t cr0 = colorObj.GetColor();
+    PrintColor("  Dynamic Color:" ,cr0);
+    colorObj.SetColor(c1);
+    PrintColor("  Dynamic Color new:" ,cr0);
+
+    Color_t cd1 = constColorObjByStruct.GetColor();
+    PrintColor("  Static const Color 1:" ,cd1);
+    Color_t cd2 = constColorObjByParam.GetColor();
+    PrintColor("  Static const Color 2:" ,cd2);
+
+    Color mixedColor = constColorObjByParam + constColorObjByStruct;
+    
+    PrintColor("  Mixed Color:" ,mixedColor.GetColor());
+    PrintColor("  Static const Color 1:" ,constColorObjByStruct.GetColor());
+    PrintColor("  Static const Color 2:" ,constColorObjByParam.GetColor());
+}
+
+
+/**
  * @brief   Demo usage of Lightning Library
  * 
  * @details
@@ -29,24 +70,13 @@ EffMacro_type eff_TestStdPulse[] = {
  * @param argc  Argument not used
  * @param argv  Argument list not used
  * @return int  Return Value not used
- **************************************************************************************************/
+ */
 int main(int argc, char const *argv[])
 {
-    printf("Sample application running");
+    PrintLine("Sample application running");
+    PrintLine("");
 
-    Color r1;
-    Color g1;
-    Color b1;
-    Color all1;
-
-    r1.SetColor(0xFF, 0,0,0);
-    g1.SetColor(0, 0xFF, 0,0);
-    b1.SetColor(0, 0, 0xFF, 0);
-
-    all1 = all1 + r1;
-    all1 = all1 + g1;
-    all1 = all1 + b1;
-
+    ColorDemo();
 
     /// Testing State machine
     EffectSM Eff1;
@@ -73,7 +103,7 @@ int main(int argc, char const *argv[])
 
 
 
-/***************************************************************************************************
+/**
  * @file Cpp_Gnu_Template.cpp
  * @author Gustice
  * @brief

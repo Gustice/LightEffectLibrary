@@ -90,13 +90,6 @@ void Color::SetColor(uint8_t r, uint8_t g, uint8_t b, uint8_t w) {
 }
 
 /**
- * @brief Returns Color as Color_t structure
- *
- * @return Color_t Color
- */
-Color_t Color::GetColor(void) { return _color; }
-
-/**
  * @brief Writes Color as formatted bytestream to location
  *
  * @param color

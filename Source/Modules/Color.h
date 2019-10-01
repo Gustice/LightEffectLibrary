@@ -49,7 +49,11 @@ class Color {
     void SetColor(Color_t color);
     void SetColor(uint8_t r, uint8_t g, uint8_t b, uint8_t w = 0);
 
-    Color_t GetColor(void);
+    /**
+     * @brief Returns Color as Color_t structure
+     * @return Color_t Color
+     */
+    Color_t GetColor(void) const { return _color; };
     void WriteByteStreamTo(uint8_t raw[sizeof(Color_t)]);
 
   private:
@@ -60,35 +64,26 @@ class Color {
 Color operator+(Color c1, Color c2);
 Color operator*(Color c1, uint8_t k);
 
-/** @name Color structure definition
- *  @details Different predefined colors
- *  @note The colors are defined that the sum of all channels equals roughly 100 %,
- *    so that a Red should appear equally bright to white (where all channels are switched on,
- *    but with 33% at each channel).
- *    However the efficiency of each channel is not considered (maybe in derived classes or driver layer)
- */
-///@{
-extern const Color_t color_Black;       ///< Black color structure constant
-extern const Color_t color_Red;         ///< Red color structure constant
-extern const Color_t color_Green;       ///< Green color structure constant
-extern const Color_t color_Blue;        ///< Blue color structure constant
-extern const Color_t color_Magenta;     ///< Magenta color structure constant
-extern const Color_t color_Cyan;        ///< Cyan color structure constant
-extern const Color_t color_Yellow;      ///< Yellow color structure constant
-extern const Color_t color_White;       ///< White color structure constant
-extern const Color_t color_WarmWhite;   ///< Warm white color structure constant (with higher red channel value)
-extern const Color_t color_ColdWhite;   ///< Black color structure constant (with higher blue channel value)
-extern const Color_t color_SpookyWhite; ///< Black color structure constant (with higher green channel value)
+extern const Color_t color_Black;       
+extern const Color_t color_Red;         
+extern const Color_t color_Green;       
+extern const Color_t color_Blue;        
+extern const Color_t color_Magenta;     
+extern const Color_t color_Cyan;        
+extern const Color_t color_Yellow;      
+extern const Color_t color_White;       
+extern const Color_t color_WarmWhite;   
+extern const Color_t color_ColdWhite;   
+extern const Color_t color_SpookyWhite; 
 
-extern const Color _ctBlack;       ///< Black color object constant
-extern const Color _ctRed;         ///< Red color object constant
-extern const Color _ctGreen;       ///< Green color object constant
-extern const Color _ctBlue;        ///< Blue color object constant
-extern const Color _ctMagenta;     ///< Magenta color object constant
-extern const Color _ctCyan;        ///< Cyan color object constant
-extern const Color _ctYellow;      ///< Yellow color object constant
-extern const Color _ctWhite;       ///< White color object constant
-extern const Color _ctWarmWhite;   ///< Warm white color object constant (with higher red channel value)
-extern const Color _ctColdWhite;   ///< Black color object constant (with higher blue channel value)
-extern const Color _ctSpookyWhite; ///< Black color object constant (with higher green channel value)
-///@}
+extern const Color _ctBlack;       
+extern const Color _ctRed;         
+extern const Color _ctGreen;       
+extern const Color _ctBlue;        
+extern const Color _ctMagenta;     
+extern const Color _ctCyan;        
+extern const Color _ctYellow;      
+extern const Color _ctWhite;       
+extern const Color _ctWarmWhite;   
+extern const Color _ctColdWhite;   
+extern const Color _ctSpookyWhite; 
