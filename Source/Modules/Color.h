@@ -1,5 +1,3 @@
-#pragma once
-
 /**
  * @file Color.h
  * @author Gustice
@@ -11,6 +9,8 @@
  *
  * @copyright Copyright (c) 2019
  */
+#pragma once
+
 #include <stdint.h>
 
 typedef struct Color_def {

@@ -4,7 +4,7 @@
 
 #include <stdint.h>
 #include "Color.h"
-#include "EffectMemory.h"
+#include "EffectStateMachine.h"
 
 
 #define COUNT_EFFECT_ELEMENT(effect) (sizeof(effect)/sizeof(EffMacro_type))

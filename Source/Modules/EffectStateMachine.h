@@ -1,5 +1,13 @@
-
-
+/**
+ * @file EffectStateMachine.h
+ * @author Gustice
+ * @brief 
+ * @version 0.1
+ * @date 2019-10-01
+ * 
+ * @copyright Copyright (c) 2019
+ * 
+ */
 #pragma once
 
 #include <stdint.h>
@@ -70,11 +78,6 @@ class DualEffMacro : EffMacro {
 };
 
 class EffectMemory {
-	friend class Effect;
-	friend class SingleEffect;
-	friend class DualEffect;
-	friend class MultiEffect;
-
 	public:
 	void SetEffect(EffMacro_type * sequence, Color_t const * sColor = NO_COLOR, uint8_t intens = gu8_idleIntensity);
 	//void SetEffect(EffMacro_type * sequence, Color const * sColor = NO_COLOR_OBJ, uint8_t intens = gu8_idleIntensity);
@@ -102,10 +105,3 @@ class EffectMemory {
 	uint8_t ReadTempIdx(void);
 };
 
-extern const uint8_t u8_EffectsCount;
-extern const uint8_t gau8_offsetPulse[];
-extern const uint8_t gau8_initSlope[];
-extern const uint8_t gau8_offsetSlope[];
-extern const uint8_t gau8_fullSlope[];
-extern const uint8_t gau8_fullPulse[];
-extern const uint8_t gu8_idleIntensity;

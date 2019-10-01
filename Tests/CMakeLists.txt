@@ -7,6 +7,7 @@ add_subdirectory(Include)
 add_executable(tests TestMain.cpp 
                      IntegrationTest.cpp 
                      Modules/Color/ColorTest.cpp 
+                     Modules/EffectStateMachine/EffectStateMachineTest.cpp 
                 )
 
 target_link_libraries(tests LEL_lib 

@@ -5,10 +5,11 @@
  *  Author: Gustice
  */ 
 
-#include "Effects.h"
 #include <math.h>
 #include <string.h>
 #include <stdlib.h>
+#include "EffectWaveforms.h"
+#include "Effects.h"
 
 
 /************************************************************************/
