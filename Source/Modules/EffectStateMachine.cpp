@@ -29,8 +29,6 @@ void EffectSM::SetEffect(EffMacro_type *sequence, Color_t const *sColor, uint8_t
     _u8_repeats = _p_effMac->u8_repeats;
 
     this->SetIndexes();
-
-    _state = _p_effMac->state;
 }
 
 void EffectSM::Tick(void) {
@@ -41,11 +39,9 @@ void EffectSM::Tick(void) {
         // repeats-decrement
         if (_u8_repeats-- == 0) {
             _p_effMac = &(_p_effSeq[_p_effMac->next]);
-
-            
-            _state      = _p_effMac->state;
             _u8_repeats = _p_effMac->u8_repeats;
 
+            // execute color change if necessary
             if (_p_effMac->color != NO_COLOR) {
                 _u8_dissCnt = cu8_Fading;
                 if (_fColor == NO_COLOR) {
