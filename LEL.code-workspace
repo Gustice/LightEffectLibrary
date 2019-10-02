@@ -7,7 +7,14 @@
     "settings": {
         "files.associations": {
             "string": "cpp",
-            "ostream": "cpp"
+            "ostream": "cpp",
+            "chrono": "cpp",
+            "random": "cpp",
+            "limits": "cpp",
+            "memory": "cpp",
+            "optional": "cpp",
+            "functional": "cpp",
+            "type_traits": "cpp"
         }
     }
 }

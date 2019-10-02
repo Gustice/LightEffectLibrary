@@ -45,34 +45,23 @@ const Color _ctColdWhite(color_ColdWhite);     ///< Black color object constant 
 const Color _ctSpookyWhite(color_SpookyWhite); ///< Black color object constant (with higher green channel value)
 ///@}
 
-/**
- * @brief   Construct a new Color object
- * @details Default color will be Black \ref _ctBlack
- */
-Color::Color(void) { SetColor(0, 0, 0, 0); }
-
-/**
- * @brief   Construct a new Color object according to rgb color-channel-values
- * @details This constructor also takes an overlaping white channel
- * @param r Red channel
- * @param g Green channel
- * @param b Blue channel
- * @param w White channel (zero by default if not assigned)
- */
-Color::Color(uint8_t r, uint8_t g, uint8_t b, uint8_t w) { SetColor(r, g, b, w); }
 
 /**
  * @brief Construct a new Color object according to Color_t Array
  * @param color
  */
-Color::Color(Color_t color) { memcpy(&_color, &color, sizeof(Color_t)); }
+Color::Color(Color_t color) { 
+    memcpy(&_color, &color, sizeof(Color_t)); 
+    }
 
 /**
  * @brief Set the Color object according to Color_t Array
  *
  * @param color
  */
-void Color::SetColor(Color_t color) { memcpy(&_color, &color, sizeof(Color_t)); }
+void Color::SetColor(Color_t color) { 
+    memcpy(&_color, &color, sizeof(Color_t)); 
+    }
 
 /**
  * @brief Set the Color object according to rgb color-channel values
@@ -100,6 +89,24 @@ void Color::WriteByteStreamTo(uint8_t raw[sizeof(Color_t)]) {
     raw[2] = _color.red;
     raw[3] = _color.white;
 }
+
+//@todo test this and differentiate to approach below
+// Color Color::operator*(uint8_t k){
+//     _color.red   = (uint8_t)((uint16_t)_color.red * k / 0xFF);
+//     _color.green = (uint8_t)((uint16_t)_color.green * k / 0xFF);
+//     _color.blue  = (uint8_t)((uint16_t)_color.blue * k / 0xFF);
+//     _color.white = (uint8_t)((uint16_t)_color.white * k / 0xFF);
+//     return _color;
+// };
+
+// Color Color::operator+(Color c2) {
+//     _color.red   = _color.red + c2._color.red;
+//     _color.green = _color.green + c2._color.green;
+//     _color.blue  = _color.blue + c2._color.blue;
+//     _color.white = _color.white + c2._color.white;
+//     return _color;
+// };
+
 
 /**
  * @brief Overlaying to colors my adding each color channel value

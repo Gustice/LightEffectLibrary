@@ -36,9 +36,9 @@ extern const EffSequence_type em_Idle[];
 
 
 
-class Effect {	
+class EffectProcessor {
 	public:
-	Effect(void);
+	EffectProcessor(uint16_t const templateLength);
 	void SetEffect(EffMacro_type * sequence, Color_t const * sColor = NO_COLOR, uint8_t intens = gu8_idleIntensity);
 	void getNextImage(void);
 	void SetFlickerRange(uint8_t range);
@@ -58,9 +58,9 @@ class Effect {
 };
 
 #define SINGLEEFFECT_COLORWITH 1
-class SingleEffect : public Effect {
+class SingleEffect : public EffectProcessor {
 	public:
-	SingleEffect(void);
+	SingleEffect(uint16_t const templateLength);
 	
 	private:
 	Color _Color[SINGLEEFFECT_COLORWITH];
@@ -69,9 +69,9 @@ class SingleEffect : public Effect {
 };
 
 #define DUALEEFFECT_COLORWITH 2
-class DualEffect : public Effect {
+class DualEffect : public EffectProcessor {
 	public:
-	DualEffect(void);
+	DualEffect(uint16_t const templateLength);
 
 	private:
 	Color _Color[DUALEEFFECT_COLORWITH];
@@ -79,13 +79,13 @@ class DualEffect : public Effect {
 	void genImage(Color * color, EffectSM * effStat);
 };
 
-class MultiEffect : public Effect {
-	public:
-	MultiEffect(uint8_t u8_Length);
+// class MultiEffect : public EffectProcessor {
+// 	public:
+// 	MultiEffect(uint8_t u8_Length);
 
-	private:
-	Color * _pColor;
-	Color * _pColorOld;
-	void genImage(Color * color, EffectSM * effStat);
-};
+// 	private:
+// 	Color * _pColor;
+// 	Color * _pColorOld;
+// 	void genImage(Color * color, EffectSM * effStat);
+// };
 

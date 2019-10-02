@@ -54,11 +54,34 @@ void ColorDemo(void)
     Color_t cd2 = constColorObjByParam.GetColor();
     PrintColor("  Static const Color 2:" ,cd2);
 
+/// @todo Check memory usage and integrity of summands 
     Color mixedColor = constColorObjByParam + constColorObjByStruct;
     
     PrintColor("  Mixed Color:" ,mixedColor.GetColor());
     PrintColor("  Static const Color 1:" ,constColorObjByStruct.GetColor());
     PrintColor("  Static const Color 2:" ,constColorObjByParam.GetColor());
+}
+
+
+
+static const uint8_t gau8_testWave[] = {0,1,2,3,4,5,6,7,8,9,10,11};
+EffMacro_type eff_Demo[] = {
+    // EffectState  // WafeformRef  FS-Val  Duration   Color           Repeats  Next
+    {Light_Blank,   (uint8_t*)0,    0xFF,   4,         NO_COLOR,        0,      1},
+    {Light_Wave,    gau8_testWave,  0xFF,   6,         USEOLD_COLOR,    0,      1},
+};
+static const uint8_t u8_testWaveLen = sizeof(gau8_testWave);
+
+void StateMachinDemo(void)
+{
+    PrintLine("## StateMachine Demo");
+
+    EffectSM Eff(u8_testWaveLen);
+    Eff.SetEffect(eff_Demo);
+    for(uint8_t i = 0; i < 12; i++)
+    {
+        Eff.Tick();
+    }
 }
 
 
@@ -78,22 +101,7 @@ int main(int argc, char const *argv[])
 
     ColorDemo();
 
-    /// Testing State machine
-    EffectSM Eff1;
-    Eff1.SetEffect(eff_TestStdPulse);
-    for(uint8_t i = 0; i < 96; i++)
-    {
-        Eff1.Tick();
-    }
-
-    EffectSM Eff2;
-    Eff2.SetEffect(eff_StdPulse);
-    for(uint8_t i = 0; i < 96; i++)
-    {
-        Eff2.Tick();
-    }
-
-
+    StateMachinDemo();
 
     /* code */
     return 0;
