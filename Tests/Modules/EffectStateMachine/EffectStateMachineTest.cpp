@@ -2,6 +2,7 @@
 #include "EffectStateMachine.h"
 #include "catch.hpp"
 
+
 TEST_CASE("Constructing EffectMachine", "[EffectStateMachine, Constructor]") {
 
 }

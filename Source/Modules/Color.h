@@ -58,10 +58,10 @@ class Color {
      */
     Color(uint8_t r, uint8_t g, uint8_t b, uint8_t w = 0) { SetColor(r, g, b, w); };
 
-    
     Color(Color_t color);
 
     void SetColor(Color_t color);
+
     void SetColor(uint8_t r, uint8_t g, uint8_t b, uint8_t w = 0);
 
     /**
@@ -69,6 +69,7 @@ class Color {
      * @return Color_t Color
      */
     Color_t GetColor(void) const { return _color; };
+
     void    WriteByteStreamTo(uint8_t raw[sizeof(Color_t)]);
 
     // Color operator*(uint8_t k);
@@ -93,6 +94,7 @@ extern const Color_t color_WarmWhite;
 extern const Color_t color_ColdWhite;
 extern const Color_t color_SpookyWhite;
 
+// @todo this might be useless
 extern const Color _ctBlack;
 extern const Color _ctRed;
 extern const Color _ctGreen;
