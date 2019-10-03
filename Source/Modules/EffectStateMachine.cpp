@@ -9,12 +9,12 @@
  *
  */
 #include "EffectStateMachine.h"
-#include "EffectMacro.h"
 
-
-/// Optional prequel for delayed start. Next entry will be first entry in Effect sequence
+/// Optional prequel for delayed start. 
+/// \li Duration must be != 0 
+/// \li Next entry will be first entry in given Effect sequence
 EffMacro_type delayPrequel[] = {
-	{Light_Blank, (uint8_t*)0, 0, 0, &color_Black, 0, 0},
+	{Light_Blank, (uint8_t*)0, 0, 1, &color_Black, 0, 0},
 };
 
 
@@ -47,13 +47,14 @@ void EffectSM::SetEffect(EffMacro_type *sequence, Color_t const *startColor, uin
         _u8_tick    = _p_effMac->u8_duration;
     }
     
+    _u8_dissolveCnt = 0;
     _u8_repeats = _p_effMac->u8_repeats;
     this->SetIndexes();
 }
 
-void EffectSM::Tick(void) {
+uint8_t EffectSM::Tick(void) {
     // tick-increment
-    if (_u8_tick-- > 0) {
+    if (_u8_tick-- == 0) {
         // repeats-decrement
         if (_u8_repeats-- == 0) {
             _p_effMac = &(_p_effSeq[_p_effMac->next]);
@@ -74,10 +75,11 @@ void EffectSM::Tick(void) {
     if (_u8_dissolveCnt > 0) {
         _u8_dissolveCnt--;
     }
+    return _u8_tick;
 }
 
 void EffectSM::SetIndexes(void) {
-    _u16_waveStep = (cu16_TemplateLength << 8) / _p_effMac->u8_duration;
+    _u16_waveStep = (_u16_templateLength << 8) / _p_effMac->u8_duration;
     _u16_waveIdx  = (uint16_t)(0 - _u16_waveStep);
 }
 

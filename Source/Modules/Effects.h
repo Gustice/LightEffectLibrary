@@ -34,6 +34,7 @@ typedef struct EffektSequenceElement_def {
 #define COUNT_EFFECT_MAKRO(effect) (sizeof(effect)/sizeof(EffSequence_type))
 extern const EffSequence_type em_Idle[];
 
+ extern const uint8_t  gu8_idleIntensity;   // @todo this is bad
 
 
 class EffectProcessor {

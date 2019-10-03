@@ -14,9 +14,6 @@
 #include "EffectMacro.h"
 #include <stdint.h>
 
-extern const uint16_t cu16_TemplateLength; // @todo this is bad
-extern const uint8_t  gu8_idleIntensity;   // @todo this is bad
-
 /**
  * @brief Effect State Machine Class
  * @details Processes Effect macro array Macro entry subsequently
@@ -38,7 +35,7 @@ class EffectSM {
     
     void    SetEffect(EffMacro_type *sequence, Color_t const *startColor = NO_COLOR, uint8_t intialDelay = 0);
     void    SetEffect(EffMacro_type *sequence, Color_t const *startColor, uint8_t delayedStart, uint8_t intens);
-    void    Tick(void);
+    uint8_t Tick(void);
     uint8_t GetDissolveRatio(void);
     const uint8_t GetWaveformIdx(void) {return (_u16_waveIdx >> 8); };
 
