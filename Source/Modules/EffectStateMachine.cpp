@@ -1,7 +1,7 @@
 /**
  * @file EffectStateMachine.cpp
  * @author Gustice
- * @brief Implementation of EffectStateMachine-Class EffectStateMachine.h
+ * @brief Implementation of Effect-State-Machine-Class EffectStateMachine.h
  * @version 0.1
  * @date 2019-10-01
  *
@@ -18,7 +18,6 @@ EffMacro_type delayPrequel[] = {
 };
 
 
-// @todo Implement waitstates
 EffectSM::EffectSM(uint16_t const templateLength, uint8_t const intensity, uint8_t const crossFade) {
     _u8_idleIntens = intensity;
     _u8_fadeSteps = crossFade;

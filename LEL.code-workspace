@@ -14,7 +14,24 @@
             "memory": "cpp",
             "optional": "cpp",
             "functional": "cpp",
-            "type_traits": "cpp"
+            "type_traits": "cpp",
+            "atomic": "cpp",
+            "*.tcc": "cpp",
+            "bitset": "cpp",
+            "deque": "cpp",
+            "unordered_map": "cpp",
+            "vector": "cpp",
+            "iterator": "cpp",
+            "memory_resource": "cpp",
+            "string_view": "cpp",
+            "fstream": "cpp",
+            "istream": "cpp",
+            "sstream": "cpp",
+            "streambuf": "cpp",
+            "system_error": "cpp",
+            "regex": "cpp",
+            "tuple": "cpp",
+            "variant": "cpp"
         }
     }
 }

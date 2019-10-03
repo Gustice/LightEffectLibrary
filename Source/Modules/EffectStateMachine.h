@@ -10,9 +10,9 @@
  */
 #pragma once
 
+#include <stdint.h>
 #include "Color.h"
 #include "EffectMacro.h"
-#include <stdint.h>
 
 /**
  * @brief Effect State Machine Class
@@ -37,9 +37,14 @@ class EffectSM {
     void    SetEffect(EffMacro_type *sequence, Color_t const *startColor, uint8_t delayedStart, uint8_t intens);
     uint8_t Tick(void);
     uint8_t GetDissolveRatio(void);
+    
     const uint8_t GetWaveformIdx(void) {return (_u16_waveIdx >> 8); };
+    const Color GetColor(void) {return _curentColor;};
+    const uint8_t GetIntensity(void) {return _u8_idleIntens;};
+    const uint8_t GetIntensity(void) {return _u8_idleIntens;};
 
     EffMacro_type const *const GetStep(void) { return _p_effMac; };
+    
 
   private: // @todo change to protected and tests results
     /// First element of Effect macro stack

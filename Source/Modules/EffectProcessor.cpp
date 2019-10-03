@@ -1,237 +1,197 @@
-/*
- * Effects.ccpp
+/**
+ * @file EffectProcessor.cpp
+ * @author Gustice
+ * @brief Implementation of Effect-Processor-Class EffectProcessor.h
+ * @version 0.1
+ * @date 2019-10-03
  *
- * Created: 04.01.2019 22:54:38
- *  Author: Gustice
- */ 
+ * @copyright Copyright (c) 2019
+ *
+ */
 
-#include <math.h>
-#include <string.h>
-#include <stdlib.h>
+#include "EffectProcessor.h"
 #include "EffectWaveforms.h"
-#include "Effects.h"
+#include <math.h>
+#include <stdlib.h>
+#include <string.h>
 
-
-/************************************************************************/
-/* Predefined effects                                                   */
-/************************************************************************/
-
-// EffMacro_type 
-	// state            wave				FS		duration    color	            repeats     next
-EffMacro_type eff_Dark[] = {		
-	{Light_Idle,	    (uint8_t*)0,		0,		32,	        &color_Black,	    0,	        1},
-};
-
-EffMacro_type eff_StartIdle[] = {
-	{Light_Wave,	    gau8_initSlope,		0xFF,	16,         &color_ColdWhite,   0,          1},
-	{Light_Idle,	    (uint8_t*)0,		0xFF,	32,         USEOLD_COLOR,		0,          1},
-};
-
-EffMacro_type eff_Idle[] = {
-	{Light_Idle,	    (uint8_t*)0,		0xFF,	32,         &color_ColdWhite,	0,          0},
-};
-
-EffMacro_type eff_StdPulse[] = {
-	{Light_Idle,	    (uint8_t*)0,		0,		32,         &color_ColdWhite,	0,          1},
-	{Light_Wave,	    gau8_offsetPulse,	0xFF,	32,         USEOLD_COLOR,		0,          2},
-	{Light_Idle,	    (uint8_t*)0,		0,		32,         USEOLD_COLOR,		0,          0},
-};
-
-EffMacro_type eff_NervousPulse[] = {
-	{Light_Idle,	    (uint8_t*)0,		0,		4,         &color_ColdWhite,	0,          1},
-	{Light_Wave,	    gau8_offsetPulse,	0xFF,	8,         USEOLD_COLOR,		0,          2},
-	{Light_Idle,	    (uint8_t*)0,		0,		4,         USEOLD_COLOR,		0,          0},
-};
-
-
-EffMacro_type eff_StdWipe[] = {
-	{Light_Idle,	    (uint8_t*)0,		0,		32,         &color_ColdWhite,	0,          1},
-		
-	{Light_Wave,	    gau8_offsetSlope,	0xFF,	32,         USEOLD_COLOR,		0,          2},
-	{Light_Freeze,	    (uint8_t*)0,		0,		32,         USEOLD_COLOR,		0,          3},
-	{Light_InvWave,	    gau8_offsetSlope,	0xFF,	32,         USEOLD_COLOR,		0,          4},
-	{Light_Freeze,	    (uint8_t*)0,		0,		32,         USEOLD_COLOR,		0,          1},
-};
-
-EffMacro_type eff_AsymPulse[] = {
-	{Light_Blank,	    (uint8_t*)0,		0,		16,         &color_ColdWhite,	0,          1},
-		
-	{Light_Wave,	    gau8_fullPulse,		0xFF,	16,         USEOLD_COLOR,		0,          2},
-	{Light_Blank,	    (uint8_t*)0,		0,		4,         USEOLD_COLOR,		0,          3},
-	{Light_Blank,	    (uint8_t*)0,		0,		32,         USEOLD_COLOR,		0,          1},
-};
-
-EffMacro_type eff_AsymPulseInv[] = {
-	{Light_Blank,	    (uint8_t*)0,		0,		16,         &color_ColdWhite,	0,          1},
-	
-	{Light_Blank,	    (uint8_t*)0,		0,		4,         USEOLD_COLOR,		0,          2},
-	{Light_Wave,	    gau8_fullPulse,		0xFF,	16,         USEOLD_COLOR,		0,          3},
-	{Light_Blank,	    (uint8_t*)0,		0,		32,         USEOLD_COLOR,		0,          1},
-};
-
-
-EffMacro efm_StdPulse[] = {
-	EffMacro(Light_Idle,	    (uint8_t*)0,		0,		32,         &_ctColdWhite,		0,          1),
-	EffMacro(Light_Wave,	    gau8_offsetPulse,	0xFF,	32,         USEOLD_COLOR_OBJ,	0,          2),
-	EffMacro(Light_Idle,	    (uint8_t*)0,		0,		32,         USEOLD_COLOR_OBJ,	0,          0),
-};
-
-
-
-
-/************************************************************************/
-/* EffectProcessor base type                                                     */
-/************************************************************************/
-const uint8_t cu8_stdFading = 15;
-
-EffectProcessor::EffectProcessor(uint16_t const templateLength) : 
-        EffPV(templateLength), 
-        EffPV_old(templateLength) 
-    { 
-	EffPV.SetEffect(eff_Dark, 0);
-	_u8_FlickerRange = 30;
+EffectProcessor::EffectProcessor(uint16_t const templateLength, uint8_t const fadeSteps) : EffPV(templateLength), EffPV_old(templateLength) {
+    EffPV.SetEffect(eff_Dark, 0);
+    u8_fadeSteps     = fadeSteps;
+    _u8_FlickerRange = 30;
 }
 
-void EffectProcessor::SetEffect(EffMacro_type * sequence, Color_t const * sColor, uint8_t intens) {
-	u8_fadingCnt = cu8_stdFading;
+void EffectProcessor::SetEffect(EffMacro_type *sequence, Color_t const *sColor, uint8_t intens) {
+    u8_fadingCnt = u8_fadeSteps;
 
-	memcpy(&EffPV_old, &EffPV, sizeof(EffPV));
-	EffPV.SetEffect(sequence, sColor, 0, intens);
+    memcpy(&EffPV_old, &EffPV, sizeof(EffPV));
+    EffPV.SetEffect(sequence, sColor, 0, intens);
 }
 
+void EffectProcessor::GetNextImage(void) {
+    uint8_t k, i;
+    EffPV.Tick();
+    GenerateImage(_pColor, &EffPV);
 
-void EffectProcessor::getNextImage(void) {
-	uint8_t k,i;
-	EffPV.Tick();
-	genImage(_pColor, &EffPV);
+    if (u8_fadingCnt > 0) { // allways process soft cross dissolve between different macros
+        u8_fadingCnt--;
+        k = (uint16_t)u8_fadingCnt * 0xFF / u8_fadeSteps;
 
-	if (u8_fadingCnt > 0)
-	{ // allways process soft cross dissolve between different macros
-		u8_fadingCnt--;
-		k = (uint16_t)u8_fadingCnt*0xFF/cu8_stdFading;
-
-		EffPV_old.Tick();
-		genImage(_pColorOld, &EffPV_old);
-		for (i=0; i<_colorSize; i++)
-		{
-			_pColorOld[i] = _pColorOld[i] * k;
-			_pColor[i] = _pColor[i] * (0xFF-k);
-			_pColor[i] = _pColor[i] +_pColorOld[i];
-		}
-	}
-	else
-	{ // Process soft cross dissolve between different colors, if needed
-		uint8_t k = EffPV.GetDissolveRatio();
-		if (k > 0)
-		{
-			for (i=0; i<_colorSize; i++)
-			{
-				_pColorOld[i] = _pColorOld[i] * k;
-				_pColor[i] = _pColor[i] * (0xFF-k);
-				_pColor[i] = _pColor[i] +_pColorOld[i];
-			}
-		}
-		memcpy(_pColorOld,_pColor,sizeof(Color));
-	}
+        EffPV_old.Tick();
+        GenerateImage(_pColorOld, &EffPV_old);
+        crossFadeColors(k);
+    } else { // Process soft cross dissolve between different colors, if needed
+        uint8_t k = EffPV.GetDissolveRatio();
+        if (k > 0) {
+            crossFadeColors(k);
+        }
+        memcpy(_pColorOld, _pColor, sizeof(Color));
+    }
 }
 
-void EffectProcessor::genImage(Color * color, EffectSM * effStat)
-{
-	// should be pure virtual but compiler doesn't accept it somehow
+Color *EffectProcessor::crossFadeColors(uint8_t k) {
+    int i;
+    for (i = 0; i < _colorSize; i++) {
+        _pColorOld[i] = _pColorOld[i] * k;
+        _pColor[i]    = _pColor[i] * (0xFF - k);
+        _pColor[i]    = _pColor[i] + _pColorOld[i];
+    }
+    return _pColor;
 }
 
+void EffectProcessor::GenerateImage(Color *color, EffectSM *effStat) {
+    uint8_t k, kr;
 
-/************************************************************************/
-/* EffectProcessor 1 LED                                                         */
-/************************************************************************/
-SingleEffect::SingleEffect(uint16_t const templateLength) : 
-    EffectProcessor(templateLength) {
-	_colorSize = 1;
-	_pColor = _Color;
-	_pColorOld = _ColorOld;
+    EffMacro_type const *const cEffStep = effStat->GetStep();
+    switch (cEffStep->state) {
+    case Light_Idle:
+        *color = effStat->GetColor() * effStat->GetIntensity();
+        break;
+
+    case Light_Wave:
+        *color = effStat->GetColor() * cEffStep->pu8_wave[effStat->GetWaveformIdx()] * cEffStep->u8_FSintensity;
+        break;
+
+    case Light_InvWave:
+        *color = effStat->GetColor() * cEffStep->pu8_wave[cu16_TemplateLength - 1 - effStat->GetWaveformIdx()] * cEffStep->u8_FSintensity;
+        break;
+
+    case Light_Flicker:
+        k      = rand();
+        k      = 50 + ((int16_t)k * (50 + _u8_FlickerRange) / 0xFF);
+        *color = effStat->GetColor() * k;
+        break;
+
+    case Light_Sparkle:
+        kr     = ((int16_t)rand() * 14 / 0xFF);
+        k      = 50 + kr * kr;
+        *color = effStat->GetColor() * k;
+        break;
+
+    case Light_Blank:
+        *color = effStat->GetColor() * 0;
+        break;
+
+    case Light_Freeze:
+
+        break;
+
+    default:
+
+        break;
+    }
 }
 
-void SingleEffect::genImage(Color * color, EffectSM * effStat) {
-	uint8_t k, kr;
+// /************************************************************************/
+// /* EffectProcessor 1 LED                                                         */
+// /************************************************************************/
+// SingleEffect::SingleEffect(uint16_t const templateLength) :
+//     EffectProcessor(templateLength) {
+// 	_colorSize = 1;
+// 	_pColor = _Color;
+// 	_pColorOld = _ColorOld;
+// }
 
-    // EffMacro_type const * const cEffStep = effStat->GetStep();
-	// switch (cEffStep->state)
-	// {
-	// 	case Light_Idle:
-	// 	*color = effStat->_aColor * effStat->_idleIntens;
-	// 	break;
-				
-	// 	case Light_Wave:
-	// 	*color = effStat->_aColor * cEffStep->pu8_wave[effStat->ReadTempIdx()] * cEffStep->u8_FSintensity;
-	// 	break;
+// void SingleEffect::genImage(Color * color, EffectSM * effStat) {
+// 	uint8_t k, kr;
 
-	// 	case Light_InvWave:
-	// 	*color = effStat->_aColor * cEffStep->pu8_wave[cu16_TemplateLength -1 - effStat->ReadTempIdx()] * cEffStep->u8_FSintensity;
-	// 	break;
+//     // EffMacro_type const * const cEffStep = effStat->GetStep();
+// 	// switch (cEffStep->state)
+// 	// {
+// 	// 	case Light_Idle:
+// 	// 	*color = effStat->_aColor * effStat->_idleIntens;
+// 	// 	break;
 
-	// 	case Light_Flicker:
-	// 	k = rand();
-	// 	k =  50 + ((int16_t) k * (50 + _u8_FlickerRange) / 0xFF);
-	// 	//k = smoothFlick.GetNewAverage(k);
-	// 	*color = effStat->_aColor * k;
-	// 	break;
+// 	// 	case Light_Wave:
+// 	// 	*color = effStat->_aColor * cEffStep->pu8_wave[effStat->ReadTempIdx()] * cEffStep->u8_FSintensity;
+// 	// 	break;
 
-	// 	case Light_Sparkle:
-	// 	kr = ((int16_t)rand() *14 / 0xFF);
-	// 	k =  50 + kr * kr;
-	// 	*color = effStat->_aColor * k;
-	// 	break;
+// 	// 	case Light_InvWave:
+// 	// 	*color = effStat->_aColor * cEffStep->pu8_wave[cu16_TemplateLength -1 - effStat->ReadTempIdx()] * cEffStep->u8_FSintensity;
+// 	// 	break;
 
-	// 	case Light_Blank:
-	// 	*color = effStat->_aColor * 0;
-	// 	break;
+// 	// 	case Light_Flicker:
+// 	// 	k = rand();
+// 	// 	k =  50 + ((int16_t) k * (50 + _u8_FlickerRange) / 0xFF);
+// 	// 	//k = smoothFlick.GetNewAverage(k);
+// 	// 	*color = effStat->_aColor * k;
+// 	// 	break;
 
-	// 	case Light_Freeze:
-	// 	default:
+// 	// 	case Light_Sparkle:
+// 	// 	kr = ((int16_t)rand() *14 / 0xFF);
+// 	// 	k =  50 + kr * kr;
+// 	// 	*color = effStat->_aColor * k;
+// 	// 	break;
 
-	// 	break;
-	// }
-}
+// 	// 	case Light_Blank:
+// 	// 	*color = effStat->_aColor * 0;
+// 	// 	break;
 
+// 	// 	case Light_Freeze:
+// 	// 	default:
 
-/************************************************************************/
-/* EffectProcessor 2 LED                                                         */
-/************************************************************************/
-DualEffect::DualEffect(uint16_t const templateLength) : EffectProcessor(templateLength) {
-	_colorSize = 2;
-	_pColor = _Color;
-	_pColorOld = _ColorOld;
-}
+// 	// 	break;
+// 	// }
+// }
 
-void DualEffect::genImage(Color * color, EffectSM * effStat) {
-	// switch (effStat->_state) 
-	// {
-	// 	case Light_Idle:
-	// 	color[0] = color[1] = effStat->_aColor * effStat->_idleIntens;
-	// 	break;
-		
-	// 	case Light_Wave:
-	// 	color[0] = effStat->_aColor * effStat->_p_effMac->pu8_wave[effStat->ReadTempIdx()] * effStat->_p_effMac->u8_FSintensity;
-	// 	color[1] = effStat->_aColor * effStat->_p_effMac->pu8_wave[cu16_TemplateLength -1 - effStat->ReadTempIdx()] * effStat->_p_effMac->u8_FSintensity;
-	// 	break;
+// /************************************************************************/
+// /* EffectProcessor 2 LED                                                         */
+// /************************************************************************/
+// DualEffect::DualEffect(uint16_t const templateLength) : EffectProcessor(templateLength) {
+// 	_colorSize = 2;
+// 	_pColor = _Color;
+// 	_pColorOld = _ColorOld;
+// }
 
-	// 	case Light_InvWave:
-	// 	color[0] = effStat->_aColor * effStat->_p_effMac->pu8_wave[cu16_TemplateLength -1 - effStat->ReadTempIdx()] * effStat->_p_effMac->u8_FSintensity;
-	// 	color[1] = effStat->_aColor * effStat->_p_effMac->pu8_wave[effStat->ReadTempIdx()] * effStat->_p_effMac->u8_FSintensity;
-	// 	break;
-		
-	// 	case Light_Blank:
-	// 	color[0] = color[1] = effStat->_aColor * 0;
-	// 	break;
-		
-	// 	case Light_Flicker:
-	// 	case Light_Sparkle:
-	// 	case Light_Freeze:
-	// 	default:
+// void DualEffect::genImage(Color * color, EffectSM * effStat) {
+// 	// switch (effStat->_state)
+// 	// {
+// 	// 	case Light_Idle:
+// 	// 	color[0] = color[1] = effStat->_aColor * effStat->_idleIntens;
+// 	// 	break;
 
-	// 	break;
-	// }
-}
+// 	// 	case Light_Wave:
+// 	// 	color[0] = effStat->_aColor * effStat->_p_effMac->pu8_wave[effStat->ReadTempIdx()] * effStat->_p_effMac->u8_FSintensity;
+// 	// 	color[1] = effStat->_aColor * effStat->_p_effMac->pu8_wave[cu16_TemplateLength -1 - effStat->ReadTempIdx()] * effStat->_p_effMac->u8_FSintensity;
+// 	// 	break;
+
+// 	// 	case Light_InvWave:
+// 	// 	color[0] = effStat->_aColor * effStat->_p_effMac->pu8_wave[cu16_TemplateLength -1 - effStat->ReadTempIdx()] * effStat->_p_effMac->u8_FSintensity;
+// 	// 	color[1] = effStat->_aColor * effStat->_p_effMac->pu8_wave[effStat->ReadTempIdx()] * effStat->_p_effMac->u8_FSintensity;
+// 	// 	break;
+
+// 	// 	case Light_Blank:
+// 	// 	color[0] = color[1] = effStat->_aColor * 0;
+// 	// 	break;
+
+// 	// 	case Light_Flicker:
+// 	// 	case Light_Sparkle:
+// 	// 	case Light_Freeze:
+// 	// 	default:
+
+// 	// 	break;
+// 	// }
+// }
 
 /************************************************************************/
 /* EffectProcessor xx LEDs                                                       */
@@ -259,7 +219,7 @@ void DualEffect::genImage(Color * color, EffectSM * effStat) {
 // 	// 	{
 // 	// 		uint8_t cStep = effStat->ReadTempIdx();
 // 	// 		uint8_t step = cu16_TemplateLength / _colorSize ;
-			
+
 // 	// 		for (i=0; i < _colorSize; i++)
 // 	// 		{
 // 	// 			color[i] = effStat->_aColor * effStat->_p_effMac->pu8_wave[cStep] * effStat->_p_effMac->u8_FSintensity;
@@ -267,7 +227,7 @@ void DualEffect::genImage(Color * color, EffectSM * effStat) {
 // 	// 		}
 // 	// 	}
 // 	// 	break;
-		
+
 // 	// 	case Light_Blank:
 // 	// 	{
 // 	// 		Color col = effStat->_aColor * 0;
@@ -277,7 +237,7 @@ void DualEffect::genImage(Color * color, EffectSM * effStat) {
 // 	// 		}
 // 	// 	}
 // 	// 	break;
-		
+
 // 	// 	case Light_Flicker:
 // 	// 	case Light_Sparkle:
 // 	// 	case Light_Freeze:
@@ -286,5 +246,3 @@ void DualEffect::genImage(Color * color, EffectSM * effStat) {
 // 	// 	break;
 // 	// }
 // }
-
-
