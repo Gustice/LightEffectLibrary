@@ -1,5 +1,6 @@
 
 #include "EffectMacro.h"
+#include "EffectWaveforms.h"
 
 EffMacro::EffMacro(e_EffectPart state,
     uint8_t const * pu8_wave,
@@ -51,7 +52,6 @@ EffMacro_type eff_NervousPulse[] = {
 	{Light_Idle,	    (uint8_t*)0,		0,		4,         USEOLD_COLOR,		0,          0},
 };
 
-
 EffMacro_type eff_StdWipe[] = {
 	{Light_Idle,	    (uint8_t*)0,		0,		32,         &color_ColdWhite,	0,          1},
 		
@@ -60,23 +60,6 @@ EffMacro_type eff_StdWipe[] = {
 	{Light_InvWave,	    gau8_offsetSlope,	0xFF,	32,         USEOLD_COLOR,		0,          4},
 	{Light_Freeze,	    (uint8_t*)0,		0,		32,         USEOLD_COLOR,		0,          1},
 };
-
-EffMacro_type eff_AsymPulse[] = {
-	{Light_Blank,	    (uint8_t*)0,		0,		16,         &color_ColdWhite,	0,          1},
-		
-	{Light_Wave,	    gau8_fullPulse,		0xFF,	16,         USEOLD_COLOR,		0,          2},
-	{Light_Blank,	    (uint8_t*)0,		0,		4,         USEOLD_COLOR,		0,          3},
-	{Light_Blank,	    (uint8_t*)0,		0,		32,         USEOLD_COLOR,		0,          1},
-};
-
-EffMacro_type eff_AsymPulseInv[] = {
-	{Light_Blank,	    (uint8_t*)0,		0,		16,         &color_ColdWhite,	0,          1},
-	
-	{Light_Blank,	    (uint8_t*)0,		0,		4,         USEOLD_COLOR,		0,          2},
-	{Light_Wave,	    gau8_fullPulse,		0xFF,	16,         USEOLD_COLOR,		0,          3},
-	{Light_Blank,	    (uint8_t*)0,		0,		32,         USEOLD_COLOR,		0,          1},
-};
-
 
 EffMacro efm_StdPulse[] = {
 	EffMacro(Light_Idle,	    (uint8_t*)0,		0,		32,         &_ctColdWhite,		0,          1),

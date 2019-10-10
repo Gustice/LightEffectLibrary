@@ -105,6 +105,20 @@
         },
 
         {
+            "label": "Plot: Plot all the stuff",
+            "type": "shell",
+            "options": {
+                "cwd": "${workspaceFolder}"
+            },
+            "command": "gnuplot",
+            "args": [
+                "--persist",
+                "Source/GnuPlot.plt"
+            ],
+            "problemMatcher": "$gcc", // Otherwise its annoys you with warnings
+        },
+
+        {
             "label": "Doxygen: Create Docs",
             "type": "shell",
             "command": "C:\\Program Files\\doxygen\\bin\\doxygen.exe",

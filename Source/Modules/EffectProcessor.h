@@ -27,12 +27,12 @@ class EffectProcessor {
   public:
     EffectProcessor(uint16_t const templateLength, uint8_t const fadeSteps);
     void SetEffect(EffMacro_type *sequence, Color_t const *sColor = NO_COLOR, uint8_t intens = gu8_idleIntensity);
-    void GetNextImage(void);
-    void SetFlickerRange(uint8_t range);
+    void Tick(void);
+    void SetDynamicRange(uint8_t range) {u8_dynamicRange = range;};
 
     uint8_t _colorSize;
-    Color * _pColor;
-    Color * _pColorOld;
+    Color _pColor;
+    Color _pColorOld;
 
     virtual void GenerateImage(Color *color, EffectSM *effStat);
 
@@ -42,7 +42,7 @@ class EffectProcessor {
 
     EffectSM EffPV;
     EffectSM EffPV_old;
-    uint8_t  _u8_FlickerRange;
+    uint8_t  u8_dynamicRange;
 
   private:
     Color *crossFadeColors(uint8_t k);

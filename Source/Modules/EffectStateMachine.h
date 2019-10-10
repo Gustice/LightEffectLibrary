@@ -29,8 +29,7 @@
  */
 class EffectSM {
   public:
-    EffectSM(uint16_t const templateLength) {
-        EffectSM(templateLength, 0, 0);};
+    EffectSM(uint16_t const templateLength) : EffectSM(templateLength, 0, 0) {};
     EffectSM(uint16_t const templateLength, uint8_t const intensity, uint8_t const crossFade);
     
     void    SetEffect(EffMacro_type *sequence, Color_t const *startColor = NO_COLOR, uint8_t intialDelay = 0);
@@ -40,7 +39,6 @@ class EffectSM {
     
     const uint8_t GetWaveformIdx(void) {return (_u16_waveIdx >> 8); };
     const Color GetColor(void) {return _curentColor;};
-    const uint8_t GetIntensity(void) {return _u8_idleIntens;};
     const uint8_t GetIntensity(void) {return _u8_idleIntens;};
 
     EffMacro_type const *const GetStep(void) { return _p_effMac; };

@@ -15,10 +15,14 @@
 #include <stdlib.h>
 #include <string.h>
 
-EffectProcessor::EffectProcessor(uint16_t const templateLength, uint8_t const fadeSteps) : EffPV(templateLength), EffPV_old(templateLength) {
+EffectProcessor::EffectProcessor(uint16_t const templateLength, uint8_t const fadeSteps)  
+      : EffPV(templateLength), 
+        EffPV_old(templateLength), 
+        _pColor(), 
+        _pColorOld() {
     EffPV.SetEffect(eff_Dark, 0);
     u8_fadeSteps     = fadeSteps;
-    _u8_FlickerRange = 30;
+    u8_dynamicRange = 30;
 }
 
 void EffectProcessor::SetEffect(EffMacro_type *sequence, Color_t const *sColor, uint8_t intens) {
@@ -28,35 +32,40 @@ void EffectProcessor::SetEffect(EffMacro_type *sequence, Color_t const *sColor, 
     EffPV.SetEffect(sequence, sColor, 0, intens);
 }
 
-void EffectProcessor::GetNextImage(void) {
+void EffectProcessor::Tick(void) {
     uint8_t k, i;
     EffPV.Tick();
-    GenerateImage(_pColor, &EffPV);
+    GenerateImage(&_pColor, &EffPV);
 
     if (u8_fadingCnt > 0) { // allways process soft cross dissolve between different macros
         u8_fadingCnt--;
         k = (uint16_t)u8_fadingCnt * 0xFF / u8_fadeSteps;
 
         EffPV_old.Tick();
-        GenerateImage(_pColorOld, &EffPV_old);
+        GenerateImage(&_pColorOld, &EffPV_old);
         crossFadeColors(k);
     } else { // Process soft cross dissolve between different colors, if needed
         uint8_t k = EffPV.GetDissolveRatio();
         if (k > 0) {
             crossFadeColors(k);
         }
-        memcpy(_pColorOld, _pColor, sizeof(Color));
+        memcpy(&_pColorOld, &_pColor, sizeof(Color));
     }
 }
 
 Color *EffectProcessor::crossFadeColors(uint8_t k) {
-    int i;
-    for (i = 0; i < _colorSize; i++) {
-        _pColorOld[i] = _pColorOld[i] * k;
-        _pColor[i]    = _pColor[i] * (0xFF - k);
-        _pColor[i]    = _pColor[i] + _pColorOld[i];
-    }
-    return _pColor;
+    // int i;
+    // for (i = 0; i < _colorSize; i++) {
+    //     _pColorOld[i] = _pColorOld[i] * k;
+    //     _pColor[i]    = _pColor[i] * (0xFF - k);
+    //     _pColor[i]    = _pColor[i] + _pColorOld[i];
+    // }
+
+        _pColorOld = _pColorOld * k;
+        _pColor    = _pColor * (0xFF - k);
+        _pColor    = _pColor + _pColorOld;
+
+    return &_pColor;
 }
 
 void EffectProcessor::GenerateImage(Color *color, EffectSM *effStat) {
@@ -78,7 +87,7 @@ void EffectProcessor::GenerateImage(Color *color, EffectSM *effStat) {
 
     case Light_Flicker:
         k      = rand();
-        k      = 50 + ((int16_t)k * (50 + _u8_FlickerRange) / 0xFF);
+        k      = 50 + ((int16_t)k * (50 + u8_dynamicRange) / 0xFF);
         *color = effStat->GetColor() * k;
         break;
 

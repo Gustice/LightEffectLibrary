@@ -18,10 +18,12 @@ EffMacro_type delayPrequel[] = {
 };
 
 
-EffectSM::EffectSM(uint16_t const templateLength, uint8_t const intensity, uint8_t const crossFade) {
-    _u8_idleIntens = intensity;
-    _u8_fadeSteps = crossFade;
+EffectSM::EffectSM(uint16_t const templateLength, uint8_t const intensity, uint8_t const crossFade)  {
     _u16_templateLength = templateLength;
+    _u8_idleIntens = intensity;
+    _u8_fadeSteps = 1;
+    if (crossFade > 0)
+        _u8_fadeSteps = crossFade;
 }
 
 void EffectSM::SetEffect(EffMacro_type *sequence, Color_t const *startColor, uint8_t intialDelay) {
