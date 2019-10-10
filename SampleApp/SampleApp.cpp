@@ -10,7 +10,10 @@
 
 // https://www.reddit.com/r/cpp/comments/af74l1/recommendations_for_setting_up_a_modern_c_dev/
 // https://codereview.stackexchange.com/questions/189489/cmake-project-template-for-a-general-cross-platform-c14-project
-#include "SampleApp.h"
+
+#include "Modules/EffectProcessor.h"
+#include "Modules/EffectWaveforms.h"
+
 #include <fstream>
 #include <iostream>
 #include <stdio.h>
