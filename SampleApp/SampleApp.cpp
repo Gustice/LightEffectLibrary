@@ -11,19 +11,12 @@
 // https://www.reddit.com/r/cpp/comments/af74l1/recommendations_for_setting_up_a_modern_c_dev/
 // https://codereview.stackexchange.com/questions/189489/cmake-project-template-for-a-general-cross-platform-c14-project
 
-
-#include "Elements/MyUtils.h"
 #include "Elements/ColorDemo.h"
-#include "Elements/StateMachineDemo.h"
 #include "Elements/EffectDemo.h"
+#include "Elements/MyUtils.h"
+#include "Elements/StateMachineDemo.h"
 
-#include <fstream>
-#include <iostream>
-#include <stdio.h>
-#include <string.h>
-using namespace std;
-
-
+void SampleApp(void);
 
 /**
  * @brief   Demo usage of Lightning Library
@@ -35,18 +28,30 @@ using namespace std;
  * @return int  Return Value not used
  */
 int main(int argc, char const *argv[]) {
-    PrintLine("Sample application running");
-    PrintLine("");
+    PrintHeader("LightEffectFramework Sample Application");
 
-   ColorDemo();
+    PrintChapter("Color Demo");
+    //ColorDemo();
 
-   StateMachinDemo();
+    PrintChapter("State-Machine Demo");
+    //StateMachinDemo();
 
-    EffectProcessorDemo();
+    PrintChapter("Effect-Processor Demo");
+    //EffectProcessorDemo();
 
+    PrintChapter("Sample-Application Demo");
+
+
+    PrintFooter();
     /* code */
     return 0;
 }
+
+
+void SampleApp(void) {
+
+}
+
 
 /**
  * @file Cpp_Gnu_Template.cpp

@@ -4,13 +4,14 @@
     "version": "2.0.0",
     "tasks": [
         { // Build Project to manually degbug the SampleApp
-            "label": "Manually: build Project",
+            "label": "SampleApp: Build Project",
             "type": "shell",
             "command": "g++",
             "args": [
                 "-g", 
-                "-o","LEL.exe",
-                "Source/SampleApp.cpp",
+                "-o","SampleApp/LEL_Demo.exe",
+                "SampleApp/SampleApp.cpp",
+                "SampleApp/Elements/*.cpp",
                 "Source/Modules/*.cpp",
                 "-I", "Source/Modules", // Includes
                 // "-L", "C:/Program Files/LLVM/lib7libclang.lib",// Library
@@ -24,7 +25,21 @@
             // Displays compiler errors in problems output
             "problemMatcher": "$gcc"
         },
-        
+        {
+            "label": "SampleApp: Plot Output Files",
+            "type": "shell",
+            "options": {
+                "cwd": "${workspaceFolder}"
+            },
+            "command": "gnuplot",
+            "args": [
+                "--persist",
+                "SampleApp/GnuPlot.plt"
+            ],
+            "problemMatcher": "$gcc", // Otherwise its annoys you with warnings
+        },
+
+
         { // #1 PyBuild Source
             "label": "PyBased: build all Source-Parts",
             "type": "shell",
@@ -104,6 +119,7 @@
             "problemMatcher": "$gcc", // Otherwise its annoys you with warnings
         },
 
+        
         {
             "label": "Plot: Plot all the stuff",
             "type": "shell",

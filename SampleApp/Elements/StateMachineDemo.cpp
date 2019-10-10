@@ -1,20 +1,11 @@
+
+#include "StateMachineDemo.h"
 /// Demo Effect Macro
 EffMacro_type eff_TestStdPulse[] = {
     {Light_Idle, (uint8_t *)0, 0, 32, &color_ColdWhite, 0, 1},
     {Light_Wave, gau8_offsetPulse, 0xFF, 32, USEOLD_COLOR, 0, 2},
     {Light_Idle, (uint8_t *)0, 0, 32, USEOLD_COLOR, 0, 0},
 };
-
-void PrintLine(string output) { cout << output << std::endl; }
-void PrintColor(string hint, Color_t const c) {
-    cout << hint << " R:" << (int)c.red << "  G: " << (int)c.green << "  B: " << (int)c.blue << "  W: " << (int)c.white << std::endl;
-}
-
-static const Color_t constColorStruct = {0x12, 0x34, 0x56, 0x78};
-static const Color   constColorObjByStruct(constColorStruct);
-static const Color   constColorObjByParam(0x87, 0x65, 0x43, 0x21);
-
-
 
 static const uint8_t gau8_testWave[] = {0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11};
 EffMacro_type        eff_Demo[]      = {

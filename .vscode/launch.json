@@ -25,7 +25,7 @@
             "name": "Launch LEL Demo",
             "type": "cppdbg",
             "request": "launch",
-            "program": "${workspaceFolder}/LEL.exe",
+            "program": "${workspaceFolder}/SampleApp/LEL_Demo.exe",
             "args": [],
             "stopAtEntry": false,
             "cwd": "${workspaceFolder}",
@@ -41,7 +41,7 @@
                 }
             ],
             // Gets sure source is compiled before debugging 
-            "preLaunchTask": "Manually: build Project"
+            "preLaunchTask": "SampleApp: Build Project"
         }
     ]
 }
