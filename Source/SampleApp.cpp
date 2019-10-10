@@ -106,16 +106,14 @@ void EffectProcessorDemo(void) {
     uint8_t cStream[4];
     plotFile.open("PlotData.txt");
     plotFile << "#Cycl abs B G R W"  << std::endl;
-    float abs;
 
     for(uint8_t i = 0; i < 20; i++)
     {
         EP1.Tick();
         EP1._pColor.WriteByteStreamTo(cStream);
-        abs = ((float)cStream[0]+cStream[1]+cStream[2]+cStream[3])/(4*0xFF);
 
-        sprintf(stream, "%3d  %3.2f  %3.2f  %3.2f  %3.2f  %3.2f",
-            i, abs, 
+        sprintf(stream, "%3d  %3.2f  %3.2f  %3.2f  %3.2f",
+            i, 
             (float)cStream[0]/(4*0xFF),
             (float)cStream[1]/(4*0xFF),
             (float)cStream[2]/(4*0xFF),
