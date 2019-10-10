@@ -21,11 +21,10 @@ set style line 2 lt 2 lc rgb "blue" lw 1
 set style line 3 lt 2 lc rgb "green" lw 1
 set style line 4 lt 2 lc rgb "red" lw 1
 
-## Data is set in order: 1:num 2:Abs 3:B 4:G 5:R (6:W)
+## Data is set in order: 1:num 2:B 3:G 4:R (5:W)
 plot \
     "PlotData.txt" using 1:(Abs($4,$3,$2)):(RGB($4,$3,$2)) with points pt 7 ps 2 lc rgb variable title 'Effect x', \
     "PlotData.txt" using 1:4 with line ls 4 notitle, \
     "PlotData.txt" using 1:3 with line ls 3 notitle, \
     "PlotData.txt" using 1:2 with line ls 2 notitle
-
 
