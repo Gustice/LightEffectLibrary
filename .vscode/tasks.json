@@ -142,7 +142,7 @@
 
         
         {
-            "label": "Plot: Plot all the stuff",
+            "label": "Plot: Sample Output",
             "type": "shell",
             "options": {
                 "cwd": "${workspaceFolder}"
@@ -151,6 +151,19 @@
             "args": [
                 "--persist",
                 "Source/GnuPlot.plt"
+            ],
+            "problemMatcher": "$gcc", // Otherwise its annoys you with warnings
+        },
+        {
+            "label": "Plot: Template Graphs",
+            "type": "shell",
+            "options": {
+                "cwd": "${workspaceFolder}/WaveFormGenerator"
+            },
+            "command": "gnuplot",
+            "args": [
+                "--persist",
+                "PlotOutput.plt"
             ],
             "problemMatcher": "$gcc", // Otherwise its annoys you with warnings
         },
@@ -163,6 +176,7 @@
                 "${workspaceFolder}\\Doc\\LEL.DoxyFile"
             ],
             "problemMatcher": "$gcc"
-        }
+        },
+        
     ]
 }

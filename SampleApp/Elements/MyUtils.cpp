@@ -3,7 +3,6 @@
 
 const char Banner[] = "###############################################################################";
 
-static uint32_t u32_errCnt = 0;
 static uint32_t u32_secNum = 0;
 static uint32_t u32_step = 0;
 

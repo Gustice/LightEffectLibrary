@@ -106,7 +106,7 @@ void PrintValues(string varName, vector<int> values, ofstream &outputFile, bool 
     plotFile << "#Cycl value" << std::endl;
 
     for (int i = 0; i < values.size(); i++) {
-        plotFile << i << values[i] << std::endl;
+        plotFile << i << "   "<< values[i] << std::endl;
     }
 
     plotFile.close();
