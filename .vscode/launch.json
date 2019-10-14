@@ -43,5 +43,28 @@
             // Gets sure source is compiled before debugging 
             "preLaunchTask": "SampleApp: Build Project"
         }
+
+        {
+            "name": "Launch GraphPlotter",
+            "type": "cppdbg",
+            "request": "launch",
+            "program": "${workspaceFolder}/WaveFormGenerator/GenTemplates.exe",
+            "args": [],
+            "stopAtEntry": false,
+            "cwd": "${workspaceFolder}/WaveFormGenerator/Output",
+            "environment": [],
+            "externalConsole": true,
+            "MIMode": "gdb",
+            "miDebuggerPath": "C:\\mingw\\bin\\gdb.exe",
+            "setupCommands": [
+                {
+                    "description": "Enable pretty-printing for gdb",
+                    "text": "-enable-pretty-printing",
+                    "ignoreFailures": true
+                }
+            ],
+            // Gets sure source is compiled before debugging 
+            "preLaunchTask": "TemplateGraphs: Build GraphGenerator"
+        }
     ]
 }

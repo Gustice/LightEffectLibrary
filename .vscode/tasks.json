@@ -39,6 +39,27 @@
             "problemMatcher": "$gcc", // Otherwise its annoys you with warnings
         },
 
+        { // Build Project to manually degbug the SampleApp
+            "label": "TemplateGraphs: Build GraphGenerator",
+            "type": "shell",
+            "command": "g++",
+            "args": [
+                "-g", 
+                "-o","WaveFormGenerator/GenTemplates.exe",
+                "WaveFormGenerator/GenerateWaveforms.cpp",
+                "WaveFormGenerator/Elements/*.cpp",
+                //"-I", "Source/Modules", // Includes
+                // "-L", "C:/Program Files/LLVM/lib7libclang.lib",// Library
+            ],
+            // Optional: 
+            // Define this as default Task for Rund-Build-Task-Command -> Shortcut 
+            "group": {
+                "kind": "build",
+                "isDefault": true
+            },
+            // Displays compiler errors in problems output
+            "problemMatcher": "$gcc"
+        },
 
         { // #1 PyBuild Source
             "label": "PyBased: build all Source-Parts",

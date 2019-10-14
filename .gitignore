@@ -43,3 +43,7 @@
 
 # Doc
 */html/*
+
+
+## My ignores
+WaveFormGenerator/Output/**
