@@ -10,14 +10,12 @@ set yrange [-5:270]
 set ylabel 'intensity / 1'
 #set tmargin 2
 set title "Pulses"
-unset key
-plot    "Output/gau8_offsetPulse_Plot.txt" using 1:2 with line title 'offset pulse',\
-        "Output/gau8_fullPulse_Plot.txt" using 1:2 with line title 'full pulse'
+plot    "Output/gau8_offsetPulse_Plot.txt" using 1:2 with lines title 'offset pulse'  ,\
+        "Output/gau8_fullPulse_Plot.txt" using 1:2 with lines title 'full pulse'  
 #
 set title "Slopes"
-unset key
-plot    "Output/gau8_offsetSlope_Plot.txt" using 1:2 with line title 'offset slope',\
-        "Output/gau8_fullSlope_Plot.txt" using 1:2 with line title 'full slope',\
-        "Output/gau8_initSlope_Plot.txt" using 1:2 with line title 'initial slope'
+plot    "Output/gau8_offsetSlope_Plot.txt" using 1:2 with lines title 'offset slope' ,\
+        "Output/gau8_fullSlope_Plot.txt" using 1:2 with lines title 'full slope' ,\
+        "Output/gau8_initSlope_Plot.txt" using 1:2 with lines title 'initial slope' 
 unset multiplot
-
+ 
