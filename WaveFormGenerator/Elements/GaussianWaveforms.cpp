@@ -1,4 +1,23 @@
-
+/**
+ * @file GaussianWaveforms.cpp
+ * @author Gustice
+ * @brief Generates waveform templates with gaussian-type curves.
+ *      In different tests this curves appeared to look just great and smooth.
+ *      For sake of efficiency this curves are prepared in lookup tables. \n
+ *  Prepared curves are: 
+ *      \li Probability density: either from black or from idle intensity
+ *      \li Cumulative distribution: either from black to idle, from black to full
+ *          or from idle to full intensity.
+ * 
+ * @note: Besides the cpp template file also plotfiles are generated that can be 
+ *  visualized by PlotOutput.plt Plotscript (Gnuplot must be installed)
+ * 
+ * @version 0.1
+ * @date 2019-10-15
+ * 
+ * @copyright Copyright (c) 2019
+ * 
+ */
 #include "GaussianWaveforms.h"
 #include <math.h>
 #include <stdlib.h>
@@ -11,13 +30,18 @@ vector<int> slope;
 vector<int> initslope;
 vector<int> fullSlope;
 
-const int maxValue = UCHAR_MAX;
+const int maxValue = UCHAR_MAX; // @todo to be parametrized
 
 void GenerateGausianPulse(int length, double peakForm, int offset);
 void PrintValues(string varName, vector<int> values, ofstream &outputFile, bool doubleLen = false);
 
+/**
+ * @brief Calls Plot-Generator and File-Generator (with Console output for minimal trace)
+ * @param config Configuration structure
+ * @param outputFile 
+ */
 void PrintGaussianWaveForms2File(GW_Config_t config, ofstream &outputFile) {
-    int  length = config.templateLength;
+    int  length = config.length;
     int  offset = config.offset;
     char sStream[200];
 
@@ -63,6 +87,15 @@ void PrintGaussianWaveForms2File(GW_Config_t config, ofstream &outputFile) {
     PrintValues("gau8_fullPulse", fullPulse, outputFile);
 }
 
+/**
+ * @brief Prints a template Graph according to generated data in c syntax 
+ * @details The generated output can be included directly into a c/cpp Project
+ * 
+ * @param varName 
+ * @param values 
+ * @param outputFile 
+ * @param doubleLen 
+ */
 void PrintValues(string varName, vector<int> values, ofstream &outputFile, bool doubleLen) {
     int  idx = 0;
     char sStream[200];
@@ -112,6 +145,13 @@ void PrintValues(string varName, vector<int> values, ofstream &outputFile, bool 
     plotFile.close();
 }
 
+/**
+ * @brief Generates data for all waveforms
+ * 
+ * @param length 
+ * @param peakForm 
+ * @param offset 
+ */
 void GenerateGausianPulse(int length, double peakForm, int offset) {
     int temporaryMax = 0;
     int idx          = 0;
