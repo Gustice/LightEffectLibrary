@@ -4,51 +4,49 @@
 const char Banner[] = "###############################################################################";
 
 static uint32_t u32_secNum = 0;
-static uint32_t u32_step = 0;
+static uint32_t u32_step   = 0;
 
-void PrintHeader (char const * caption) {
+void PrintHeader(char const *caption) {
     PrintLine(Banner);
     PrintLine("# %s", caption);
     PrintLine(Banner);
     PrintLine("");
 }
 
-void PrintFooter (void) {
+void PrintFooter(void) {
     PrintLine("");
     PrintLine(Banner);
     PrintLine("# Test End");
     PrintLine(Banner);
 }
 
-void PrintChapter (char const * caption) {
+void PrintChapter(char const *caption) {
     u32_secNum = 0;
-    u32_step = 0;
+    u32_step   = 0;
     PrintLine("###");
     PrintLine("### %s", caption);
     PrintLine("###");
 }
 
-void PrintSection (char const * caption) {
+void PrintSection(char const *caption) {
     u32_step = 0;
     PrintLine("### %d: %s", ++u32_secNum, caption);
     PrintLine("");
 }
 
+void ShowByteStream(char const *str_def, uint8_t *p_bytes, uint32_t u32_len) {
+    PrintLine("   %s", str_def);
 
-void ShowByteStream(char const * str_def, uint8_t * p_bytes, uint32_t u32_len) {
-  PrintLine("   %s",str_def);
-  
-  printf("   ");
-  uint32_t i;
-  for (i=0u; i<u32_len; i++)
-  {
-    printf("0x%.2x\t",p_bytes[i]);
-  }
-  PrintLine("");
+    printf("   ");
+    uint32_t i;
+    for (i = 0u; i < u32_len; i++) {
+        printf("0x%.2x\t", p_bytes[i]);
+    }
+    PrintLine("");
 }
 
-int PrintLine(char const * format, ...) {
-    int retVal;
+int PrintLine(char const *format, ...) {
+    int     retVal;
     va_list args;
     va_start(args, format);
     retVal = vprintf(format, args);

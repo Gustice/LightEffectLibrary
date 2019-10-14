@@ -1,9 +1,9 @@
 
 #include "GaussianWaveforms.h"
-#include <string>
-#include <vector>
 #include <math.h>
 #include <stdlib.h>
+#include <string>
+#include <vector>
 
 vector<int> pulse;
 vector<int> fullPulse;
@@ -29,7 +29,7 @@ void PrintGaussianWaveForms2File(GW_Config_t config, ofstream &outputFile) {
     fullPulse.resize(length);
     fullSlope.resize(length);
 
-	PrintSection("Generate Pulse Byte-Streams");
+    PrintSection("Generate Pulse Byte-Streams");
     GenerateGausianPulse(length, 2.3, offset);
 
     sprintf(sStream, "#define  PULSE_TEMPLATE_LEN    %d", length);
@@ -37,29 +37,29 @@ void PrintGaussianWaveForms2File(GW_Config_t config, ofstream &outputFile) {
     sprintf(sStream, "const uint8_t gu8_idleIntensity = 0x%02X;", offset);
     outputFile << sStream << endl;
 
-	PrintSection("Safe offset Pulse");
-	outputFile << endl;
-	outputFile << "// Full Pulse: Gaussian pulse from background illumination with full scale intensity" << endl;
+    PrintSection("Safe offset Pulse");
+    outputFile << endl;
+    outputFile << "// Full Pulse: Gaussian pulse from background illumination with full scale intensity" << endl;
     PrintValues("gau8_offsetPulse", pulse, outputFile, true);
 
-	PrintSection("Safe init Pulse");
-	outputFile << endl;
-	outputFile << "// Init Slope: Gaussian slope from dark to background brightness" << endl;
+    PrintSection("Safe init Pulse");
+    outputFile << endl;
+    outputFile << "// Init Slope: Gaussian slope from dark to background brightness" << endl;
     PrintValues("gau8_initSlope", initslope, outputFile);
-	
-	PrintSection("Safe offset Slope");
-	outputFile << endl;
-	outputFile << "// Full Slope: Gaussian slope from background illumination to full scale brightness" << endl;
+
+    PrintSection("Safe offset Slope");
+    outputFile << endl;
+    outputFile << "// Full Slope: Gaussian slope from background illumination to full scale brightness" << endl;
     PrintValues("gau8_offsetSlope", slope, outputFile);
 
-	PrintSection("Safe full Slope");
-	outputFile << endl;
-	outputFile << "// Offset Pulse:Gaussian slope from dark to full scale brightness" << endl;
+    PrintSection("Safe full Slope");
+    outputFile << endl;
+    outputFile << "// Offset Pulse:Gaussian slope from dark to full scale brightness" << endl;
     PrintValues("gau8_fullSlope", fullSlope, outputFile);
 
-	PrintSection("Safe full Pulse");
-	outputFile << endl;
-	outputFile << "// Offset Pulse: Gaussian pulse from dark to full scale intensity" << endl;
+    PrintSection("Safe full Pulse");
+    outputFile << endl;
+    outputFile << "// Offset Pulse: Gaussian pulse from dark to full scale intensity" << endl;
     PrintValues("gau8_fullPulse", fullPulse, outputFile);
 }
 
@@ -106,7 +106,7 @@ void PrintValues(string varName, vector<int> values, ofstream &outputFile, bool 
     plotFile << "#Cycl value" << std::endl;
 
     for (int i = 0; i < values.size(); i++) {
-        plotFile << i << "   "<< values[i] << std::endl;
+        plotFile << i << "   " << values[i] << std::endl;
     }
 
     plotFile.close();
