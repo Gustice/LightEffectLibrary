@@ -73,7 +73,8 @@ class Color {
     void    WriteByteStreamTo(uint8_t raw[sizeof(Color_t)]);
 
     // Color operator*(uint8_t k);
-    // Color operator+(Color c2);
+    // Color operator+(Color * c2);
+    Color operator= (Color const * c2);
 
   private:
     Color_t _color; ///< Color data

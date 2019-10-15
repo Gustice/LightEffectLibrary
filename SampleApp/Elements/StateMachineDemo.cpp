@@ -1,5 +1,7 @@
 
 #include "StateMachineDemo.h"
+using namespace Effect;
+
 /// Demo Effect Macro
 EffMacro_type eff_TestStdPulse[] = {
     {Light_Idle, (uint8_t *)0, 0, 32, &color_ColdWhite, 0, 1},
@@ -28,8 +30,8 @@ void StateMachinDemo(void) {
     char stream[100];
 
     for (uint8_t i = 0; i < 16; i++) {
-        uint8_t tick1 = Eff1.Tick();
-        uint8_t tick2 = Eff2.Tick();
+        uint8_t tick1 = 0; // Eff1.Tick(); // @todo
+        uint8_t tick2 = 0; // Eff2.Tick();
         sprintf(stream, "  %2d  %4d  %4d  %3d      %4d  %4d  %3d    ", i, tick1, Eff1.GetWaveformIdx(), Eff1.GetDissolveRatio(), tick2, Eff2.GetWaveformIdx(),
                 Eff2.GetDissolveRatio());
         PrintLine(stream);

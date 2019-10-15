@@ -1,9 +1,10 @@
 
 #include "EffectDemo.h"
-
+using namespace Effect;
 
 static const uint8_t gau8_showWave[] = {0, 255/12, 255*2/12, 255*3/12, 255*4/12, 255*5/12, 
                                         255*6/12, 255*7/12, 255*8/12, 255*9/12, 255*10/12, 255*11/12};
+
 EffMacro_type        eff_ShowDemo[]      = {
     // EffectState  // WafeformRef  FS-Val  Duration   Color           Repeats  Next
     {Light_Blank, (uint8_t *)0, 0xFF, 2, &color_Black, 0, 1},

@@ -14,6 +14,8 @@
 #include "EffectStateMachine.h"
 #include <stdint.h>
 
+namespace Effect {
+
 extern const uint8_t gu8_idleIntensity; // @todo this is bad
 
 /**
@@ -28,13 +30,11 @@ class EffectProcessor {
     EffectProcessor(uint16_t const templateLength, uint8_t const fadeSteps);
     void SetEffect(EffMacro_type *sequence, Color_t const *sColor = NO_COLOR, uint8_t intens = gu8_idleIntensity);
     void Tick(void);
-    void SetDynamicRange(uint8_t range) {u8_dynamicRange = range;};
+    //void SetDynamicRange(uint8_t range) { u8_dynamicRange = range; }; // @todo
 
     uint8_t _colorSize;
-    Color _pColor;
-    Color _pColorOld;
-
-    virtual void GenerateImage(Color *color, EffectSM *effStat);
+    Color   _pColor;
+    Color   _pColorOld;
 
     uint8_t u8_fadeSteps;
     uint8_t u8_fadingCnt;
@@ -42,7 +42,6 @@ class EffectProcessor {
 
     EffectSM EffPV;
     EffectSM EffPV_old;
-    uint8_t  u8_dynamicRange;
 
   private:
     Color *crossFadeColors(uint8_t k);
@@ -79,3 +78,5 @@ class EffectProcessor {
 // 	Color * _pColorOld;
 // 	void genImage(Color * color, EffectSM * effStat);
 // };
+
+} // namespace Effect

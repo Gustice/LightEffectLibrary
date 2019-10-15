@@ -45,23 +45,18 @@ const Color _ctColdWhite(color_ColdWhite);     ///< Black color object constant 
 const Color _ctSpookyWhite(color_SpookyWhite); ///< Black color object constant (with higher green channel value)
 ///@}
 
-
 /**
  * @brief Construct a new Color object according to Color_t Array
  * @param color
  */
-Color::Color(Color_t color) { 
-    memcpy(&_color, &color, sizeof(Color_t)); 
-    }
+Color::Color(Color_t color) { memcpy(&_color, &color, sizeof(Color_t)); }
 
 /**
  * @brief Set the Color object according to Color_t Array
  *
  * @param color
  */
-void Color::SetColor(Color_t color) { 
-    memcpy(&_color, &color, sizeof(Color_t)); 
-    }
+void Color::SetColor(Color_t color) { memcpy(&_color, &color, sizeof(Color_t)); }
 
 /**
  * @brief Set the Color object according to rgb color-channel values
@@ -90,6 +85,15 @@ void Color::WriteByteStreamTo(uint8_t raw[sizeof(Color_t)]) {
     raw[3] = _color.white;
 }
 
+Color Color::operator= (Color const * c2) {
+    _color.red   = c2->_color.red;
+    _color.green = c2->_color.green;
+    _color.blue  = c2->_color.blue;
+    _color.white = c2->_color.white;
+
+    return *this;
+}
+
 //@todo test this and differentiate to approach below
 // Color Color::operator*(uint8_t k){
 //     _color.red   = (uint8_t)((uint16_t)_color.red * k / 0xFF);
@@ -107,6 +111,8 @@ void Color::WriteByteStreamTo(uint8_t raw[sizeof(Color_t)]) {
 //     return _color;
 // };
 
+//@todo Change operator overwrite to reference Types
+//@optimize Calling of calculation with inline calc
 
 /**
  * @brief Overlaying to colors my adding each color channel value

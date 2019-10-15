@@ -9,20 +9,22 @@
  *
  */
 
-#include "EffectProcessor.h"
+
+#include "EffectBasics.h"
+#include "EffectMacro.h"
 #include "EffectWaveforms.h"
+#include "EffectProcessor.h"
 #include <math.h>
 #include <stdlib.h>
 #include <string.h>
 
-EffectProcessor::EffectProcessor(uint16_t const templateLength, uint8_t const fadeSteps)  
-      : EffPV(templateLength), 
-        EffPV_old(templateLength), 
-        _pColor(), 
-        _pColorOld() {
+namespace Effect {
+
+EffectProcessor::EffectProcessor(uint16_t const templateLength, uint8_t const fadeSteps)
+    : EffPV(templateLength), EffPV_old(templateLength), _pColor(), _pColorOld() {
     EffPV.SetEffect(eff_Dark, 0);
-    u8_fadeSteps     = fadeSteps;
-    u8_dynamicRange = 30;
+    u8_fadeSteps    = fadeSteps;
+    //u8_dynamicRange = 30;
 }
 
 void EffectProcessor::SetEffect(EffMacro_type *sequence, Color_t const *sColor, uint8_t intens) {
@@ -33,16 +35,14 @@ void EffectProcessor::SetEffect(EffMacro_type *sequence, Color_t const *sColor, 
 }
 
 void EffectProcessor::Tick(void) {
-    uint8_t k, i;
-    EffPV.Tick();
-    GenerateImage(&_pColor, &EffPV);
+    uint8_t k;
+    _pColor = EffPV.Tick();
 
     if (u8_fadingCnt > 0) { // allways process soft cross dissolve between different macros
         u8_fadingCnt--;
         k = (uint16_t)u8_fadingCnt * 0xFF / u8_fadeSteps;
 
-        EffPV_old.Tick();
-        GenerateImage(&_pColorOld, &EffPV_old);
+        _pColorOld = EffPV_old.Tick();
         crossFadeColors(k);
     } else { // Process soft cross dissolve between different colors, if needed
         uint8_t k = EffPV.GetDissolveRatio();
@@ -61,55 +61,13 @@ Color *EffectProcessor::crossFadeColors(uint8_t k) {
     //     _pColor[i]    = _pColor[i] + _pColorOld[i];
     // }
 
-        _pColorOld = _pColorOld * k;
-        _pColor    = _pColor * (0xFF - k);
-        _pColor    = _pColor + _pColorOld;
+    _pColorOld = _pColorOld * k;
+    _pColor    = _pColor * (0xFF - k);
+    _pColor    = _pColor + _pColorOld;
 
     return &_pColor;
 }
 
-void EffectProcessor::GenerateImage(Color *color, EffectSM *effStat) {
-    uint8_t k, kr;
-
-    EffMacro_type const *const cEffStep = effStat->GetStep();
-    switch (cEffStep->state) {
-    case Light_Idle:
-        *color = effStat->GetColor() * effStat->GetIntensity();
-        break;
-
-    case Light_Wave:
-        *color = effStat->GetColor() * cEffStep->pu8_wave[effStat->GetWaveformIdx()] * cEffStep->u8_FSintensity;
-        break;
-
-    case Light_InvWave:
-        *color = effStat->GetColor() * cEffStep->pu8_wave[cu16_TemplateLength - 1 - effStat->GetWaveformIdx()] * cEffStep->u8_FSintensity;
-        break;
-
-    case Light_Flicker:
-        k      = rand();
-        k      = 50 + ((int16_t)k * (50 + u8_dynamicRange) / 0xFF);
-        *color = effStat->GetColor() * k;
-        break;
-
-    case Light_Sparkle:
-        kr     = ((int16_t)rand() * 14 / 0xFF);
-        k      = 50 + kr * kr;
-        *color = effStat->GetColor() * k;
-        break;
-
-    case Light_Blank:
-        *color = effStat->GetColor() * 0;
-        break;
-
-    case Light_Freeze:
-
-        break;
-
-    default:
-
-        break;
-    }
-}
 
 // /************************************************************************/
 // /* EffectProcessor 1 LED                                                         */
@@ -255,3 +213,5 @@ void EffectProcessor::GenerateImage(Color *color, EffectSM *effStat) {
 // 	// 	break;
 // 	// }
 // }
+
+} // namespace Effect
