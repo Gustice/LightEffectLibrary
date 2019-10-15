@@ -16,6 +16,32 @@
 
 namespace Effect {
 
+typedef struct SM_ProcessValues_def {
+    /// Decrementing tick, counting duration
+    uint8_t u8_tick;
+    /// Decrementing repeats of current Effect-part
+    uint8_t u8_repeats;
+    /// Current index to waveform
+    uint8_t u16_waveIdx;
+    /// Index step each tick according to duration and template length.
+    uint8_t u16_waveStep;
+    /// Dissolve counter dissolves the leading color each tick
+    uint8_t u8_dissolveCnt;
+    /// Index to macro element
+    uint8_t u8_macroIdx;
+} SM_ProcessValues_t;
+
+typedef struct SM_ParamValues_def {
+    /// Idle intensity as background color
+    uint8_t u8_idleIntens;
+    /// dynamic range as variation around background color
+    uint8_t u8_dynamicRange;
+    /// Fade steps for color changes
+    uint8_t u8_fadeSteps;
+    /// Waveform template length -> index steps are calculated accordingly by give duration
+    uint16_t u16_templateLength;
+} SM_ParameterValues_t;
+
 /**
  * @brief Effect State Machine Class
  * @details Processes Effect macro array Macro entry subsequently
@@ -31,25 +57,25 @@ namespace Effect {
  */
 class EffectSM {
   public:
-
     /**
      * @brief Construct a new Effect State Machine object
-     * 
-     * @param templateLength 
+     *
+     * @param templateLength
      */
     EffectSM(uint16_t const templateLength) : EffectSM(templateLength, 0, 0){};
     EffectSM(uint16_t const templateLength, uint8_t const intensity, uint8_t const crossFade);
 
-    void    SetEffect(EffMacro_type *sequence, Color_t const *startColor = NO_COLOR, uint8_t intialDelay = 0);
-    void    SetEffect(EffMacro_type *sequence, Color_t const *startColor, uint8_t delayedStart, uint8_t intens);
-    Color const * Tick(void);
-    uint8_t GetDissolveRatio(void);
+    void         SetEffect(EffMacro_type *sequence, Color_t const *startColor = NO_COLOR, uint8_t intialDelay = 0);
+    void         SetEffect(EffMacro_type *sequence, Color_t const *startColor, uint8_t delayedStart, uint8_t intens);
+    Color const *Tick(void);
+    uint8_t      GetDissolveRatio(void);
+    void         SetDynamicRange(uint8_t range) { SMIParams.u8_dynamicRange = range; }; // @todo
 
-    const uint8_t GetWaveformIdx(void) { return (_u16_waveIdx >> 8); };
-    const Color   GetColor(void) { return _curentColor; }; // @todo delete?
-    const uint8_t GetIntensity(void) { return _u8_idleIntens; }; // @todo delete?
-
+    const uint8_t              GetWaveformIdx(void) { return (SMPValues.u16_waveIdx >> 8); };
+    const Color                GetColor(void) { return _curentColor; };       // @todo delete?
+    const uint8_t              GetIntensity(void) { return SMIParams.u8_idleIntens; }; // @todo delete?
     EffMacro_type const *const GetStep(void) { return _p_effMac; };
+    const SM_ProcessValues_t   GetProcessValues(void) { return SMPValues; };
 
   private: // @todo change to protected and tests results
     /// First element of Effect macro stack
@@ -57,25 +83,17 @@ class EffectSM {
     /// Currently indexed Effect-part
     EffMacro_type const *_p_effMac;
 
-    Color * _outputColor; // @todo !!
+    Color *_outputColor; // @todo !!
 
-
-    //Color& (*apF_Effects)(EffectSM * SM);
+    // Color& (*apF_Effects)(EffectSM * SM);
     typedef Color const * pEffPrc(EffectSM *);
-    static pEffPrc  * const apF_Processors[6];
-    static Color const * UpdateBlank(EffectSM * SM);
-    static Color const * UpdateIdle(EffectSM * SM);
-    static Color const * UpdateFreeze(EffectSM * SM);
-    static Color const * UpdateWave(EffectSM * SM);
-    static Color const * UpdateRevWave(EffectSM * SM);
-    static Color const * UpdateFlicker(EffectSM * SM);
-
-    /// Decrementing tick, counting duration
-    uint8_t _u8_tick;
-    /// Decrementing repeats of current Effect-part
-    uint8_t _u8_repeats;
-    /// Dissolve counter dissolves the leading color each tick
-    uint8_t _u8_dissolveCnt;
+    static pEffPrc *const apF_Processors[6];
+    static Color const *  UpdateBlank(EffectSM *SM);
+    static Color const *  UpdateIdle(EffectSM *SM);
+    static Color const *  UpdateFreeze(EffectSM *SM);
+    static Color const *  UpdateWave(EffectSM *SM);
+    static Color const *  UpdateRevWave(EffectSM *SM);
+    static Color const *  UpdateFlicker(EffectSM *SM);
 
     /// @todo Configuration could be given by structure
     /// Current color
@@ -83,21 +101,13 @@ class EffectSM {
     /// \li Or given by current Effect-part
     Color _curentColor;
 
-    /// Idle intensity as background color
-    uint8_t _u8_idleIntens;
-    /// dynamic range as variation around background color
-    uint8_t  _u8_dynamicRange;
+    /// Concentrated parameter values of instance
+    SM_ParameterValues_t SMIParams;
 
-    /// Fade steps for color changes
-    uint8_t _u8_fadeSteps;
-    /// Waveform template length -> index steps are calculated accordingly by give duration
-    uint16_t _u16_templateLength;
-    /// Current index to waveform
-    uint16_t _u16_waveIdx;
-    /// Index step each tick according to duration and template length.
-    uint16_t _u16_waveStep;
+    /// Concentrated process values of instance
+    SM_ProcessValues_t SMPValues;
 
-    /// @todo callback vor finished to exclude these indexes
+    /// @todo callback for finished to exclude these indexes
 
     void SetIndexes(void);
 };

@@ -30,7 +30,6 @@ class EffectProcessor {
     EffectProcessor(uint16_t const templateLength, uint8_t const fadeSteps);
     void SetEffect(EffMacro_type *sequence, Color_t const *sColor = NO_COLOR, uint8_t intens = gu8_idleIntensity);
     void Tick(void);
-    //void SetDynamicRange(uint8_t range) { u8_dynamicRange = range; }; // @todo
 
     uint8_t _colorSize;
     Color   _pColor;

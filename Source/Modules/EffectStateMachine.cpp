@@ -21,14 +21,11 @@ EffMacro_type delayPrequel[] = {
     {Light_Blank, (uint8_t *)0, 0, 1, &color_Black, 0, 0},
 };
 
-EffectSM::pEffPrc * const EffectSM::apF_Processors[6] = {
-    EffectSM::UpdateBlank,
-    EffectSM::UpdateIdle,
-    EffectSM::UpdateFreeze,
-    EffectSM::UpdateWave,
-    EffectSM::UpdateWave,
-    EffectSM::UpdateFlicker,
+/// Function table to processing Functions
+EffectSM::pEffPrc *const EffectSM::apF_Processors[6] = {
+    EffectSM::UpdateBlank, EffectSM::UpdateIdle, EffectSM::UpdateFreeze, EffectSM::UpdateWave, EffectSM::UpdateWave, EffectSM::UpdateFlicker,
 };
+
 
 /**
  * @brief Construct a new Effect State Machine object
@@ -38,15 +35,17 @@ EffectSM::pEffPrc * const EffectSM::apF_Processors[6] = {
  * @param crossFade
  */
 EffectSM::EffectSM(uint16_t const templateLength, uint8_t const intensity, uint8_t const crossFade) {
-    _u16_templateLength = templateLength;
-    _u8_idleIntens      = intensity;
-    _u8_fadeSteps       = 1;
+    SMIParams.u16_templateLength = templateLength;
+    SMIParams.u8_idleIntens      = intensity;
+    SMIParams.u8_fadeSteps       = 1;
+    SMIParams.u8_dynamicRange    = 30;
+
     if (crossFade > 0)
         _u8_fadeSteps = crossFade;
 }
 
 void EffectSM::SetEffect(EffMacro_type *sequence, Color_t const *startColor, uint8_t intialDelay) {
-    SetEffect(sequence, startColor, intialDelay, _u8_idleIntens);
+    SetEffect(sequence, startColor, intialDelay, SMIParams.u8_idleIntens);
 }
 
 /**
@@ -63,19 +62,20 @@ void EffectSM::SetEffect(EffMacro_type *sequence, Color_t const *startColor, uin
     } else {
         _curentColor.SetColor(*startColor);
     }
-    _u8_idleIntens = intens;
+    SMIParams.u8_idleIntens = intens;
+    SMPValues.u8_macroIdx = 0;
 
     _p_effSeq = sequence;
     if (delayedStart > 0) {
         _p_effMac = delayPrequel;
-        _u8_tick  = delayedStart;
+        SMPValues.u8_tick  = delayedStart;
     } else {
         _p_effMac = sequence;
-        _u8_tick  = _p_effMac->u8_duration;
+        SMPValues.u8_tick  = _p_effMac->u8_duration;
     }
 
-    _u8_dissolveCnt = 0;
-    _u8_repeats     = _p_effMac->u8_repeats;
+    SMPValues.u8_dissolveCnt = 0;
+    SMPValues.u8_repeats     = _p_effMac->u8_repeats;
     this->SetIndexes();
 }
 
@@ -93,76 +93,77 @@ void EffectSM::SetEffect(EffMacro_type *sequence, Color_t const *startColor, uin
  *
  * @return uint8_t
  */
-Color const * EffectSM::Tick(void) {
+Color const *EffectSM::Tick(void) {
     // tick-increment
-    if (_u8_tick-- == 0) {
+    if (SMPValues.u8_tick-- == 0) {
         // repeats-decrement
-        if (_u8_repeats-- == 0) {
+        if (SMPValues.u8_repeats-- == 0) {
+            SMPValues.u8_macroIdx = _p_effMac->next;
             _p_effMac   = &(_p_effSeq[_p_effMac->next]);
-            _u8_repeats = _p_effMac->u8_repeats;
+            SMPValues.u8_repeats = _p_effMac->u8_repeats;
 
             // execute color change if necessary
             if (_p_effMac->color != NO_COLOR) {
-                _u8_dissolveCnt = _u8_fadeSteps;
+                SMPValues.u8_dissolveCnt = SMIParams.u8_fadeSteps;
                 _curentColor.SetColor(*_p_effMac->color);
             }
         }
 
-        _u8_tick = _p_effMac->u8_duration;
+        SMPValues.u8_tick = _p_effMac->u8_duration;
         this->SetIndexes();
     }
 
-    _u16_waveIdx += _u16_waveStep;
-    if (_u8_dissolveCnt > 0) {
-        _u8_dissolveCnt--;
+    SMPValues.u16_waveIdx += SMPValues.u16_waveStep;
+    if (SMPValues.u8_dissolveCnt > 0) {
+        SMPValues.u8_dissolveCnt--;
     }
 
     return apF_Processors[_p_effMac->state](this);
 }
 
 void EffectSM::SetIndexes(void) {
-    _u16_waveStep = (_u16_templateLength << 8) / _p_effMac->u8_duration;
-    _u16_waveIdx  = (uint16_t)(0 - _u16_waveStep);
+    SMPValues.u16_waveStep = (SMIParams.u16_templateLength << 8) / _p_effMac->u8_duration;
+    SMPValues.u16_waveIdx  = (uint16_t)(0 - SMPValues.u16_waveStep);
 }
 
 uint8_t EffectSM::GetDissolveRatio(void) {
-    uint8_t dissolving = (uint8_t)((uint16_t)0xFF * _u8_dissolveCnt / _u8_fadeSteps);
+    uint8_t dissolving = (uint8_t)((uint16_t)0xFF * SMPValues.u8_dissolveCnt / SMIParams.u8_fadeSteps);
     return dissolving;
 }
 
-    Color const * EffectSM::UpdateBlank(EffectSM * SM){
-        *(SM->_outputColor) = SM->_curentColor * 0;
-        return SM->_outputColor;
-    }
+Color const *EffectSM::UpdateBlank(EffectSM *SM) {
+    *(SM->_outputColor) = SM->_curentColor * 0;
+    return SM->_outputColor;
+}
 
-    Color const * EffectSM::UpdateIdle(EffectSM * SM){
-        *(SM->_outputColor) = SM->_curentColor * SM->_u8_idleIntens;
-        return SM->_outputColor;
-    }
-    
-    Color const * EffectSM::UpdateFreeze(EffectSM * SM){
-        // just do nothing
-        return SM->_outputColor;
-    }
+Color const *EffectSM::UpdateIdle(EffectSM *SM) {
+    *(SM->_outputColor) = SM->_curentColor * SM->SMIParams.u8_idleIntens;
+    return SM->_outputColor;
+}
 
-    Color const * EffectSM::UpdateWave(EffectSM * SM){
-            // EffMacro_type const *const cEffStep = effStat->GetStep();
-        // *color = effStat->GetColor() * cEffStep->pu8_wave[effStat->GetWaveformIdx()] * cEffStep->u8_FSintensity;
-        return SM->_outputColor;
-    }
+Color const *EffectSM::UpdateFreeze(EffectSM *SM) {
+    // just do nothing
+    return SM->_outputColor;
+}
 
-    Color const * EffectSM::UpdateRevWave(EffectSM * SM){
-            // EffMacro_type const *const cEffStep = effStat->GetStep();
-        // *color = effStat->GetColor() * cEffStep->pu8_wave[cu16_TemplateLength - 1 - effStat->GetWaveformIdx()] * cEffStep->u8_FSintensity;
-        return SM->_outputColor;
-    }
+Color const *EffectSM::UpdateWave(EffectSM *SM) {
+    // EffMacro_type const *const cEffStep = effStat->GetStep();
+    // *color = effStat->GetColor() * cEffStep->pu8_wave[effStat->GetWaveformIdx()] * cEffStep->u8_FSintensity;
+    return SM->_outputColor;
+}
 
-    Color const * EffectSM::UpdateFlicker(EffectSM * SM){
-        uint8_t k;
-        k      = rand();
-        k      = SM->_u8_idleIntens + ((int16_t)k * (SM->_u8_idleIntens + SM->_u8_dynamicRange) / 0xFF);
-        *(SM->_outputColor) = SM->_curentColor * k;
-        return SM->_outputColor;
-    }
+Color const *EffectSM::UpdateRevWave(EffectSM *SM) {
+    // EffMacro_type const *const cEffStep = effStat->GetStep();
+    // *color = effStat->GetColor() * cEffStep->pu8_wave[cu16_TemplateLength - 1 - effStat->GetWaveformIdx()] * cEffStep->u8_FSintensity;
+    return SM->_outputColor;
+}
+
+Color const *EffectSM::UpdateFlicker(EffectSM *SM) {
+    uint8_t k;
+    k                   = rand();
+    k                   = SM->SMIParams.u8_idleIntens + ((int16_t)k * (SM->SMIParams.u8_idleIntens + SM->SMIParams.u8_dynamicRange) / 0xFF);
+    *(SM->_outputColor) = SM->_curentColor * k;
+    return SM->_outputColor;
+}
 
 } // namespace Effect

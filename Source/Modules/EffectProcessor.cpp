@@ -24,7 +24,6 @@ EffectProcessor::EffectProcessor(uint16_t const templateLength, uint8_t const fa
     : EffPV(templateLength), EffPV_old(templateLength), _pColor(), _pColorOld() {
     EffPV.SetEffect(eff_Dark, 0);
     u8_fadeSteps    = fadeSteps;
-    //u8_dynamicRange = 30;
 }
 
 void EffectProcessor::SetEffect(EffMacro_type *sequence, Color_t const *sColor, uint8_t intens) {
