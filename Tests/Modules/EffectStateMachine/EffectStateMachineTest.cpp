@@ -4,7 +4,7 @@
 
 
 TEST_CASE("Constructing EffectMachine", "[EffectStateMachine, Constructor]") {
-
+    
 }
 
 TEST_CASE("Setting EffectSM by Parameter or by Structure", "[EffectStateMachine, Constructor]") {

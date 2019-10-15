@@ -28,7 +28,7 @@ EffMacro::EffMacro(e_EffectPart state,
 // EffMacro_type 
 	// state            wave				FS		duration    color	            repeats     next
 EffMacro_type eff_Dark[] = {		
-	{Light_Idle,	    (uint8_t*)0,		0,		32,	        &color_Black,	    0,	        1},
+	{Light_Idle,	    (uint8_t*)0,		0,		32,	        &color_Black,	    0,	        0},
 };
 
 EffMacro_type eff_StartIdle[] = {

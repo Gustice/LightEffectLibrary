@@ -64,9 +64,7 @@ extern EffMacro_type eff_StdPulse[];
 extern EffMacro_type eff_NervousPulse[];
 extern EffMacro_type eff_StdWipe[];
 extern EffMacro_type eff_AsymPulse[];
-extern EffMacro_type eff_AsymPulseInv[];
 extern EffMacro_type eff_ShiftAsymPulse[];
-extern EffMacro_type eff_ShiftAsymPulseInv[];
 
 typedef struct EffectList_def {
 	const EffMacro_type * Macro;		// Macro reference

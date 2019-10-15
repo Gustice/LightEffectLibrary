@@ -61,30 +61,38 @@ void PrintGaussianWaveForms2File(GW_Config_t config, ofstream &outputFile) {
     sprintf(sStream, "const uint8_t gu8_idleIntensity = 0x%02X;", offset);
     outputFile << sStream << endl;
 
+    // @todo A differentiation between c and cpp seems to be needed 
+// const uint16_t cu16_TemplateLength = 128;
+// const uint8_t gu8_idleIntensity = 0x55;
+// const uint8_t gu8_fullIntensity = 0xFF;
+
+
     PrintSection("Safe offset Pulse");
     outputFile << endl;
-    outputFile << "// Full Pulse: Gaussian pulse from background illumination with full scale intensity" << endl;
+    outputFile << "/// Offset Pulse: Gaussian pulse from background illumination with full scale intensity" << endl;
     PrintValues("gau8_offsetPulse", pulse, outputFile, true);
+
+    PrintSection("Safe full Pulse");
+    outputFile << endl;
+    outputFile << "/// Full Pulse: Gaussian pulse from dark to full scale intensity" << endl;
+    PrintValues("gau8_fullPulse", fullPulse, outputFile, true);
 
     PrintSection("Safe init Pulse");
     outputFile << endl;
-    outputFile << "// Init Slope: Gaussian slope from dark to background brightness" << endl;
+    outputFile << "/// Init Slope: Gaussian slope from dark to background brightness" << endl;
     PrintValues("gau8_initSlope", initslope, outputFile);
 
     PrintSection("Safe offset Slope");
+    outputFile << "/// Offset Pulse: Gaussian slope from background illumination to full scale brightness" << endl;
     outputFile << endl;
-    outputFile << "// Full Slope: Gaussian slope from background illumination to full scale brightness" << endl;
     PrintValues("gau8_offsetSlope", slope, outputFile);
 
     PrintSection("Safe full Slope");
     outputFile << endl;
-    outputFile << "// Offset Pulse:Gaussian slope from dark to full scale brightness" << endl;
+    outputFile << "/// Full Slope: Gaussian slope from dark to full scale brightness" << endl;
     PrintValues("gau8_fullSlope", fullSlope, outputFile);
 
-    PrintSection("Safe full Pulse");
-    outputFile << endl;
-    outputFile << "// Offset Pulse: Gaussian pulse from dark to full scale intensity" << endl;
-    PrintValues("gau8_fullPulse", fullPulse, outputFile);
+
 }
 
 /**
