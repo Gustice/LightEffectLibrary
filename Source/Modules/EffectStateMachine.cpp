@@ -40,8 +40,8 @@ EffectSM::EffectSM(uint16_t const templateLength, uint8_t const intensity, uint8
     SMIParams.u8_fadeSteps       = 1;
     SMIParams.u8_dynamicRange    = 30;
 
-    if (crossFade > 0)
-        _u8_fadeSteps = crossFade;
+    //if (crossFade > 0)
+        //_u8_fadeSteps = crossFade; // @todo
 }
 
 void EffectSM::SetEffect(EffMacro_type *sequence, Color_t const *startColor, uint8_t intialDelay) {

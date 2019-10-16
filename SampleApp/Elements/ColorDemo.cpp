@@ -28,4 +28,6 @@ void ColorDemo(void) {
     PrintColor("  Static const Color 2:", constColorObjByParam.GetColor());
 }
 
-void PrintColor(const char *hint, Color_t const c) { PrintLine("%s   R: %3d   G: %3d   B: %3d   W: %3d", hint, c.red, c.green, c.blue, c.white); }
+void PrintColor(const char *hint, Color_t const c) { 
+	PrintLine("%s   R: %3d   G: %3d   B: %3d   W: %3d", hint, c.red, c.green, c.blue, c.white); 
+}

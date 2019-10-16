@@ -71,7 +71,7 @@ class EffectSM {
     uint8_t      GetDissolveRatio(void);
     void         SetDynamicRange(uint8_t range) { SMIParams.u8_dynamicRange = range; }; // @todo
 
-    const uint8_t              GetWaveformIdx(void) { return (SMPValues.u16_waveIdx >> 8); };
+    const uint8_t              GetWaveformIdx(void) { return ((SMPValues.u16_waveIdx & 0xFF00u) >> 8); };
     const Color                GetColor(void) { return _curentColor; };       // @todo delete?
     const uint8_t              GetIntensity(void) { return SMIParams.u8_idleIntens; }; // @todo delete?
     EffMacro_type const *const GetStep(void) { return _p_effMac; };

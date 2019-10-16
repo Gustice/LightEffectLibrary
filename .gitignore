@@ -38,6 +38,11 @@
 **/CMake/**
 **/DoxyGen/
 
+# MS VisualStudio metha
+**/.vs/**
+**/Debug/**
+*.user
+
 # My Logfiles
 **.log
 
