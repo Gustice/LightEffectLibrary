@@ -27,32 +27,32 @@ namespace Effect {
 
 // EffMacro_type
 // state            wave				FS		duration    color	            repeats     next
-EffMacro_type eff_Dark[] = {
+EffMacro_t eff_Dark[] = {
     {Light_Idle, (uint8_t *)0, 0, 32, &color_Black, 0, 0},
 };
 
-EffMacro_type eff_StartIdle[] = {
+EffMacro_t eff_StartIdle[] = {
     {Light_Wave, gau8_initSlope, 0xFF, 16, &color_ColdWhite, 0, 1},
     {Light_Idle, (uint8_t *)0, 0xFF, 32, USEOLD_COLOR, 0, 1},
 };
 
-EffMacro_type eff_Idle[] = {
+EffMacro_t eff_Idle[] = {
     {Light_Idle, (uint8_t *)0, 0xFF, 32, &color_ColdWhite, 0, 0},
 };
 
-EffMacro_type eff_StdPulse[] = {
+EffMacro_t eff_StdPulse[] = {
     {Light_Idle, (uint8_t *)0, 0, 32, &color_ColdWhite, 0, 1},
     {Light_Wave, gau8_offsetPulse, 0xFF, 32, USEOLD_COLOR, 0, 2},
     {Light_Idle, (uint8_t *)0, 0, 32, USEOLD_COLOR, 0, 0},
 };
 
-EffMacro_type eff_NervousPulse[] = {
+EffMacro_t eff_NervousPulse[] = {
     {Light_Idle, (uint8_t *)0, 0, 4, &color_ColdWhite, 0, 1},
     {Light_Wave, gau8_offsetPulse, 0xFF, 8, USEOLD_COLOR, 0, 2},
     {Light_Idle, (uint8_t *)0, 0, 4, USEOLD_COLOR, 0, 0},
 };
 
-EffMacro_type eff_StdWipe[] = {
+EffMacro_t eff_StdWipe[] = {
     {Light_Idle, (uint8_t *)0, 0, 32, &color_ColdWhite, 0, 1},
 
     {Light_Wave, gau8_offsetSlope, 0xFF, 32, USEOLD_COLOR, 0, 2},    {Light_Freeze, (uint8_t *)0, 0, 32, USEOLD_COLOR, 0, 3},
@@ -64,5 +64,21 @@ EffMacro_type eff_StdWipe[] = {
 //     EffMacro(Light_Wave, gau8_offsetPulse, 0xFF, 32, USEOLD_COLOR_OBJ, 0, 2),
 //     EffMacro(Light_Idle, (uint8_t *)0, 0, 32, USEOLD_COLOR_OBJ, 0, 0),
 // };
+
+
+
+const static Effect1 someEffects[] = {
+    Effect1(Light_Blank, 1,2),
+    Effect2(Light_Blank, 1,2, gau8_offsetPulse, 0, 0),
+    Effect1(Light_Blank, 1,2),
+};
+const static Effect3 someInit(Light_Blank, 1,2, nullptr, 0, 0, 0, 0, NO_COLOR, 128, 10);
+EffectMacro someScene(&someInit, someEffects, 3);
+
+const static Effect1 startEffect[] = {
+    Effect1(Light_Blank, 64, 0),
+};
+EffectMacro idleScene(nullptr, startEffect, 1);
+
 
 } // namespace Effect

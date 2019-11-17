@@ -29,6 +29,7 @@ typedef struct Color_def {
 #define USEOLD_COLOR NO_COLOR         ///< Used old color agreement (if no color pointer)
 #define USEOLD_COLOR_OBJ NO_COLOR_OBJ ///< Alternative use old color agreement
 
+
 /**
  * @brief   Color class
  *
@@ -60,7 +61,8 @@ class Color {
 
     Color(Color_t color);
 
-    void SetColor(Color_t color);
+    void SetColor(const Color_t color);
+    void SetColor(const Color_t * color);
 
     void SetColor(uint8_t r, uint8_t g, uint8_t b, uint8_t w = 0);
 
@@ -82,6 +84,11 @@ class Color {
 
 Color operator*(Color c1, uint8_t k);
 Color operator+(Color c1, Color c2);
+
+extern const Color_t * p_noColor;
+extern const Color * p_noColorObj;
+
+
 
 extern const Color_t color_Black;
 extern const Color_t color_Red;

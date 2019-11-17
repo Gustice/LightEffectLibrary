@@ -26,7 +26,7 @@ EffectProcessor::EffectProcessor(uint16_t const templateLength, uint8_t const fa
     u8_fadeSteps    = fadeSteps;
 }
 
-void EffectProcessor::SetEffect(EffMacro_type *sequence, Color_t const *sColor, uint8_t intens) {
+void EffectProcessor::SetEffect(EffMacro_t *sequence, Color_t const *sColor, uint8_t intens) {
     u8_fadingCnt = u8_fadeSteps;
 
     memcpy(&EffPV_old, &EffPV, sizeof(EffPV));

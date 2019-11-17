@@ -46,10 +46,19 @@ int main(int argc, char const *argv[]) {
     // EffectProcessorDemo();
 
     PrintChapter("Sample-Application Demo");
+    SampleApp();
 
     PrintFooter();
     /* code */
     return 0;
 }
 
-void SampleApp(void) {}
+
+
+
+
+
+void SampleApp(void) {
+
+
+}

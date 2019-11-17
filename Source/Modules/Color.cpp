@@ -45,6 +45,11 @@ const Color _ctColdWhite(color_ColdWhite);     ///< Black color object constant 
 const Color _ctSpookyWhite(color_SpookyWhite); ///< Black color object constant (with higher green channel value)
 ///@}
 
+
+const Color_t * p_noColor = (Color_t *) 0;
+const Color * p_noColorObj = (Color *) 0;
+
+
 /**
  * @brief Construct a new Color object according to Color_t Array
  * @param color
@@ -53,10 +58,14 @@ Color::Color(Color_t color) { memcpy(&_color, &color, sizeof(Color_t)); }
 
 /**
  * @brief Set the Color object according to Color_t Array
- *
  * @param color
  */
-void Color::SetColor(Color_t color) { memcpy(&_color, &color, sizeof(Color_t)); }
+void Color::SetColor(const Color_t color) { memcpy(&_color, &color, sizeof(Color_t)); }
+/**
+ * @brief Set the Color object according to Color_t Array
+ * @param color
+ */
+void Color::SetColor(const Color_t * color) { memcpy(&_color, color, sizeof(Color_t)); }
 
 /**
  * @brief Set the Color object according to rgb color-channel values

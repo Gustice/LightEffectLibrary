@@ -3,14 +3,14 @@
 using namespace Effect;
 
 /// Demo Effect Macro
-EffMacro_type eff_TestStdPulse[] = {
+EffMacro_t eff_TestStdPulse[] = {
     {Light_Idle, (uint8_t *)0, 0, 32, &color_ColdWhite, 0, 1},
     {Light_Wave, gau8_offsetPulse, 0xFF, 32, USEOLD_COLOR, 0, 2},
     {Light_Idle, (uint8_t *)0, 0, 32, USEOLD_COLOR, 0, 0},
 };
 
 static const uint8_t gau8_testWave[] = {0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11};
-EffMacro_type        eff_Demo[]      = {
+EffMacro_t        eff_Demo[]      = {
     // EffectState  // WafeformRef  FS-Val  Duration   Color           Repeats  Next
     {Light_Blank, (uint8_t *)0, 0xFF, 4, &color_Black, 0, 1},
     {Light_Wave, gau8_testWave, 0xFF, 6, &color_Black, 0, 1},

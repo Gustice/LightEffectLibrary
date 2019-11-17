@@ -6,6 +6,12 @@
  * @date 2019-09-18
  *
  * @copyright Copyright (c) 2019
+ * 
+ * @note CodeConventions for this Project:
+ *  -# Local Clang-Format stale sheet is to be used. Once the style Sheet is updated, all source 
+ *      files must be reformated und committed.
+ *  -# Comments are placed where the Implementation is. Its justs for that reason because the tools 
+ *      that i use tend to jump to implementation and not to the declaration.
  */
 
 // https://www.reddit.com/r/cpp/comments/af74l1/recommendations_for_setting_up_a_modern_c_dev/

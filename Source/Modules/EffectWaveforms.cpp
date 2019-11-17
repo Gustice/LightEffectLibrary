@@ -12,9 +12,10 @@
 
 namespace Effect {
 
-const uint16_t cu16_TemplateLength = 128;
-const uint8_t  gu8_idleIntensity   = 0x55;
-const uint8_t  gu8_fullIntensity   = 0xFF;
+const uint16_t cu16_TemplateLength = 128;   ///< Lenght of all subsequent Template definitions
+const uint8_t  gu8_idleIntensity   = 0x55;  ///< Idle intensity for Slopes and Pulses
+const uint8_t  gu8_fullIntensity   = 0xFF;  ///< Idle intensity for Slopes and Pulses
+const uint8_t  gu8_fadeSteps = 10;          ///< Standard cross fade steps
 
 /// Offset Pulse: Gaussian pulse from background illumination with full scale intensity
 const uint8_t gau8_offsetPulse[cu16_TemplateLength * 2] = {

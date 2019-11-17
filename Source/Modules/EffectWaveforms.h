@@ -13,9 +13,11 @@
 
 namespace Effect {
 
-extern const uint16_t cu16_TemplateLength; ///< Lenght of all subsequent Template definitions
-extern const uint8_t  gu8_idleIntensity;   ///< Idle intensity for Slopes and Pulses
-extern const uint8_t  gu8_fullIntensity;   ///< Idle intensity for Slopes and Pulses
+extern const uint16_t cu16_TemplateLength; 
+extern const uint8_t  gu8_idleIntensity;   
+extern const uint8_t  gu8_fullIntensity;   
+extern const uint8_t  gu8_fadeSteps;
+
 
 /// Starts from idle \ref gu8_idleIntensity and represents a gaussian impulse  \ref gu8_fullIntensity
 extern const uint8_t gau8_offsetPulse[];

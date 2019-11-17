@@ -28,7 +28,7 @@ extern const uint8_t gu8_idleIntensity; // @todo this is bad
 class EffectProcessor {
   public:
     EffectProcessor(uint16_t const templateLength, uint8_t const fadeSteps);
-    void SetEffect(EffMacro_type *sequence, Color_t const *sColor = NO_COLOR, uint8_t intens = gu8_idleIntensity);
+    void SetEffect(EffMacro_t *sequence, Color_t const *sColor = NO_COLOR, uint8_t intens = gu8_idleIntensity);
     void Tick(void);
 
     uint8_t _colorSize;
@@ -44,7 +44,10 @@ class EffectProcessor {
 
   private:
     Color *crossFadeColors(uint8_t k);
+    EffectProcessor();
 };
+
+
 
 // #define SINGLEEFFECT_COLORWITH 1
 // class SingleEffect : public EffectProcessor {
