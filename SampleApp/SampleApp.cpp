@@ -40,10 +40,11 @@ int main(int argc, char const *argv[]) {
     PrintHeader("LightEffectFramework Sample Application");
 
     PrintChapter("Color Demo");
-    //ColorDemo();
+    ColorDemo();
 
     PrintChapter("State-Machine Demo");
-    //StateMachinDemo();
+    StateMachinDemo();
+    SequenceMachinDemo();
 
     PrintChapter("Effect-Processor Demo");
     //EffectProcessorDemo();

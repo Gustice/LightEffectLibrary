@@ -156,7 +156,7 @@ class SequenceSM : public EffectSM
 {
 public:
   SequenceSM(const Effect1 * init);
-  void SetEffect(const EffectMacro *sequence, uint8_t delay);
+  void SetEffect(const EffectMacro *sequence, uint8_t delay = 0);
 
   Color const *Tick(void);
 

@@ -54,18 +54,14 @@ const Color * p_noColorObj = (Color *) 0;
  * @brief Construct a new Color object according to Color_t Array
  * @param color
  */
-Color::Color(Color_t color) { memcpy(&_color, &color, sizeof(Color_t)); }
+Color::Color(Color_t color) 
 
+void Color::SetColor(const Color_t color) 
 /**
  * @brief Set the Color object according to Color_t Array
  * @param color
  */
-void Color::SetColor(const Color_t color) { memcpy(&_color, &color, sizeof(Color_t)); }
-/**
- * @brief Set the Color object according to Color_t Array
- * @param color
- */
-void Color::SetColor(const Color_t * color) { memcpy(&_color, color, sizeof(Color_t)); }
+void Color::SetColor(const Color_t * color) 
 
 /**
  * @brief Set the Color object according to rgb color-channel values

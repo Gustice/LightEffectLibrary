@@ -13,9 +13,10 @@
 
 namespace Effect {
 
-extern const uint16_t cu16_TemplateLength; 
-extern const uint8_t  gu8_idleIntensity;   
-extern const uint8_t  gu8_fullIntensity;   
+extern const uint16_t cu16_TemplateLength;
+extern const uint8_t  gu8_idleIntensity;
+extern const uint8_t  gu8_fullIntensity;
+extern const uint8_t  gu8_dynamicRange;
 extern const uint8_t  gu8_fadeSteps;
 
 

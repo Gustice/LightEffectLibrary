@@ -37,3 +37,34 @@ void StateMachinDemo(void) {
         PrintLine(stream);
     }
 }
+
+
+const static Effect1 gau8_testSeqWave[] = {
+    Effect1(Light_Idle, 32, 1),
+    Effect2(Light_Wave, 32, 2, gau8_offsetPulse, gu8_dynamicRange, 0), 
+    Effect1(Light_Idle, 32, 0),
+};
+const static Effect3 init(Light_Blank, 1,2, nullptr, 0, 0, 0, 0, NO_COLOR, 128, 10);
+EffectMacro someScene(&init, gau8_testSeqWave, 3);
+
+void SequenceMachinDemo(void) {
+    PrintLine("## Sequence StateMachine Demo");
+
+    static SequenceSM Eff1(&init);
+    static SequenceSM Eff2(&init);
+    
+    Eff1.SetEffect(&someScene);
+    Eff2.SetEffect(&someScene, 3);
+
+    PrintLine("  No  Effect1            Effect2 (delayed)");
+    PrintLine("  No  tick index fade    tick index fade    ");
+    char stream[100];
+
+    for (uint8_t i = 0; i < 16; i++) {
+        uint8_t tick1 = 0; // Eff1.Tick(); // @todo
+        uint8_t tick2 = 0; // Eff2.Tick();
+        sprintf(stream, "  %2d  %4d  %4d  %3d      %4d  %4d  %3d    ", i, tick1, Eff1.GetWaveformIdx(), Eff1.GetDissolveRatio(), tick2, Eff2.GetWaveformIdx(),
+                Eff2.GetDissolveRatio());
+        PrintLine(stream);
+    }
+}

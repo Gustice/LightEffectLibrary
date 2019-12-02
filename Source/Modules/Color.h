@@ -12,6 +12,7 @@
 #pragma once
 
 #include <stdint.h>
+#include <string.h>
 
 /**
  * @brief Color Structure
@@ -28,7 +29,6 @@ typedef struct Color_def {
 #define NO_COLOR_OBJ ((Color *)0)     ///< Null color object
 #define USEOLD_COLOR NO_COLOR         ///< Used old color agreement (if no color pointer)
 #define USEOLD_COLOR_OBJ NO_COLOR_OBJ ///< Alternative use old color agreement
-
 
 /**
  * @brief   Color class
@@ -59,10 +59,28 @@ class Color {
      */
     Color(uint8_t r, uint8_t g, uint8_t b, uint8_t w = 0) { SetColor(r, g, b, w); };
 
-    Color(Color_t color);
+    /**
+     * @brief Construct a new Color object according to Color_t structure
+     * @param color Color to set
+     */
+    Color(Color_t color) { memcpy(&_color, &color, sizeof(Color_t)); };
+    /**
+     * @brief Construct a new Color object according to Color_t structure
+     * @param color Color to set
+     */
+    Color(Color_t * color) { memcpy(&_color, color, sizeof(Color_t)); };
 
-    void SetColor(const Color_t color);
-    void SetColor(const Color_t * color);
+
+    /**
+     * @brief Set the Color object according to Color_t Array
+     * @param color Color to set
+     */
+    void SetColor(const Color_t *color) { memcpy(&_color, color, sizeof(Color_t)); }
+    /**
+     * @brief Set the Color object according to Color_t Array
+     * @param color Color to set
+     */
+    void SetColor(const Color_t color) { memcpy(&_color, &color, sizeof(Color_t)); }
 
     void SetColor(uint8_t r, uint8_t g, uint8_t b, uint8_t w = 0);
 
@@ -72,11 +90,11 @@ class Color {
      */
     Color_t GetColor(void) const { return _color; };
 
-    void    WriteByteStreamTo(uint8_t raw[sizeof(Color_t)]);
+    void WriteByteStreamTo(uint8_t raw[sizeof(Color_t)]);
 
     // Color operator*(uint8_t k);
     // Color operator+(Color * c2);
-    Color operator= (Color const * c2);
+    Color operator=(Color const *c2);
 
   private:
     Color_t _color; ///< Color data
@@ -85,10 +103,8 @@ class Color {
 Color operator*(Color c1, uint8_t k);
 Color operator+(Color c1, Color c2);
 
-extern const Color_t * p_noColor;
-extern const Color * p_noColorObj;
-
-
+extern const Color_t *p_noColor;
+extern const Color *  p_noColorObj;
 
 extern const Color_t color_Black;
 extern const Color_t color_Red;
