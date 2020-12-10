@@ -47,7 +47,7 @@ int main(int argc, char const *argv[]) {
     SequenceMachinDemo();
 
     PrintChapter("Effect-Processor Demo");
-    //EffectProcessorDemo();
+    EffectProcessorDemo();
 
     PrintChapter("Sample-Application Demo");
 

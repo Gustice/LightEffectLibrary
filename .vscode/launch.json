@@ -42,7 +42,7 @@
             ],
             // Gets sure source is compiled before debugging 
             "preLaunchTask": "SampleApp: Build Project"
-        }
+        },
 
         {
             "name": "Launch GraphPlotter",

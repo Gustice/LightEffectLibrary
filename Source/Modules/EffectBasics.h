@@ -16,7 +16,7 @@ enum eEffect {
     Light_States,
 };
 
-typedef enum eMacroLevel {
+enum eMacroLevel {
     level0,
     level1,
     level2,
