@@ -18,7 +18,14 @@ TEST_CASE("Constructing emtpy Color Object", "[Color, Constructor]") {
 bool ColorIsEqualToStream(Color &C, const uint8_t s[sizeof(Color_t)]) {
     Color_t c = C.GetColor();
 
-    return ((c.red == s[0]) && (c.green == s[1]) && (c.blue == s[2]) && (c.white == s[3]));
+    if (((c.red == s[0]) && (c.green == s[1]) && (c.blue == s[2]) && (c.white == s[3])))
+        return true;
+
+    INFO(printf("C.red:   %02x  |  b0: %02x\n", c.red, s[0]));
+    INFO(printf("C.green: %02x  |  b1: %02x\n", c.green, s[1]));
+    INFO(printf("C.blue:  %02x  |  b2: %02x\n", c.blue, s[2]));
+    INFO(printf("C.white: %02x  |  b3: %02x\n", c.white, s[3]));
+    return false;
 }
 
 void DivideByPowOfN(uint8_t stream[sizeof(Color_t)], int n) {
@@ -128,6 +135,21 @@ TEST_CASE("Using Add-Operator", "[Color, Operator]") {
     Color dut = dut1 + dut2;
     REQUIRE(ColorIsEqualToStream(dut, checkStream));
 }
+
+TEST_CASE("Using Mix-Method", "[Color, Method]") {
+    Color c1(color_Red);
+    Color c2(color_Green);
+    Color c3(color_Blue);
+    uint8_t checkStream1[size] = {0x80, 0x7F, 0x00, 0x00};
+    uint8_t checkStream2[size] = {0x60, 0x5F, 0x3F, 0x00};
+
+    c1.MixWith(c2, 0x7F);
+    REQUIRE( ColorIsEqualToStream(c1, checkStream1) );
+
+    c1.MixWith(c3, 0x3F);
+    REQUIRE( ColorIsEqualToStream(c1, checkStream2) );
+}
+
 
 TEST_CASE("Using Multiply-Operator with odd data", "[Color, Operator]") {
     const int     size            = sizeof(Color_t);

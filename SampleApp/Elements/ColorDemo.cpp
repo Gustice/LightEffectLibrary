@@ -1,4 +1,3 @@
-
 #include "ColorDemo.h"
 
 static const Color_t constColorStruct = {0x12, 0x34, 0x56, 0x78};

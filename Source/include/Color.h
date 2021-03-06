@@ -104,6 +104,17 @@ class Color {
      */
     Color_t GetColor(void) const { return _color; }
 
+  /**
+   * @brief Scaling and overlaying with given color.
+   * @param c2 Color 2
+   * @param k scaling factor
+   * @return Overlayed Color
+   */
+    Color MixWith(const Color c2, uint8_t k = 0x7F){
+      *this = (*this * (UINT8_MAX - k)) + ( c2 * k);
+      return *this;
+    }
+
     /**
      * @brief Writes Color as formatted bytestream to location
      * @param color

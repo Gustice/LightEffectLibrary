@@ -71,14 +71,11 @@ const Color * p_noColorObj = (Color *) 0;
 //@optimize Calling of calculation with inline calc
 
 /**
- * @brief Overlaying to colors my adding each color channel value
+ * @brief Scale color by scaling each color-channel by given factor
  *
- * @note Colors channels should not overlap since there is no automatic ratio correction.
- *    Use *-Operator first in order to scale each color value a a way that no overflow can occur
- *
- * @param c1 Color 1
- * @param c2 Color 2
- * @return Overlayed Color
+ * @param c1 Color
+ * @param k Scale-factor uint8_t.Max is fullscale
+ * @return Scaled Color
  */
 Color operator*(Color c1, uint8_t k) {
     c1._color.red   = (uint8_t)((uint16_t)c1._color.red * k / 0xFF);
@@ -89,11 +86,14 @@ Color operator*(Color c1, uint8_t k) {
 }
 
 /**
- * @brief Scale color by scaling each color-channel by given factor
+ * @brief Overlaying to colors my adding each color channel value
  *
- * @param c1 Color
- * @param k Scale-factor uint8_t.Max is fullscale
- * @return Scaled Color
+ * @note Colors channels should not overlap since there is no automatic ratio correction.
+ *    Use *-Operator first in order to scale each color value a a way that no overflow can occur
+ *
+ * @param c1 Color 1
+ * @param c2 Color 2
+ * @return Overlayed Color
  */
 Color operator+(Color c1, Color c2) {
     c1._color.red   = c1._color.red + c2._color.red;
