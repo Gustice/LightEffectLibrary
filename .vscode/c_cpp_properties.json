@@ -7,8 +7,6 @@
             "includePath": [
                 "${workspaceFolder}/**",
                 "${workspaceFolder}/Source/**",
-                "${workspaceFolder}/Source/Modules/**",
-                "${workspaceFolder}/Externals/**",
                 "${workspaceFolder}/Tests/**"
             ],
             "defines": [
@@ -16,17 +14,6 @@
                 "UNICODE",
                 "_UNICODE"
             ],
-            "browse": {
-                "path": [
-                    "${workspaceFolder}/**",
-                    "${workspaceFolder}/Source/**",
-                    "${workspaceFolder}/Source/Modules/**",
-                    "${workspaceFolder}/Externals/**",
-                    "${workspaceFolder}/Tests/**"
-                ],
-                "limitSymbolsToIncludedHeaders": true,
-                "databaseFilename": ""
-            },
             "cppStandard": "c++11",
             "cStandard": "c99"
         }

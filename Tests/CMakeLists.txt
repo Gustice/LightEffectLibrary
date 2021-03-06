@@ -10,12 +10,13 @@ add_executable(tests TestMain.cpp
                      Modules/EffectStateMachine/EffectStateMachineTest.cpp 
                 )
 
-target_link_libraries(tests LEL_lib 
+target_link_libraries(tests LEL_library 
                             catch )
 
                             
 add_library(integrationTests STATIC IntegrationTest.cpp )
 target_include_directories(integrationTests PUBLIC ${CMAKE_CURRENT_SOURCE_DIR})
 target_link_libraries(integrationTests PUBLIC
-                                    LEL_lib 
-                                    catch )
+                                   LEL_library 
+                                   catch 
+)

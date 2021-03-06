@@ -5,21 +5,16 @@
     "version": "0.2.0",
     "configurations": [
         {
-            "name": "Python: Aktuelle Datei",
+            "name": "Python: CurrentFile",
             "type": "python",
             "request": "launch",
             "program": "${file}",
             "console": "integratedTerminal",
             "cwd": "${workspaceFolder}",
-            // "args": [ // Testcase: Compile Tests
-            //     "Tests,-In Source,-Ex Source\\SampleApp.cpp",
-            //     "-I Source -I Source\\Modules -I Tests\\Include",
-            // ]
             "args": [ // Testcase: Compile SampleApp
                 "Source",
                 "-I Source -I Source\\Modules",
             ]
-
         },
         {
             "name": "Launch LEL Demo",
