@@ -32,58 +32,23 @@ const Color_t color_WarmWhite   = {0x7F, 0x4F, 0x4F, 0x00}; ///< Warm white colo
 const Color_t color_ColdWhite   = {0x4F, 0x4F, 0x7F, 0x00}; ///< Black color structure constant (with higher blue channel value)
 const Color_t color_SpookyWhite = {0x4F, 0x7F, 0x4F, 0x00}; ///< Black color structure constant (with higher green channel value)
 
-const Color _ctBlack(color_Black);             ///< Black color object constant
-const Color _ctRed(color_Red);                 ///< Red color object constant
-const Color _ctGreen(color_Green);             ///< Green color object constant
-const Color _ctBlue(color_Blue);               ///< Blue color object constant
-const Color _ctMagenta(color_Magenta);         ///< Magenta color object constant
-const Color _ctCyan(color_Cyan);               ///< Cyan color object constant
-const Color _ctYellow(color_Yellow);           ///< Yellow color object constant
-const Color _ctWhite(color_White);             ///< White color object constant
-const Color _ctWarmWhite(color_WarmWhite);     ///< Warm white color object constant (with higher red channel value)
-const Color _ctColdWhite(color_ColdWhite);     ///< Black color object constant (with higher blue channel value)
-const Color _ctSpookyWhite(color_SpookyWhite); ///< Black color object constant (with higher green channel value)
+const Color CBlack(color_Black);             ///< Black color object constant
+const Color CRed(color_Red);                 ///< Red color object constant
+const Color CGreen(color_Green);             ///< Green color object constant
+const Color CBlue(color_Blue);               ///< Blue color object constant
+const Color CMagenta(color_Magenta);         ///< Magenta color object constant
+const Color CCyan(color_Cyan);               ///< Cyan color object constant
+const Color CYellow(color_Yellow);           ///< Yellow color object constant
+const Color CWhite(color_White);             ///< White color object constant
+const Color CWarmWhite(color_WarmWhite);     ///< Warm white color object constant (with higher red channel value)
+const Color CColdWhite(color_ColdWhite);     ///< Black color object constant (with higher blue channel value)
+const Color CSpookyWhite(color_SpookyWhite); ///< Black color object constant (with higher green channel value)
 ///@}
 
 
 const Color_t * p_noColor = (Color_t *) 0;
 const Color * p_noColorObj = (Color *) 0;
 
-/**
- * @brief Set the Color object according to rgb color-channel values
- *
- * @param r Red channel
- * @param g Green channel
- * @param b Blue channel
- * @param w White channel (zero by default if not assigned)
- */
-void Color::SetColor(uint8_t r, uint8_t g, uint8_t b, uint8_t w) {
-    _color.red   = r;
-    _color.green = g;
-    _color.blue  = b;
-    _color.white = w;
-}
-
-/**
- * @brief Writes Color as formatted bytestream to location
- *
- * @param color
- */
-void Color::WriteByteStreamTo(uint8_t raw[sizeof(Color_t)]) {
-    raw[0] = _color.blue;
-    raw[1] = _color.green;
-    raw[2] = _color.red;
-    raw[3] = _color.white;
-}
-
-Color Color::operator= (Color const * c2) {
-    _color.red   = c2->_color.red;
-    _color.green = c2->_color.green;
-    _color.blue  = c2->_color.blue;
-    _color.white = c2->_color.white;
-
-    return *this;
-}
 
 //@todo test this and differentiate to approach below
 // Color Color::operator*(uint8_t k){
@@ -124,7 +89,7 @@ Color operator*(Color c1, uint8_t k) {
 }
 
 /**
- * @brief Scale color by scaling each color-channel by given scale-factor
+ * @brief Scale color by scaling each color-channel by given factor
  *
  * @param c1 Color
  * @param k Scale-factor uint8_t.Max is fullscale

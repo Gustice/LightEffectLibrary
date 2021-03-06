@@ -143,9 +143,9 @@ typedef struct EffectList_def {
 } EffectList_type;
 
 typedef struct EffektSequenceElement_def {
-    const EffMacro_t *element;    // VisualisierungsElement
-    uint8_t           u8_content; // Anzahl der eingetragenen Teilschritte
-    uint8_t           u8_repeats; // Wiederholungen
+    const EffMacro_t *element;    // Element for visualization 
+    uint8_t           u8_content; // Number of registered steps
+    uint8_t           u8_repeats; // Repetitions
 } EffSequence_type;
 #define COUNT_EFFECT_MAKRO(effect) (sizeof(effect) / sizeof(EffSequence_type))
 extern const EffSequence_type em_Idle[];

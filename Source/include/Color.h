@@ -42,6 +42,9 @@ class Color {
     friend Color operator+(Color c1, Color c2);
     friend Color operator*(Color c1, uint8_t k);
 
+  private:
+    Color_t _color; ///< Color data
+
   public:
     /**
      * @brief   Construct a new Color object
@@ -68,8 +71,7 @@ class Color {
      * @brief Construct a new Color object according to Color_t structure
      * @param color Color to set
      */
-    Color(Color_t * color) { memcpy(&_color, color, sizeof(Color_t)); };
-
+    Color(Color_t *color) { memcpy(&_color, color, sizeof(Color_t)); };
 
     /**
      * @brief Set the Color object according to Color_t Array
@@ -82,22 +84,43 @@ class Color {
      */
     void SetColor(const Color_t color) { memcpy(&_color, &color, sizeof(Color_t)); }
 
-    void SetColor(uint8_t r, uint8_t g, uint8_t b, uint8_t w = 0);
+    /**
+     * @brief Set the Color object according to rgb color-channel values
+     * @param r Red channel
+     * @param g Green channel
+     * @param b Blue channel
+     * @param w White channel (zero by default if not assigned)
+     */
+    void SetColor(uint8_t r, uint8_t g, uint8_t b, uint8_t w = 0) {
+        _color.red   = r;
+        _color.green = g;
+        _color.blue  = b;
+        _color.white = w;
+    }
 
     /**
      * @brief Returns Color as Color_t structure
      * @return Color_t Color
      */
-    Color_t GetColor(void) const { return _color; };
+    Color_t GetColor(void) const { return _color; }
 
-    void WriteByteStreamTo(uint8_t raw[sizeof(Color_t)]);
+    /**
+     * @brief Writes Color as formatted bytestream to location
+     * @param color
+     */
+    void WriteByteStreamTo(uint8_t raw[sizeof(Color_t)]) {
+        raw[0] = _color.blue;
+        raw[1] = _color.green;
+        raw[2] = _color.red;
+        raw[3] = _color.white;
+    }
 
     // Color operator*(uint8_t k);
     // Color operator+(Color * c2);
-    Color operator=(Color const *c2);
-
-  private:
-    Color_t _color; ///< Color data
+    Color operator=(Color const *c2) {
+        SetColor(c2->_color);
+        return *this;
+    }
 };
 
 Color operator*(Color c1, uint8_t k);
@@ -119,14 +142,14 @@ extern const Color_t color_ColdWhite;
 extern const Color_t color_SpookyWhite;
 
 // @todo this might be useless
-extern const Color _ctBlack;
-extern const Color _ctRed;
-extern const Color _ctGreen;
-extern const Color _ctBlue;
-extern const Color _ctMagenta;
-extern const Color _ctCyan;
-extern const Color _ctYellow;
-extern const Color _ctWhite;
-extern const Color _ctWarmWhite;
-extern const Color _ctColdWhite;
-extern const Color _ctSpookyWhite;
+extern const Color CBlack;
+extern const Color CRed;
+extern const Color CGreen;
+extern const Color CBlue;
+extern const Color CMagenta;
+extern const Color CCyan;
+extern const Color CYellow;
+extern const Color CWhite;
+extern const Color CWarmWhite;
+extern const Color CColdWhite;
+extern const Color CSpookyWhite;
