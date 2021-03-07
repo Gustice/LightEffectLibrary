@@ -18,28 +18,28 @@ namespace Effect {
 
 typedef struct SM_ProcessValues_def {
     /// Decrementing tick, counting duration
-    uint8_t u8_tick;
+    uint8_t tick;
     /// Decrementing repeats of current Effect-part
-    uint8_t u8_repeats;
-    /// Current index to waveform
-    uint8_t u16_waveIdx;
-    /// Index step each tick according to duration and template length.
-    uint8_t u16_waveStep;
+    uint8_t repeats;
     /// Dissolve counter dissolves the leading color each tick
-    uint8_t u8_dissolveCnt;
+    uint8_t dissolveCnt;
     /// Index to macro element
-    uint8_t u8_macroIdx;
+    uint8_t macroIdx;
+    /// Current index to waveform
+    uint16_t waveIdx;
+    /// Index step each tick according to duration and template length.
+    uint16_t waveStep;
 } SM_ProcessValues_t;
 
 typedef struct SM_ParamValues_def {
     /// Idle intensity as background color
-    uint8_t u8_idleIntens;
+    uint8_t idleIntens;
     /// dynamic range as variation around background color
-    uint8_t u8_dynamicRange;
+    uint8_t dynamicRange;
     /// Fade steps for color changes
-    uint8_t u8_fadeSteps;
+    uint8_t fadeSteps;
     /// Waveform template length -> index steps are calculated accordingly by give duration
-    uint16_t u16_templateLength;
+    uint16_t templateLength;
 } SM_ParameterValues_t;
 
 /**
@@ -59,14 +59,14 @@ class EffectSM {
   public:
     /**
      * @brief Construct a new Effect State Machine object
-     * @param templateLength
+     * @param templateLength Length of waveforms that are used to display
      */
     EffectSM(uint16_t const templateLength) : EffectSM(templateLength, 0, 0){};
 
     EffectSM(uint16_t const templateLength, uint8_t const intensity, uint8_t const crossFade);
     /// @todo Configuration could be given by structure
 
-    void SetEffect(EffMacro_t *sequence, Color_t const *startColor = NO_COLOR, uint8_t intialDelay = 0);
+    void SetEffect(EffMacro_t *sequence, Color_t const *startColor = NO_COLOR, uint8_t initialDelay = 0);
     void SetEffect(EffMacro_t *sequence, Color_t const *startColor, uint8_t delayedStart, uint8_t intens);
     void SetEffect(const EffectMacro *sequence);
 
@@ -78,14 +78,14 @@ class EffectSM {
      * @param range Dynamic range 0-255. Which applied around idle brightness
      */
     /// @todo Fill this with some magic
-    void SetDynamicRange(uint8_t range) { SMIParams.u8_dynamicRange = range; };
+    void SetDynamicRange(uint8_t range) { SMIParams.dynamicRange = range; };
 
     /**
      * @brief Get the index for the current waveform
      * @details The index is calculated with a higher accuracy in the background.
      * @return const uint8_t index to waveform position.
      */
-    const uint8_t GetWaveformIdx(void) { return ((SMPValues.u16_waveIdx & 0xFF00u) >> 8); };
+    const uint8_t GetWaveformIdx(void) { return ((SMPValues.waveIdx & 0xFF00u) >> 8); };
 
     /**
      * @brief Get current color
@@ -99,7 +99,7 @@ class EffectSM {
      * @return const uint8_t intensity
      */
     /// @todo delete?
-    const uint8_t GetIntensity(void) { return SMIParams.u8_idleIntens; };
+    const uint8_t GetIntensity(void) { return SMIParams.idleIntens; };
 
     /**
      * @brief Get index to current macro in sequence
@@ -132,6 +132,9 @@ class EffectSM {
     static Color const *  UpdateWave(EffectSM *SM);
     static Color const *  UpdateRevWave(EffectSM *SM);
     static Color const *  UpdateFlicker(EffectSM *SM);
+
+    /// Last color
+    Color _lastColor;
 
     /// Current color
     /// \li Either forced by start with parameter

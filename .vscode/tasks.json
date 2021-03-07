@@ -29,9 +29,9 @@
             "label": "CMake: Run Test Project",
             "type": "shell",
             "options": {
-                "cwd": "${workspaceFolder}/build"
+                "cwd": "${workspaceFolder}"
             },
-            "command": "Tests/tests.exe",
+            "command": "build/Tests/tests.exe",
             "dependsOn": "CMake: Build Project",
             "group": {
                 "kind": "test",

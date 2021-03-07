@@ -1,3 +1,8 @@
 {
-    "python.pythonPath": "C:\\Python39\\python.exe"
+    "python.pythonPath": "C:\\Python39\\python.exe",
+    "files.associations": {
+        "ostream": "cpp",
+        "iosfwd": "cpp",
+        "fstream": "cpp"
+    }
 }

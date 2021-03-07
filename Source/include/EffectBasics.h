@@ -142,7 +142,7 @@ typedef struct EffectList_def {
     const uint8_t     u8_parts; // Macro-entries
 } EffectList_type;
 
-typedef struct EffektSequenceElement_def {
+typedef struct EffectSequenceElement_def {
     const EffMacro_t *element;    // Element for visualization 
     uint8_t           u8_content; // Number of registered steps
     uint8_t           u8_repeats; // Repetitions

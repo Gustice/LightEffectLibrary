@@ -35,7 +35,7 @@ typedef struct Color_def {
  *
  * @details Defines color data and common operations with color objects
  *  \li Supports RGB with overlapping white channel (e.g. SK6812-LED)
- *  \li Supprts Operator overloading with '+' and '*'
+ *  \li Supprts Operator overloading with '+' and '*' (Combined operation with MixWith)
  *  \li Return formatted data stream that can be directly sent to an LED
  */
 class Color {
@@ -104,15 +104,15 @@ class Color {
      */
     Color_t GetColor(void) const { return _color; }
 
-  /**
-   * @brief Scaling and overlaying with given color.
-   * @param c2 Color 2
-   * @param k scaling factor
-   * @return Overlayed Color
-   */
-    Color MixWith(const Color c2, uint8_t k = 0x7F){
-      *this = (*this * (UINT8_MAX - k)) + ( c2 * k);
-      return *this;
+    /**
+     * @brief Scaling and overlaying with given color.
+     * @param c2 Color 2
+     * @param k scaling factor
+     * @return Overlayed Color
+     */
+    Color MixWith(const Color c2, uint8_t k = 0x7F) {
+        *this = (*this * (UINT8_MAX - k)) + (c2 * k);
+        return *this;
     }
 
     /**
@@ -131,6 +131,19 @@ class Color {
     Color operator=(Color const *c2) {
         SetColor(c2->_color);
         return *this;
+    }
+
+    bool operator==(Color const & c2) {
+        return ((_color.blue == c2._color.blue) && 
+        (_color.green == c2._color.green) && 
+        (_color.red == c2._color.red) && 
+        (_color.white == c2._color.white));
+    }
+    bool operator!=(Color const & c2) {
+        return ((_color.blue != c2._color.blue) || 
+        (_color.green != c2._color.green) || 
+        (_color.red != c2._color.red) || 
+        (_color.white != c2._color.white));
     }
 };
 

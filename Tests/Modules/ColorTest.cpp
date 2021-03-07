@@ -315,3 +315,25 @@ TEST_CASE("Testsing usage of predefined Colors", "[Color]") {
     uint8_t check[size] = {0x55, 0x55, 0x55, 0x00}; // this is white
     REQUIRE(ColorIsEqualToStream(dut, check));
 }
+
+
+TEST_CASE("Comparing Color", "[Color]") {
+    Color_t cDef = {1,2,3,4};
+    Color c1(cDef);
+    Color c2(1,2,3,4);
+    CHECK ( (c1 == c2 ));
+
+    Color cN1(0,2,3,4);
+    CHECK ( (c1 != cN1) );
+    Color cN2(1,0,3,4);
+    CHECK ( (c1 != cN2) );
+    Color cN3(1,2,0,4);
+    CHECK ( (c1 != cN3) );
+    Color cN4(1,2,3,0);
+    CHECK ( (c1 != cN4) );
+
+    Color c3 = Color();
+    CHECK ( (c1 != c3) );
+    c3.SetColor(1,2,3,4);
+    CHECK ( (c1 == c3) );
+}
