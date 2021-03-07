@@ -14,10 +14,106 @@ EffMacro_t        eff_ShowDemo[]      = {
 static const uint8_t u8_showWaveLen = sizeof(gau8_showWave);
 
 TEST_CASE("Constructing EffectProcessor", "[EffectProcessor, Constructor]") {
-    EffectProcessor EP1(u8_showWaveLen, 3);
-    EP1.SetEffect(eff_ShowDemo);
+    EffectProcessor dut(u8_showWaveLen, 3);
+    dut.SetEffect(eff_ShowDemo);
     REQUIRE(true);
 }
+
+
+
+TEST_CASE("Running Effect Processor with different Setups", "[EffectProcessor]") {
+    SECTION("Running with different intensities(applies for idle state)") {
+        EffMacro_t effDemo[] = {
+            // State      WV            FS    N  Start         R  Next
+            {Light_Idle, NO_WAVE, 0xFF, 4, &color_Blue, 0, 1},
+            {Light_Idle, NO_WAVE, 0xFF, 4, &color_Green, 0, 2},
+        };
+        uint8_t fullIntens = 0xFFu;
+        uint8_t halfIntens = 0x80u;
+
+        SECTION("Running with full intensity(applies for idle state)") {
+            static EffectSM dut(u8_testWaveLen, 0xFF, 0);
+            dut.SetEffect(effDemo);
+
+            CHECK(CheckColor(Color(0, 0, 0xFF, 0), *dut.Tick()));
+            CHECK(CheckColor(Color(0, 0, 0xFF, 0), *dut.Tick()));
+            CHECK(CheckColor(Color(0, 0, 0xFF, 0), *dut.Tick()));
+            CHECK(CheckColor(Color(0, 0, 0xFF, 0), *dut.Tick()));
+            CHECK(CheckColor(Color(0, 0xFF, 0, 0), *dut.Tick())); // <- Switching to next waveform
+        }
+
+        SECTION("Running with half default idle intensity(applies for idle state)") {
+            static EffectSM dut(u8_testWaveLen, 0x80, 0);
+            dut.SetEffect(effDemo);
+
+            CHECK(CheckColor(Color(0, 0, 0x80, 0), *dut.Tick()));
+            CHECK(CheckColor(Color(0, 0, 0x80, 0), *dut.Tick()));
+            CHECK(CheckColor(Color(0, 0, 0x80, 0), *dut.Tick()));
+            CHECK(CheckColor(Color(0, 0, 0x80, 0), *dut.Tick()));
+            CHECK(CheckColor(Color(0, 0x80, 0, 0), *dut.Tick())); // <- Switching to next waveform
+        }
+        SECTION("Define other start intensity") {
+            static EffectSM dut(u8_testWaveLen, 0xFF, 0);
+            dut.SetEffect(effDemo, NO_COLOR, &halfIntens, 0);
+            CHECK(CheckColor(Color(0, 0, 0x80, 0), *dut.Tick()));
+            dut.Tick();
+            dut.Tick();
+            CHECK(CheckColor(Color(0, 0, 0x80, 0), *dut.Tick()));
+            CHECK(CheckColor(Color(0, 0x80, 0, 0), *dut.Tick())); // <- Switching to next waveform
+        }
+    }
+    SECTION("Starting Effect with different colors") {
+        EffMacro_t effDemo[] = {
+            // State     WV       FS    N  Start         R  Next
+            {Light_Idle, NO_WAVE, 0xFF, 4, &color_Blue, 0, 1},
+            {Light_Idle, NO_WAVE, 0xFF, 4, &color_Green, 0, 2},
+            {Light_Idle, NO_WAVE, 0xFF, 4, &color_Red, 0, 0},
+        };
+
+        static EffectSM dut(u8_testWaveLen, 0xFF, 0);
+        SECTION("Not Changing colors") {
+            dut.SetEffect(effDemo);
+            CHECK(CheckColor(Color(0, 0, 0xFF, 0), *dut.Tick()));
+            dut.Tick();
+            dut.Tick();
+            CHECK(CheckColor(Color(0, 0, 0xFF, 0), *dut.Tick()));
+            CHECK(CheckColor(Color(0, 0xFF, 0, 0), *dut.Tick())); // <- Switching to next waveform
+        }
+        SECTION("Define other Start Color") {
+            dut.SetEffect(effDemo, &color_Red, nullptr, 0);
+            CHECK(CheckColor(Color(0xFF, 0, 0, 0), *dut.Tick()));
+            dut.Tick();
+            dut.Tick();
+            CHECK(CheckColor(Color(0xFF, 0, 0, 0), *dut.Tick()));
+            CHECK(CheckColor(Color(0, 0xFF, 0, 0), *dut.Tick())); // <- Switching to next waveform
+        }
+    }
+    SECTION("Delayed start of Effects") {
+        EffMacro_t effDemo[] = {
+            // State      WV            FS    N  Start         R  Next
+            {Light_Idle, NO_WAVE, 0xFF, 4, &color_Blue, 0, 1},
+            {Light_Idle, NO_WAVE, 0xFF, 4, &color_Green, 0, 2},
+        };
+        static EffectSM dut(u8_testWaveLen, 0xFF, 0);
+        dut.SetEffect(effDemo, NO_COLOR, 2);
+        CHECK(CheckColor(Color(0, 0, 0, 0), *dut.Tick()));
+        CHECK(CheckColor(Color(0, 0, 0, 0), *dut.Tick()));
+        CHECK(CheckColor(Color(0, 0, 0xFF, 0), *dut.Tick()));
+        dut.Tick();
+        dut.Tick();
+        CHECK(CheckColor(Color(0, 0, 0xFF, 0), *dut.Tick()));
+        CHECK(CheckColor(Color(0, 0xFF, 0, 0), *dut.Tick())); // <- Switching to next waveform
+    }
+}
+
+
+
+
+
+
+
+
+
 
 TEST_CASE("Running EffectProcessor", "[EffectProcessor, Constructor]") {
     EffectProcessor EP1(u8_showWaveLen, 3);

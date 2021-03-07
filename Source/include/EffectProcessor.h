@@ -47,8 +47,6 @@ class EffectProcessor {
     EffectProcessor();
 };
 
-
-
 // #define SINGLEEFFECT_COLORWITH 1
 // class SingleEffect : public EffectProcessor {
 // 	public:

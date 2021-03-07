@@ -9,11 +9,10 @@
  *
  */
 
-
+#include "EffectProcessor.h"
 #include "EffectBasics.h"
 #include "EffectMacro.h"
 #include "EffectWaveforms.h"
-#include "EffectProcessor.h"
 #include <math.h>
 #include <stdlib.h>
 #include <string.h>
@@ -23,7 +22,7 @@ namespace Effect {
 EffectProcessor::EffectProcessor(uint16_t const templateLength, uint8_t const fadeSteps)
     : EffPV(templateLength), EffPV_old(templateLength), _pColor(), _pColorOld() {
     EffPV.SetEffect(eff_Dark, 0);
-    u8_fadeSteps    = fadeSteps;
+    u8_fadeSteps = fadeSteps;
 }
 
 void EffectProcessor::SetEffect(EffMacro_t *sequence, Color_t const *sColor, uint8_t intens) {
@@ -67,7 +66,6 @@ Color *EffectProcessor::crossFadeColors(uint8_t k) {
     return &_pColor;
 }
 
-
 // /************************************************************************/
 // /* EffectProcessor 1 LED                                                         */
 // /************************************************************************/
@@ -93,7 +91,8 @@ Color *EffectProcessor::crossFadeColors(uint8_t k) {
 // 	// 	break;
 
 // 	// 	case Light_InvWave:
-// 	// 	*color = effStat->_aColor * cEffStep->pu8_wave[cu16_TemplateLength -1 - effStat->ReadTempIdx()] * cEffStep->u8_FSintensity;
+// 	// 	*color = effStat->_aColor * cEffStep->pu8_wave[cu16_TemplateLength -1 - effStat->ReadTempIdx()] *
+// cEffStep->u8_FSintensity;
 // 	// 	break;
 
 // 	// 	case Light_Flicker:
@@ -137,13 +136,17 @@ Color *EffectProcessor::crossFadeColors(uint8_t k) {
 // 	// 	break;
 
 // 	// 	case Light_Wave:
-// 	// 	color[0] = effStat->_aColor * effStat->_p_effMac->pu8_wave[effStat->ReadTempIdx()] * effStat->_p_effMac->u8_FSintensity;
-// 	// 	color[1] = effStat->_aColor * effStat->_p_effMac->pu8_wave[cu16_TemplateLength -1 - effStat->ReadTempIdx()] * effStat->_p_effMac->u8_FSintensity;
+// 	// 	color[0] = effStat->_aColor * effStat->_p_effMac->pu8_wave[effStat->ReadTempIdx()] *
+// effStat->_p_effMac->u8_FSintensity;
+// 	// 	color[1] = effStat->_aColor * effStat->_p_effMac->pu8_wave[cu16_TemplateLength -1 - effStat->ReadTempIdx()] *
+// effStat->_p_effMac->u8_FSintensity;
 // 	// 	break;
 
 // 	// 	case Light_InvWave:
-// 	// 	color[0] = effStat->_aColor * effStat->_p_effMac->pu8_wave[cu16_TemplateLength -1 - effStat->ReadTempIdx()] * effStat->_p_effMac->u8_FSintensity;
-// 	// 	color[1] = effStat->_aColor * effStat->_p_effMac->pu8_wave[effStat->ReadTempIdx()] * effStat->_p_effMac->u8_FSintensity;
+// 	// 	color[0] = effStat->_aColor * effStat->_p_effMac->pu8_wave[cu16_TemplateLength -1 - effStat->ReadTempIdx()] *
+// effStat->_p_effMac->u8_FSintensity;
+// 	// 	color[1] = effStat->_aColor * effStat->_p_effMac->pu8_wave[effStat->ReadTempIdx()] *
+// effStat->_p_effMac->u8_FSintensity;
 // 	// 	break;
 
 // 	// 	case Light_Blank:

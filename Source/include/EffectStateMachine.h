@@ -67,11 +67,11 @@ class EffectSM {
     /// @todo Configuration could be given by structure
 
     void SetEffect(EffMacro_t *sequence, Color_t const *startColor = NO_COLOR, uint8_t initialDelay = 0);
-    void SetEffect(EffMacro_t *sequence, Color_t const *startColor, uint8_t delayedStart, uint8_t intens);
+    void SetEffect(EffMacro_t *sequence, Color_t const *startColor, const uint8_t *intens, const uint8_t delayedStart);
     void SetEffect(const EffectMacro *sequence);
 
     virtual Color const *Tick(void);
-    uint8_t      GetDissolveRatio(void);
+    uint8_t              GetDissolveRatio(void);
 
     /**
      * @brief Set the Dynamic Range of effects
@@ -154,16 +154,14 @@ class EffectSM {
     EffectSM(void){};
 };
 
+class SequenceSM : public EffectSM {
+  public:
+    SequenceSM(const Effect1 *init);
+    void SetEffect(const EffectMacro *sequence, uint8_t delay = 0);
 
-class SequenceSM : public EffectSM
-{
-public:
-  SequenceSM(const Effect1 * init);
-  void SetEffect(const EffectMacro *sequence, uint8_t delay = 0);
+    Color const *Tick(void);
 
-  Color const *Tick(void);
-
-protected:
+  protected:
     /// First element of Effect macro stack
     EffectMacro const *p_effSeq;
     /// Currently indexed Effect-part
@@ -179,10 +177,6 @@ protected:
     static Color const *  UpdateWave(SequenceSM *SM);
     static Color const *  UpdateRevWave(SequenceSM *SM);
     static Color const *  UpdateFlicker(SequenceSM *SM);
-
-
-
 };
-
 
 } // namespace Effect

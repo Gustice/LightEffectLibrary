@@ -19,7 +19,6 @@ extern const uint8_t  gu8_fullIntensity;
 extern const uint8_t  gu8_dynamicRange;
 extern const uint8_t  gu8_fadeSteps;
 
-
 /// Starts from idle \ref gu8_idleIntensity and represents a gaussian impulse  \ref gu8_fullIntensity
 extern const uint8_t gau8_offsetPulse[];
 /// Starts at zero and rises to idle intensity \ref gu8_idleIntensity

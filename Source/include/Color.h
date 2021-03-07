@@ -25,6 +25,7 @@ typedef struct Color_def {
     uint8_t white;
 } Color_t;
 
+#define NO_WAVE ((uint8_t *)0)
 #define NO_COLOR ((Color_t *)0)       ///< Pointer constant to "no color"
 #define NO_COLOR_OBJ ((Color *)0)     ///< Null color object
 #define USEOLD_COLOR NO_COLOR         ///< Used old color agreement (if no color pointer)
@@ -133,17 +134,13 @@ class Color {
         return *this;
     }
 
-    bool operator==(Color const & c2) {
-        return ((_color.blue == c2._color.blue) && 
-        (_color.green == c2._color.green) && 
-        (_color.red == c2._color.red) && 
-        (_color.white == c2._color.white));
+    bool operator==(Color const &c2) {
+        return ((_color.blue == c2._color.blue) && (_color.green == c2._color.green) && (_color.red == c2._color.red) &&
+                (_color.white == c2._color.white));
     }
-    bool operator!=(Color const & c2) {
-        return ((_color.blue != c2._color.blue) || 
-        (_color.green != c2._color.green) || 
-        (_color.red != c2._color.red) || 
-        (_color.white != c2._color.white));
+    bool operator!=(Color const &c2) {
+        return ((_color.blue != c2._color.blue) || (_color.green != c2._color.green) || (_color.red != c2._color.red) ||
+                (_color.white != c2._color.white));
     }
 };
 

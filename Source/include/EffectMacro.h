@@ -20,5 +20,4 @@ extern EffMacro_t eff_ShiftAsymPulse[];
 extern EffectMacro someScene;
 extern EffectMacro idleScene;
 
-
 } // namespace Effect

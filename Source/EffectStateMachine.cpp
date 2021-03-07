@@ -24,7 +24,8 @@ EffMacro_t delayPrequel[] = {
 
 /// Function table to processing Functions
 EffectSM::pEffPrc *const EffectSM::apF_Processors[6] = {
-    EffectSM::UpdateBlank, EffectSM::UpdateIdle, EffectSM::UpdateFreeze, EffectSM::UpdateWave, EffectSM::UpdateWave, EffectSM::UpdateFlicker,
+    EffectSM::UpdateBlank, EffectSM::UpdateIdle,    EffectSM::UpdateFreeze,
+    EffectSM::UpdateWave,  EffectSM::UpdateRevWave, EffectSM::UpdateFlicker,
 };
 
 /**
@@ -32,20 +33,20 @@ EffectSM::pEffPrc *const EffectSM::apF_Processors[6] = {
  *
  * @param templateLength
  * @param intensity
- * @param crossFade
+ * @param crossFade @todo not implemented yet
  */
 EffectSM::EffectSM(uint16_t const templateLength, uint8_t const intensity, uint8_t const crossFade) {
     SMIParams.templateLength = templateLength;
-    SMIParams.idleIntens      = intensity;
-    SMIParams.fadeSteps       = 0;
-    SMIParams.dynamicRange    = 30;
+    SMIParams.idleIntens     = intensity;
+    SMIParams.fadeSteps      = 0;
+    SMIParams.dynamicRange   = 30;
     if (crossFade > 0)
         SMIParams.fadeSteps = crossFade; // @todo
-    _outputColor = new Color; // @todo must be destructed
+    _outputColor = new Color;            // @todo must be destructed
 }
 
 void EffectSM::SetEffect(EffMacro_t *sequence, Color_t const *startColor, uint8_t initialDelay) {
-    SetEffect(sequence, startColor, initialDelay, SMIParams.idleIntens);
+    SetEffect(sequence, startColor, &SMIParams.idleIntens, initialDelay);
 }
 
 /**
@@ -56,22 +57,26 @@ void EffectSM::SetEffect(EffMacro_t *sequence, Color_t const *startColor, uint8_
  * @param delayedStart
  * @param intens
  */
-void EffectSM::SetEffect(EffMacro_t *sequence, Color_t const *startColor, uint8_t delayedStart, uint8_t intens) {
-    if (startColor == NO_COLOR) {
-        _curentColor.SetColor(*sequence->color);
-    } else {
+void EffectSM::SetEffect(EffMacro_t *sequence, Color_t const *startColor, const uint8_t *intens,
+                         const uint8_t delayedStart) {
+    if (startColor != NO_COLOR) {
         _curentColor.SetColor(*startColor);
+    } else {
+        _curentColor.SetColor(*sequence->color);
     }
     _lastColor.SetColor(_curentColor.GetColor());
-    SMIParams.idleIntens = intens;
-    SMPValues.macroIdx   = 0;
+    if (intens != nullptr) {
+        SMIParams.idleIntens = *intens;
+    }
+
+    SMPValues.macroIdx = 0;
 
     _p_effSeq = sequence;
     if (delayedStart > 0) {
-        _p_effMac         = delayPrequel;
+        _p_effMac      = delayPrequel;
         SMPValues.tick = delayedStart;
     } else {
-        _p_effMac         = sequence;
+        _p_effMac      = sequence;
         SMPValues.tick = _p_effMac->u8_duration;
     }
 
@@ -101,7 +106,7 @@ Color const *EffectSM::Tick(void) {
         // u8_repeats-decrement
         if (SMPValues.repeats-- == 0) {
             SMPValues.macroIdx = _p_effMac->next;
-            _p_effMac             = &(_p_effSeq[_p_effMac->next]);
+            _p_effMac          = &(_p_effSeq[_p_effMac->next]);
             SMPValues.repeats  = _p_effMac->u8_repeats;
 
             // execute color change if necessary
@@ -119,7 +124,6 @@ Color const *EffectSM::Tick(void) {
     SMPValues.waveIdx += SMPValues.waveStep;
     if (SMPValues.dissolveCnt > 0) {
         SMPValues.dissolveCnt--;
-        
     }
 
     return apF_Processors[_p_effMac->state](this);
@@ -131,7 +135,7 @@ Color const *EffectSM::Tick(void) {
 void EffectSM::SetIndexes(void) {
     SMPValues.waveStep = ((SMIParams.templateLength) << 8);
     SMPValues.waveStep /= _p_effMac->u8_duration;
-    SMPValues.waveIdx  = (uint16_t)(0 - SMPValues.waveStep);
+    SMPValues.waveIdx = (uint16_t)(0 - SMPValues.waveStep);
 }
 
 /**
@@ -140,7 +144,8 @@ void EffectSM::SetIndexes(void) {
  */
 /// @todo it seems not te be very clever to delegate this on higher level
 uint8_t EffectSM::GetDissolveRatio(void) {
-    if (SMIParams.fadeSteps == 0) return 0;
+    if (SMIParams.fadeSteps == 0)
+        return 0;
 
     uint8_t dissolving = (uint8_t)((uint16_t)0xFF * SMPValues.dissolveCnt / SMIParams.fadeSteps);
     return dissolving;
@@ -157,7 +162,7 @@ Color const *EffectSM::UpdateIdle(EffectSM *SM) {
 }
 
 Color const *EffectSM::UpdateFreeze(EffectSM *SM) {
-    // just do nothing
+    // just do nothing and Return currently set color
     return SM->_outputColor;
 }
 
@@ -168,50 +173,46 @@ Color const *EffectSM::UpdateWave(EffectSM *SM) {
 }
 
 Color const *EffectSM::UpdateRevWave(EffectSM *SM) {
-    // EffMacro_type const *const cEffStep = effStat->GetStep();
-    // *color = effStat->GetColor() * cEffStep->pu8_wave[cTemplateLength - 1 - effStat->GetWaveformIdx()] * cEffStep->FSintensity;
+    EffMacro_t const *const cEffStep  = SM->GetStep();
+    uint8_t                 lastIndex = SM->SMIParams.templateLength - 1;
+    *(SM->_outputColor) =
+        SM->GetColor() * cEffStep->pu8_wave[lastIndex - SM->GetWaveformIdx()] * cEffStep->u8_FSintensity;
     return SM->_outputColor;
-} 
+}
 
 Color const *EffectSM::UpdateFlicker(EffectSM *SM) {
     uint8_t k;
     k                   = rand();
-    k                   = SM->SMIParams.idleIntens + ((int16_t)k * (SM->SMIParams.idleIntens + SM->SMIParams.dynamicRange) / 0xFF);
+    k                   = SM->SMIParams.idleIntens + ((int16_t)k * (SM->SMIParams.dynamicRange) / 0xFF);
     *(SM->_outputColor) = SM->_curentColor * k;
     return SM->_outputColor;
 }
-
-
-
-
-
-
-
 
 /// Initial Delay template. Only effect entry is used here.
 static const Effect1 InitialDelay(Light_Blank, 0, 0);
 
 /// Function table to processing Functions
 SequenceSM::pSeqPrc *const SequenceSM::apF_SqProcessors[6] = {
-    SequenceSM::UpdateBlank, SequenceSM::UpdateIdle, SequenceSM::UpdateFreeze, SequenceSM::UpdateWave, SequenceSM::UpdateWave, SequenceSM::UpdateFlicker,
+    SequenceSM::UpdateBlank, SequenceSM::UpdateIdle, SequenceSM::UpdateFreeze,
+    SequenceSM::UpdateWave,  SequenceSM::UpdateWave, SequenceSM::UpdateFlicker,
 };
 
 SequenceSM::SequenceSM(const Effect1 *init) : EffectSM() {
     if (const Effect3 *init3 = dynamic_cast<const Effect3 *>(init)) {
-        SMIParams.idleIntens      = init3->idleIntens;
+        SMIParams.idleIntens     = init3->idleIntens;
         SMIParams.templateLength = init3->templateLen;
-        SMIParams.dynamicRange    = init3->dynRange;
-        SMIParams.fadeSteps       = init3->fadeSteps;
+        SMIParams.dynamicRange   = init3->dynRange;
+        SMIParams.fadeSteps      = init3->fadeSteps;
     } else if (const Effect2 *init2 = dynamic_cast<const Effect2 *>(init)) {
-        SMIParams.idleIntens      = gu8_idleIntensity;
+        SMIParams.idleIntens     = gu8_idleIntensity;
         SMIParams.templateLength = cu16_TemplateLength;
-        SMIParams.dynamicRange    = init2->dynRange;
-        SMIParams.fadeSteps       = gu8_fadeSteps;
+        SMIParams.dynamicRange   = init2->dynRange;
+        SMIParams.fadeSteps      = gu8_fadeSteps;
     } else {
-        SMIParams.idleIntens      = gu8_idleIntensity;
+        SMIParams.idleIntens     = gu8_idleIntensity;
         SMIParams.templateLength = cu16_TemplateLength;
-        SMIParams.dynamicRange    = INT8_MAX - cu16_TemplateLength;
-        SMIParams.fadeSteps       = gu8_fadeSteps;
+        SMIParams.dynamicRange   = INT8_MAX - cu16_TemplateLength;
+        SMIParams.fadeSteps      = gu8_fadeSteps;
     }
 }
 
@@ -221,22 +222,22 @@ void SequenceSM::SetEffect(const EffectMacro *sequence, uint8_t delay) {
     const Color_t *initColor = p_noColor;
     const Effect1 *init      = sequence->initEffect;
     if (const Effect3 *init3 = dynamic_cast<const Effect3 *>(init)) {
-        SMIParams.idleIntens      = init3->idleIntens;
+        SMIParams.idleIntens     = init3->idleIntens;
         SMIParams.templateLength = init3->templateLen;
-        SMIParams.dynamicRange    = init3->dynRange;
-        SMIParams.fadeSteps       = init3->fadeSteps;
+        SMIParams.dynamicRange   = init3->dynRange;
+        SMIParams.fadeSteps      = init3->fadeSteps;
         _curentColor.SetColor(init3->color);
         initColor = init3->color;
     } else if (const Effect2 *init2 = dynamic_cast<const Effect2 *>(init)) {
-        SMIParams.idleIntens      = gu8_idleIntensity;
+        SMIParams.idleIntens     = gu8_idleIntensity;
         SMIParams.templateLength = cu16_TemplateLength;
-        SMIParams.dynamicRange    = init2->dynRange;
-        SMIParams.fadeSteps       = gu8_fadeSteps;
+        SMIParams.dynamicRange   = init2->dynRange;
+        SMIParams.fadeSteps      = gu8_fadeSteps;
     } else {
-        SMIParams.idleIntens      = gu8_idleIntensity;
+        SMIParams.idleIntens     = gu8_idleIntensity;
         SMIParams.templateLength = cu16_TemplateLength;
-        SMIParams.dynamicRange    = INT8_MAX - cu16_TemplateLength;
-        SMIParams.fadeSteps       = gu8_fadeSteps;
+        SMIParams.dynamicRange   = INT8_MAX - cu16_TemplateLength;
+        SMIParams.fadeSteps      = gu8_fadeSteps;
     }
 
     p_effMac = sequence->sequence;
@@ -244,18 +245,18 @@ void SequenceSM::SetEffect(const EffectMacro *sequence, uint8_t delay) {
     SMPValues.macroIdx = 0;
 
     if (delay > 0) {
-        p_effMac          = &InitialDelay;
+        p_effMac       = &InitialDelay;
         SMPValues.tick = delay;
     } else {
-        p_effMac          = sequence->sequence;
+        p_effMac       = sequence->sequence;
         SMPValues.tick = _p_effMac->u8_duration;
     }
 
     if (const Effect3 *macro3 = dynamic_cast<const Effect3 *>(p_effMac)) {
-        SMIParams.idleIntens      = macro3->idleIntens;
+        SMIParams.idleIntens     = macro3->idleIntens;
         SMIParams.templateLength = macro3->templateLen;
-        SMIParams.dynamicRange    = macro3->dynRange;
-        SMIParams.fadeSteps       = macro3->fadeSteps;
+        SMIParams.dynamicRange   = macro3->dynRange;
+        SMIParams.fadeSteps      = macro3->fadeSteps;
 
         if (initColor != p_noColor) {
             _curentColor.SetColor(macro3->color);
@@ -275,7 +276,7 @@ Color const *SequenceSM::Tick(void) {
         // u8_repeats-decrement
         if (SMPValues.repeats-- == 0) {
             SMPValues.macroIdx = p_effMac->next;
-            p_effMac              = &(p_effSeq->sequence[p_effMac->next]);
+            p_effMac           = &(p_effSeq->sequence[p_effMac->next]);
 
             SetupProcessVariables(p_effMac);
         }
@@ -294,10 +295,10 @@ Color const *SequenceSM::Tick(void) {
 
 void SequenceSM::SetupProcessVariables(Effect1 const *effMac) {
     if (const Effect3 *macro3 = dynamic_cast<const Effect3 *>(effMac)) {
-        SMIParams.idleIntens      = macro3->idleIntens;
+        SMIParams.idleIntens     = macro3->idleIntens;
         SMIParams.templateLength = macro3->templateLen;
-        SMIParams.dynamicRange    = macro3->dynRange;
-        SMIParams.fadeSteps       = macro3->fadeSteps;
+        SMIParams.dynamicRange   = macro3->dynRange;
+        SMIParams.fadeSteps      = macro3->fadeSteps;
 
         if (macro3->color != p_noColor) {
             _curentColor.SetColor(macro3->color);
@@ -334,14 +335,15 @@ Color const *SequenceSM::UpdateWave(SequenceSM *SM) {
 
 Color const *SequenceSM::UpdateRevWave(SequenceSM *SM) {
     // EffMacro_type const *const cEffStep = effStat->GetStep();
-    // *color = effStat->GetColor() * cEffStep->pwave[cTemplateLength - 1 - effStat->GetWaveformIdx()] * cEffStep->FSintensity;
+    // *color = effStat->GetColor() * cEffStep->pwave[cTemplateLength - 1 - effStat->GetWaveformIdx()] *
+    // cEffStep->FSintensity;
     return SM->_outputColor;
 }
 
 Color const *SequenceSM::UpdateFlicker(SequenceSM *SM) {
     uint8_t k;
-    k                   = rand();
-    k                   = SM->SMIParams.idleIntens + ((int16_t)k * (SM->SMIParams.idleIntens + SM->SMIParams.dynamicRange) / 0xFF);
+    k = rand();
+    k = SM->SMIParams.idleIntens + ((int16_t)k * (SM->SMIParams.idleIntens + SM->SMIParams.dynamicRange) / 0xFF);
     *(SM->_outputColor) = SM->_curentColor * k;
     return SM->_outputColor;
 }
