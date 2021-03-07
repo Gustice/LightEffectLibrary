@@ -42,8 +42,17 @@ EffectSM::EffectSM(uint16_t const templateLength, uint8_t const intensity, uint8
     SMIParams.dynamicRange   = 30;
     if (crossFade > 0)
         SMIParams.fadeSteps = crossFade; // @todo
-    _outputColor = new Color;            // @todo must be destructed
+    _outputColor = new Color;
 }
+
+/**
+ * @brief Destroy the Effect State Machine
+ * 
+ */
+    EffectSM::~EffectSM() {
+        delete _outputColor;
+    }
+
 
 void EffectSM::SetEffect(EffMacro_t *sequence, Color_t const *startColor, uint8_t initialDelay) {
     SetEffect(sequence, startColor, &SMIParams.idleIntens, initialDelay);

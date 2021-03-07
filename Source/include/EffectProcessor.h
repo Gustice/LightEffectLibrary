@@ -28,21 +28,19 @@ extern const uint8_t gu8_idleIntensity; // @todo this is bad
 class EffectProcessor {
   public:
     EffectProcessor(uint16_t const templateLength, uint8_t const fadeSteps);
+    ~EffectProcessor();
     void SetEffect(EffMacro_t *sequence, Color_t const *sColor = NO_COLOR, uint8_t intens = gu8_idleIntensity);
-    void Tick(void);
+    Color const * Tick(void);
 
+  private:
     uint8_t _colorSize;
     Color   _pColor;
     Color   _pColorOld;
+    uint8_t _fadeSteps;
+    uint8_t _fadingCnt;
+    EffectSM * _EffPV;
+    EffectSM * _EffPV_old;
 
-    uint8_t u8_fadeSteps;
-    uint8_t u8_fadingCnt;
-    uint8_t u8_dissCnt;
-
-    EffectSM EffPV;
-    EffectSM EffPV_old;
-
-  private:
     Color *crossFadeColors(uint8_t k);
     EffectProcessor();
 };

@@ -62,6 +62,7 @@ class EffectSM {
      * @param templateLength Length of waveforms that are used to display
      */
     EffectSM(uint16_t const templateLength) : EffectSM(templateLength, 0, 0){};
+    ~EffectSM();
 
     EffectSM(uint16_t const templateLength, uint8_t const intensity, uint8_t const crossFade);
     /// @todo Configuration could be given by structure

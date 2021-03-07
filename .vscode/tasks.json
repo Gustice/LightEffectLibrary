@@ -3,7 +3,6 @@
     // for the documentation about the tasks.json format
     "version": "2.0.0",
     "tasks": [
-
         // NOTE: It works somehow better if the Configuration is initially startet manuallly
         //          Hence this task is not needed
         // { // This is better made by plugin integration
@@ -22,7 +21,10 @@
                 "cwd": "${workspaceFolder}/build"
             },
             "command": "CMake --build .",
-            "group": {"kind": "build", "isDefault": true},
+            "group": {
+                "kind": "build",
+                "isDefault": true
+            },
             "problemMatcher": "$gcc", // Otherwise its annoys you with warnings
         },
         {
@@ -39,7 +41,16 @@
             },
             "problemMatcher": "$gcc", // Otherwise its annoys you with warnings
         },
-
+        {
+            "label": "Py: Show Test-Plots",
+            "type": "shell",
+            "options": {
+                "cwd": "${workspaceFolder}"
+            },
+            "command": "py Tests/Output/PrintOutputs.py",
+            "dependsOn": "CMake: Build Project",
+            "problemMatcher": "$gcc", // Otherwise its annoys you with warnings
+        },
         {
             "label": "Doxygen: Create Docs",
             "type": "shell",
@@ -49,6 +60,5 @@
             ],
             "problemMatcher": "$gcc"
         },
-        
     ]
 }

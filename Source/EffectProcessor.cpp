@@ -20,35 +20,46 @@
 namespace Effect {
 
 EffectProcessor::EffectProcessor(uint16_t const templateLength, uint8_t const fadeSteps)
-    : EffPV(templateLength), EffPV_old(templateLength), _pColor(), _pColorOld() {
-    EffPV.SetEffect(eff_Dark, 0);
-    u8_fadeSteps = fadeSteps;
+    : _pColor(), _pColorOld() {
+    _EffPV = new EffectSM(templateLength); 
+    _EffPV_old = new EffectSM(templateLength);
+    _EffPV->SetEffect(eff_Dark, 0);
+    _fadeSteps = fadeSteps;
+}
+
+EffectProcessor::~EffectProcessor(){
+    delete _EffPV;
+    delete _EffPV_old;
 }
 
 void EffectProcessor::SetEffect(EffMacro_t *sequence, Color_t const *sColor, uint8_t intens) {
-    u8_fadingCnt = u8_fadeSteps;
+    _fadingCnt = _fadeSteps;
 
-    memcpy(&EffPV_old, &EffPV, sizeof(EffPV));
-    EffPV.SetEffect(sequence, sColor, 0, intens);
+    EffectSM * pEsm = _EffPV_old;
+    _EffPV_old = _EffPV;
+    _EffPV = pEsm;
+    _EffPV->SetEffect(sequence, sColor, &intens, 0);
 }
 
-void EffectProcessor::Tick(void) {
+Color const * EffectProcessor::Tick(void) {
     uint8_t k;
-    _pColor = EffPV.Tick();
+    _pColor = _EffPV->Tick();
 
-    if (u8_fadingCnt > 0) { // allways process soft cross dissolve between different macros
-        u8_fadingCnt--;
-        k = (uint16_t)u8_fadingCnt * 0xFF / u8_fadeSteps;
+    if (_fadingCnt > 0) { // allways process soft cross dissolve between different macros
+        _fadingCnt--;
+        k = (uint16_t)_fadingCnt * 0xFF / _fadeSteps;
 
-        _pColorOld = EffPV_old.Tick();
+        _pColorOld = _EffPV_old->Tick();
         crossFadeColors(k);
-    } else { // Process soft cross dissolve between different colors, if needed
-        uint8_t k = EffPV.GetDissolveRatio();
-        if (k > 0) {
-            crossFadeColors(k);
-        }
-        memcpy(&_pColorOld, &_pColor, sizeof(Color));
+    // } else { // Process soft cross dissolve between different colors, if needed
+    //     uint8_t k = _EffPV.GetDissolveRatio();
+    //     if (k > 0) {
+    //         crossFadeColors(k);
+    //     }
+    //     memcpy(&_pColorOld, &_pColor, sizeof(Color));
     }
+
+    return &_pColor;
 }
 
 Color *EffectProcessor::crossFadeColors(uint8_t k) {
