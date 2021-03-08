@@ -4,5 +4,8 @@
         "ostream": "cpp",
         "iosfwd": "cpp",
         "fstream": "cpp"
-    }
+    },
+    "cSpell.words": [
+        "asym"
+    ]
 }

@@ -48,7 +48,7 @@ typedef struct SM_ParamValues_def {
  * Processing is executed in following manner:
  *  \li Index-incrementing each Tick
  *      \li ticks until duration \ref EffMacro is finished
- *      \li each tick the index incremented by templateLenght/duration
+ *      \li each tick the index incremented by templateLength/duration
  *  \li Repeats-processing
  *      \li Each repeat the tick and the index are set back to start
  *      \li Switches to next Macro enty
@@ -86,7 +86,7 @@ class EffectSM {
      * @details The index is calculated with a higher accuracy in the background.
      * @return const uint8_t index to waveform position.
      */
-    const uint8_t GetWaveformIdx(void) { return ((SMPValues.waveIdx & 0xFF00u) >> 8); };
+    const uint8_t GetWaveIdx(void) { return ((SMPValues.waveIdx & 0xFF00u) >> 8); };
 
     /**
      * @brief Get current color

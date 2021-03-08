@@ -56,14 +56,14 @@ class EffectProcessor {
 // 	void genImage(Color * color, EffectSM * effStat);
 // };
 
-// #define DUALEEFFECT_COLORWITH 2
+// #define DUALEEFECT_COLORWITH 2
 // class DualEffect : public EffectProcessor {
 // 	public:
 // 	DualEffect(uint16_t const templateLength);
 
 // 	private:
-// 	Color _Color[DUALEEFFECT_COLORWITH];
-// 	Color _ColorOld[DUALEEFFECT_COLORWITH];
+// 	Color _Color[DUALEEFECT_COLORWITH];
+// 	Color _ColorOld[DUALEFFECT_COLORWITH];
 // 	void genImage(Color * color, EffectSM * effStat);
 // };
 

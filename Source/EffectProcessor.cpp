@@ -78,7 +78,7 @@ Color *EffectProcessor::crossFadeColors(uint8_t k) {
 }
 
 // /************************************************************************/
-// /* EffectProcessor 1 LED                                                         */
+// /* EffectProcessor 1 LED                                                */
 // /************************************************************************/
 // SingleEffect::SingleEffect(uint16_t const templateLength) :
 //     EffectProcessor(templateLength) {
@@ -131,7 +131,7 @@ Color *EffectProcessor::crossFadeColors(uint8_t k) {
 // }
 
 // /************************************************************************/
-// /* EffectProcessor 2 LED                                                         */
+// /* EffectProcessor 2 LED                                                */
 // /************************************************************************/
 // DualEffect::DualEffect(uint16_t const templateLength) : EffectProcessor(templateLength) {
 // 	_colorSize = 2;

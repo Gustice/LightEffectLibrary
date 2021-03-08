@@ -16,6 +16,25 @@ enum eEffect {
     Light_States,
 };
 
+typedef const struct EffectMacroElement_def {
+    /// Effect type
+    eEffect state;
+    /// waveform reference
+    uint8_t const *pWave;
+    /// Full-Scale-intensity
+    uint8_t FsIntensity;
+    /// Effect duration
+    uint8_t duration;
+    /// SubEffect color
+    const Color_t *color;
+    /// Num of Repeats
+    int8_t repeats;
+    /// Next SubEffect
+    int8_t next;
+} EffMacro_t;
+#define COUNT_EFFECT_ELEMENT(effect) (sizeof(effect) / sizeof(EffMacro_type))
+
+
 enum eMacroLevel {
     level0,
     level1,
@@ -44,25 +63,6 @@ typedef const struct Macro2_def {
     const Color_t *color;      // SubEffect color
     int8_t         u8_repeats; // Num of Repeats
 } EffMacro2_t;
-
-typedef const struct EffectMacroElement_def {
-    /// Effect type
-    eEffect state;
-    /// waveform reference
-    uint8_t const *pu8_wave;
-    /// Full-Scale-intensity
-    uint8_t u8_FSintensity;
-
-    /// Effect duration
-    uint8_t u8_duration;
-    /// SubEffect color
-    const Color_t *color;
-    /// Num of Repeats
-    int8_t u8_repeats;
-    /// Next SubEffect
-    int8_t next;
-} EffMacro_t;
-#define COUNT_EFFECT_ELEMENT(effect) (sizeof(effect) / sizeof(EffMacro_type))
 
 class EffectBase {
   public:
@@ -153,7 +153,7 @@ typedef struct EffectSequenceElement_def {
     uint8_t           u8_content; // Number of registered steps
     uint8_t           u8_repeats; // Repetitions
 } EffSequence_type;
-#define COUNT_EFFECT_MAKRO(effect) (sizeof(effect) / sizeof(EffSequence_type))
+#define COUNT_EFFECT_MACRO(effect) (sizeof(effect) / sizeof(EffSequence_type))
 extern const EffSequence_type em_Idle[];
 
 } // namespace Effect

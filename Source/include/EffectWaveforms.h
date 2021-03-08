@@ -13,10 +13,15 @@
 
 namespace Effect {
 
+/// Length of all subsequent Template definitions
 extern const uint16_t cu16_TemplateLength;
+/// Idle intensity for Slopes and Pulses
 extern const uint8_t  gu8_idleIntensity;
+/// Idle intensity for Slopes and Pulses
 extern const uint8_t  gu8_fullIntensity;
+/// Headrom for Effects on top of idle brightness
 extern const uint8_t  gu8_dynamicRange;
+/// Standard cross fade steps
 extern const uint8_t  gu8_fadeSteps;
 
 /// Starts from idle \ref gu8_idleIntensity and represents a gaussian impulse  \ref gu8_fullIntensity

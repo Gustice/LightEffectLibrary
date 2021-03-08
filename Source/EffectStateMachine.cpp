@@ -16,7 +16,7 @@
 namespace Effect {
 
 /// Optional prequel for delayed start.
-/// \li u8_Duration must be != 0
+/// \li Duration must be != 0
 /// \li Next entry will be first entry in given Effect sequence
 EffMacro_t delayPrequel[] = {
     {Light_Blank, (uint8_t *)0, 0, 1, &color_Black, 0, 0},
@@ -86,12 +86,12 @@ void EffectSM::SetEffect(EffMacro_t *sequence, Color_t const *startColor, const 
         SMPValues.tick = delayedStart;
     } else {
         _p_effMac      = sequence;
-        SMPValues.tick = _p_effMac->u8_duration;
+        SMPValues.tick = _p_effMac->duration;
     }
 
     SMPValues.tick++;
     SMPValues.dissolveCnt = 0;
-    SMPValues.repeats     = _p_effMac->u8_repeats;
+    SMPValues.repeats     = _p_effMac->repeats;
     this->SetIndexes();
 }
 
@@ -112,11 +112,11 @@ void EffectSM::SetEffect(EffMacro_t *sequence, Color_t const *startColor, const 
 Color const *EffectSM::Tick(void) {
     // tick-increment
     if (--SMPValues.tick == 0) {
-        // u8_repeats-decrement
+        // repeats-decrement
         if (SMPValues.repeats-- == 0) {
             SMPValues.macroIdx = _p_effMac->next;
             _p_effMac          = &(_p_effSeq[_p_effMac->next]);
-            SMPValues.repeats  = _p_effMac->u8_repeats;
+            SMPValues.repeats  = _p_effMac->repeats;
 
             // execute color change if necessary
             if (_p_effMac->color != NO_COLOR) {
@@ -126,7 +126,7 @@ Color const *EffectSM::Tick(void) {
             }
         }
 
-        SMPValues.tick = _p_effMac->u8_duration;
+        SMPValues.tick = _p_effMac->duration;
         this->SetIndexes();
     }
 
@@ -139,11 +139,11 @@ Color const *EffectSM::Tick(void) {
 }
 
 /**
- * @brief Sets Waveform index according du desired u8_duration, waveform-length and current step
+ * @brief Sets Waveform index according du desired duration, waveform-length and current step
  */
 void EffectSM::SetIndexes(void) {
     SMPValues.waveStep = ((SMIParams.templateLength) << 8);
-    SMPValues.waveStep /= _p_effMac->u8_duration;
+    SMPValues.waveStep /= _p_effMac->duration;
     SMPValues.waveIdx = (uint16_t)(0 - SMPValues.waveStep);
 }
 
@@ -177,7 +177,7 @@ Color const *EffectSM::UpdateFreeze(EffectSM *SM) {
 
 Color const *EffectSM::UpdateWave(EffectSM *SM) {
     EffMacro_t const *const cEffStep = SM->GetStep();
-    *(SM->_outputColor) = SM->GetColor() * cEffStep->pu8_wave[SM->GetWaveformIdx()] * cEffStep->u8_FSintensity;
+    *(SM->_outputColor) = SM->GetColor() * cEffStep->pWave[SM->GetWaveIdx()] * cEffStep->FsIntensity;
     return SM->_outputColor;
 }
 
@@ -185,7 +185,7 @@ Color const *EffectSM::UpdateRevWave(EffectSM *SM) {
     EffMacro_t const *const cEffStep  = SM->GetStep();
     uint8_t                 lastIndex = SM->SMIParams.templateLength - 1;
     *(SM->_outputColor) =
-        SM->GetColor() * cEffStep->pu8_wave[lastIndex - SM->GetWaveformIdx()] * cEffStep->u8_FSintensity;
+        SM->GetColor() * cEffStep->pWave[lastIndex - SM->GetWaveIdx()] * cEffStep->FsIntensity;
     return SM->_outputColor;
 }
 
@@ -196,6 +196,10 @@ Color const *EffectSM::UpdateFlicker(EffectSM *SM) {
     *(SM->_outputColor) = SM->_curentColor * k;
     return SM->_outputColor;
 }
+
+
+
+
 
 /// Initial Delay template. Only effect entry is used here.
 static const Effect1 InitialDelay(Light_Blank, 0, 0);
@@ -258,7 +262,7 @@ void SequenceSM::SetEffect(const EffectMacro *sequence, uint8_t delay) {
         SMPValues.tick = delay;
     } else {
         p_effMac       = sequence->sequence;
-        SMPValues.tick = _p_effMac->u8_duration;
+        SMPValues.tick = _p_effMac->duration;
     }
 
     if (const Effect3 *macro3 = dynamic_cast<const Effect3 *>(p_effMac)) {
@@ -338,13 +342,13 @@ Color const *SequenceSM::UpdateFreeze(SequenceSM *SM) {
 
 Color const *SequenceSM::UpdateWave(SequenceSM *SM) {
     // EffMacro_type const *const cEffStep = effStat->GetStep();
-    // *color = effStat->GetColor() * cEffStep->pwave[effStat->GetWaveformIdx()] * cEffStep->FSintensity;
+    // *color = effStat->GetColor() * cEffStep->pWave[effStat->GetWaveformIdx()] * cEffStep->FSintensity;
     return SM->_outputColor;
 }
 
 Color const *SequenceSM::UpdateRevWave(SequenceSM *SM) {
     // EffMacro_type const *const cEffStep = effStat->GetStep();
-    // *color = effStat->GetColor() * cEffStep->pwave[cTemplateLength - 1 - effStat->GetWaveformIdx()] *
+    // *color = effStat->GetColor() * cEffStep->pWave[cTemplateLength - 1 - effStat->GetWaveformIdx()] *
     // cEffStep->FSintensity;
     return SM->_outputColor;
 }
