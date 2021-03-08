@@ -52,6 +52,17 @@
             "problemMatcher": "$gcc", // Otherwise its annoys you with warnings
         },
         {
+            "label": "Create Waveforms",
+            "type": "shell",
+            "options": {
+                "cwd": "${workspaceFolder}/WaveFormGenerator/Output"
+            },
+            "command": "${workspaceFolder}/build/WaveFormGenerator/WaveFormGen.exe",
+            "problemMatcher": []
+        },
+
+
+        {
             "label": "Doxygen: Create Docs",
             "type": "shell",
             "command": "C:\\Program Files\\doxygen\\bin\\dox ygen.exe",

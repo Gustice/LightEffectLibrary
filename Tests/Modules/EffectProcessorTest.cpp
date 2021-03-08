@@ -131,18 +131,18 @@ TEST_CASE("EffectProcessor plots for manual evaluation", "[EffectProcessor, Cons
     int i = 0;
     for (; i < 128; i++) {
         Color_t c = dut.Tick()->GetColor();
-        sprintf(stream, "%3d,%3.2f,%3.2f,%3.2f,%3.2f", i, (float)c.red / (0xFF), (float)c.green / (0xFF),
-                (float)c.blue / (0xFF), (float)c.white / (0xFF),
-                (float)((uint16_t)c.red + c.green + c.blue) / (0xFF));
+        sprintf(stream, "%3d,%3.2f,%3.2f,%3.2f,%3.2f,%3.2f", i, (float)c.red / (4*0xFF), (float)c.green / (4*0xFF),
+                (float)c.blue / (4*0xFF), (float)c.white / (4*0xFF),
+                (float)((uint16_t)c.red + c.green + c.blue) / (4*0xFF/3));
         plotFile << stream << std::endl;
     }
 
     dut.SetEffect(effDemo2, NO_COLOR, 0x55);
     for (; i < (128 + 64); i++) {
         Color_t c = dut.Tick()->GetColor();
-        sprintf(stream, "%3d,%3.2f,%3.2f,%3.2f,%3.2f", i, (float)c.red / (0xFF), (float)c.green / (0xFF),
-                (float)c.blue / (0xFF), (float)c.white / (0xFF),
-                (float)((uint16_t)c.red + c.green + c.blue) / (0xFF));
+        sprintf(stream, "%3d,%3.2f,%3.2f,%3.2f,%3.2f,%3.2f", i, (float)c.red / (4*0xFF), (float)c.green / (4*0xFF),
+                (float)c.blue / (4*0xFF), (float)c.white / (4*0xFF),
+                (float)((uint16_t)c.red + c.green + c.blue) / (4*0xFF/3));
         plotFile << stream << std::endl;
     }
 

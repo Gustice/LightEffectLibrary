@@ -140,14 +140,14 @@ void PrintValues(string varName, vector<int> values, ofstream &outputFile, bool 
     char varNameArray[n + 1];
     strcpy(varNameArray, varName.c_str());
 
-    sprintf(sStream, "%s_Plot.txt", varNameArray);
+    sprintf(sStream, "%s_Plot.csv", varNameArray);
 
     ofstream plotFile;
     plotFile.open(sStream);
-    plotFile << "#Cycl value" << std::endl;
+    plotFile << "Cycl,value" << std::endl;
 
     for (int i = 0; i < values.size(); i++) {
-        plotFile << i << "   " << values[i] << std::endl;
+        plotFile << i << "," << values[i] << std::endl;
     }
 
     plotFile.close();

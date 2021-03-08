@@ -5,3 +5,4 @@ project(LightingEffectLibrary)
 
 add_subdirectory(Source)
 add_subdirectory(Tests)
+add_subdirectory(WaveFormGenerator)
