@@ -18,7 +18,7 @@
  * @brief Color Structure
  * @details Defines red/green/blue and white color channel values
  */
-typedef struct Color_def {
+typedef struct {
     uint8_t red;
     uint8_t green;
     uint8_t blue;

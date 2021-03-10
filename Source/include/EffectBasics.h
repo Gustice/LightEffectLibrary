@@ -2,6 +2,7 @@
 
 #include "Color.h"
 #include <stdint.h>
+#include "EffectWaveforms.h"
 
 namespace Effect {
 
@@ -16,7 +17,7 @@ enum eEffect {
     Light_States,
 };
 
-typedef const struct EffectMacroElement_def {
+typedef const struct EffMacro_def {
     /// Effect type
     eEffect state;
     /// waveform reference
@@ -26,7 +27,7 @@ typedef const struct EffectMacroElement_def {
     /// Effect duration
     uint8_t duration;
     /// SubEffect color
-    const Color_t *color;
+    const Color_t *pColor;
     /// Num of Repeats
     int8_t repeats;
     /// Next SubEffect
@@ -34,126 +35,40 @@ typedef const struct EffectMacroElement_def {
 } EffMacro_t;
 #define COUNT_EFFECT_ELEMENT(effect) (sizeof(effect) / sizeof(EffMacro_type))
 
-
-enum eMacroLevel {
-    level0,
-    level1,
-    level2,
-    level3,
-};
-
-typedef const struct Macro1_def {
-    /// Effect-Type
-    eEffect state;
-    /// SubEffect
-    eMacroLevel level;
-    /// Effect duration
-    uint8_t u8_duration;
-    /// Next SubEffect
-    int8_t next;
-    /// Full-Scale-intensity
-    uint8_t u8_FSintensity;
-} EffMacro1_t;
-
-typedef const struct Macro2_def {
-    /// SubEffect
-    EffMacro1_t state;
-
-    uint8_t const *pu8_wave;   // waveform reference
-    const Color_t *color;      // SubEffect color
-    int8_t         u8_repeats; // Num of Repeats
-} EffMacro2_t;
-
-class EffectBase {
-  public:
-    ~EffectBase() = default;
-
-  protected:
-    EffectBase(eMacroLevel lev) : level(lev) {}
-
-  private:
-    const eMacroLevel level;
-};
-
-typedef struct EffLevel1_def {
-    const eEffect effect;
-    const uint8_t duration;
-    const uint8_t next;
-} EffLevel1_t;
-
-class Effect1 : public EffectBase {
-  public:
-    Effect1(eEffect eff, uint8_t dur, uint8_t nxt)
-        : EffectBase(eMacroLevel::level1), state(eff), duration(dur), next(nxt) {}
-    virtual ~Effect1() = default;
-
-    const eEffect state;
-    const uint8_t duration;
-    const uint8_t next;
-
-  protected:
-    Effect1(eMacroLevel lev, eEffect eff, uint8_t dur, uint8_t nxt)
-        : EffectBase(lev), state(eff), duration(dur), next(nxt) {}
-};
-
-class Effect2 : public Effect1 {
-  public:
-    Effect2(eEffect eff, uint8_t dur, uint8_t nxt, const uint8_t *const wave, uint8_t dyn, uint8_t rep)
-        : Effect1(eMacroLevel::level2, eff, dur, nxt), p_wave(wave), dynRange(dyn), repeats(rep) {}
-
-    virtual ~Effect2() = default;
-
-    const uint8_t *const p_wave;
-    const uint8_t        dynRange;
-    const uint8_t        repeats;
-
-  protected:
-    Effect2(eMacroLevel lev, eEffect eff, uint8_t dur, uint8_t nxt, const uint8_t *const wave, uint8_t dyn, uint8_t rep)
-        : Effect1(lev, eff, dur, nxt), p_wave(wave), dynRange(dyn), repeats(rep) {}
-};
-
-class Effect3 : public Effect2 {
-  public:
-    Effect3(eEffect eff, uint8_t dur, uint8_t nxt, uint8_t const *wave, uint8_t dyn, uint8_t rep, uint8_t intens,
-            uint8_t idle, Color_t *newCol, uint8_t len, uint8_t fade)
-        : Effect2(eMacroLevel::level3, eff, dur, nxt, wave, dyn, rep), fsIntensity(intens), idleIntens(idle),
-          color(newCol), templateLen(len), fadeSteps(fade) {}
-    virtual ~Effect3() = default;
-
-    const uint8_t  fsIntensity;
-    const uint8_t  idleIntens;
-    const Color_t *color;
-    const uint8_t  templateLen;
-    const uint8_t  fadeSteps;
-
-  protected:
-    Effect3(eMacroLevel lev, eEffect eff, uint8_t dur, uint8_t nxt, uint8_t const *wave, uint8_t dyn, uint8_t rep,
-            uint8_t intens, uint8_t idle, Color_t *newCol, uint8_t len, uint8_t fade)
-        : Effect2(lev, eff, dur, nxt, wave, dyn, rep), fsIntensity(intens), idleIntens(idle), color(newCol),
-          templateLen(len), fadeSteps(fade) {}
-};
-
 class EffectMacro {
   public:
-    EffectMacro(const Effect1 *init, const Effect1 *seq, uint8_t len) : initEffect(init), sequence(seq), sequLen(len) {}
-    ~EffectMacro() = default;
+    /// Effect type
+    const eEffect state;
+    /// waveform reference
+    const uint8_t * const pWave;
+    /// Full-Scale-intensity
+    const uint8_t FsIntensity;
+    /// Effect duration
+    const uint8_t duration;
+    /// SubEffect color
+    Color_t const *const pColor;
+    /// Num of Repeats
+    const int8_t repeats;
+    /// Next SubEffect
+    const int8_t next;
 
-    const Effect1 *initEffect;
-    const Effect1 *sequence;
-    const uint8_t  sequLen;
+    constexpr EffectMacro(uint8_t duration, uint8_t next, eEffect state = eEffect::Light_Freeze, Color_t const *pColor = USEOLD_COLOR)
+        : state(state), pWave(NO_WAVE), FsIntensity(gu8_idleIntensity), duration(duration),
+          pColor(pColor), repeats(0), next(next){};
+    constexpr EffectMacro(uint8_t duration, uint8_t next, uint8_t const *pWave, Color_t const *pColor = USEOLD_COLOR)
+        : state(eEffect::Light_Blank), pWave(pWave), FsIntensity(gu8_idleIntensity), duration(duration), pColor(pColor),
+          repeats(0), next(next){};
+    constexpr EffectMacro(EffMacro_t macro)
+        : state(macro.state), pWave(macro.pWave), FsIntensity(macro.FsIntensity), duration(macro.duration),
+          pColor(macro.pColor), repeats(macro.repeats), next(macro.next){};
 };
 
-typedef struct EffectList_def {
-    const EffMacro_t *Macro;    // Macro reference
-    const uint8_t     u8_parts; // Macro-entries
-} EffectList_type;
-
-typedef struct EffectSequenceElement_def {
-    const EffMacro_t *element;    // Element for visualization
-    uint8_t           u8_content; // Number of registered steps
-    uint8_t           u8_repeats; // Repetitions
-} EffSequence_type;
+typedef struct {
+    const EffMacro_t *element; // Element for visualization
+    uint8_t           content; // Number of registered steps
+    uint8_t           repeats; // Repetitions
+} EffSequence_t;
 #define COUNT_EFFECT_MACRO(effect) (sizeof(effect) / sizeof(EffSequence_type))
-extern const EffSequence_type em_Idle[];
+extern const EffSequence_t em_Idle[];
 
 } // namespace Effect

@@ -20,4 +20,8 @@ extern EffMacro_t eff_ShiftAsymPulse[];
 extern EffectMacro someScene;
 extern EffectMacro idleScene;
 
+extern const EffectMacro StdPulse[];
+extern const EffectMacro StdDark[];
+
+
 } // namespace Effect
