@@ -4,7 +4,7 @@
         "ostream": "cpp",
         "iosfwd": "cpp",
         "fstream": "cpp",
-        "effectsequencestatemachinetest cpp": "cpp"
+        "stdbool.h": "c"
     },
     "cSpell.words": [
         "asym"
