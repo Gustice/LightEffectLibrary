@@ -34,7 +34,7 @@ TEST_CASE("Running Effect SequenceMachine with different Setups", "[EffectSquenc
             // {Light_Idle, NO_WAVE, 0xFF, 4, &color_Blue, 0, 1},
             // {Light_Idle, NO_WAVE, 0xFF, 4, &color_Green, 0, 2},
             EffectMacro(4,1, Light_Idle, &color_Blue),
-            EffectMacro(4,1, Light_Idle, &color_Green),
+            EffectMacro(4,2, Light_Idle, &color_Green),
         };
         uint8_t fullIntens = 0xFFu;
         uint8_t halfIntens = 0x80u;
@@ -50,68 +50,73 @@ TEST_CASE("Running Effect SequenceMachine with different Setups", "[EffectSquenc
             CHECK(CheckColor(Color(0, 0xFF, 0, 0), *dut.Tick())); // <- Switching to next waveform
         }
 
-    //     SECTION("Running with half default idle intensity(applies for idle state)") {
-    //         static SequenceSM dut(u8_testWaveLen, 0x80, 0);
-    //         dut.SetEffect(effDemo);
+        SECTION("Running with half default idle intensity(applies for idle state)") {
+            static SequenceSM dut(u8_testWaveLen, 0x80, 0);
+            dut.SetEffect(effDemo);
 
-    //         CHECK(CheckColor(Color(0, 0, 0x80, 0), *dut.Tick()));
-    //         CHECK(CheckColor(Color(0, 0, 0x80, 0), *dut.Tick()));
-    //         CHECK(CheckColor(Color(0, 0, 0x80, 0), *dut.Tick()));
-    //         CHECK(CheckColor(Color(0, 0, 0x80, 0), *dut.Tick()));
-    //         CHECK(CheckColor(Color(0, 0x80, 0, 0), *dut.Tick())); // <- Switching to next waveform
-    //     }
-    //     SECTION("Define other start intensity") {
-    //         static SequenceSM dut(u8_testWaveLen, 0xFF, 0);
-    //         dut.SetEffect(effDemo, NO_COLOR, &halfIntens, 0);
-    //         CHECK(CheckColor(Color(0, 0, 0x80, 0), *dut.Tick()));
-    //         dut.Tick();
-    //         dut.Tick();
-    //         CHECK(CheckColor(Color(0, 0, 0x80, 0), *dut.Tick()));
-    //         CHECK(CheckColor(Color(0, 0x80, 0, 0), *dut.Tick())); // <- Switching to next waveform
-    //     }
-    // }
-    // SECTION("Starting Effect with different colors") {
-    //     EffectMacro effDemo[] = {
-    //         // State     WV       FS    N  Start         R  Next
-    //         {Light_Idle, NO_WAVE, 0xFF, 4, &color_Blue, 0, 1},
-    //         {Light_Idle, NO_WAVE, 0xFF, 4, &color_Green, 0, 2},
-    //         {Light_Idle, NO_WAVE, 0xFF, 4, &color_Red, 0, 0},
-    //     };
-
-    //     static SequenceSM dut(u8_testWaveLen, 0xFF, 0);
-    //     SECTION("Not Changing colors") {
-    //         dut.SetEffect(effDemo);
-    //         CHECK(CheckColor(Color(0, 0, 0xFF, 0), *dut.Tick()));
-    //         dut.Tick();
-    //         dut.Tick();
-    //         CHECK(CheckColor(Color(0, 0, 0xFF, 0), *dut.Tick()));
-    //         CHECK(CheckColor(Color(0, 0xFF, 0, 0), *dut.Tick())); // <- Switching to next waveform
-    //     }
-    //     SECTION("Define other Start Color") {
-    //         dut.SetEffect(effDemo, &color_Red, nullptr, 0);
-    //         CHECK(CheckColor(Color(0xFF, 0, 0, 0), *dut.Tick()));
-    //         dut.Tick();
-    //         dut.Tick();
-    //         CHECK(CheckColor(Color(0xFF, 0, 0, 0), *dut.Tick()));
-    //         CHECK(CheckColor(Color(0, 0xFF, 0, 0), *dut.Tick())); // <- Switching to next waveform
-    //     }
+            CHECK(CheckColor(Color(0, 0, 0x80, 0), *dut.Tick()));
+            CHECK(CheckColor(Color(0, 0, 0x80, 0), *dut.Tick()));
+            CHECK(CheckColor(Color(0, 0, 0x80, 0), *dut.Tick()));
+            CHECK(CheckColor(Color(0, 0, 0x80, 0), *dut.Tick()));
+            CHECK(CheckColor(Color(0, 0x80, 0, 0), *dut.Tick())); // <- Switching to next waveform
+        }
+        SECTION("Define other start intensity") {
+            static SequenceSM dut(u8_testWaveLen, 0xFF, 0);
+            dut.SetEffect(effDemo, NO_COLOR, &halfIntens, 0);
+            CHECK(CheckColor(Color(0, 0, 0x80, 0), *dut.Tick()));
+            dut.Tick();
+            dut.Tick();
+            CHECK(CheckColor(Color(0, 0, 0x80, 0), *dut.Tick()));
+            CHECK(CheckColor(Color(0, 0x80, 0, 0), *dut.Tick())); // <- Switching to next waveform
+        }
     }
-    // SECTION("Delayed start of Effects") {
-    //     EffectMacro effDemo[] = {
-    //         // State      WV            FS    N  Start         R  Next
-    //         {Light_Idle, NO_WAVE, 0xFF, 4, &color_Blue, 0, 1},
-    //         {Light_Idle, NO_WAVE, 0xFF, 4, &color_Green, 0, 2},
-    //     };
-    //     static SequenceSM dut(u8_testWaveLen, 0xFF, 0);
-    //     dut.SetEffect(effDemo, NO_COLOR, 2);
-    //     CHECK(CheckColor(Color(0, 0, 0, 0), *dut.Tick()));
-    //     CHECK(CheckColor(Color(0, 0, 0, 0), *dut.Tick()));
-    //     CHECK(CheckColor(Color(0, 0, 0xFF, 0), *dut.Tick()));
-    //     dut.Tick();
-    //     dut.Tick();
-    //     CHECK(CheckColor(Color(0, 0, 0xFF, 0), *dut.Tick()));
-    //     CHECK(CheckColor(Color(0, 0xFF, 0, 0), *dut.Tick())); // <- Switching to next waveform
-    // }
+    SECTION("Starting Effect with different colors") {
+        EffectMacro effDemo[] = {
+            // State     WV       FS    N  Start         R  Next
+            // {Light_Idle, NO_WAVE, 0xFF, 4, &color_Blue, 0, 1},
+            // {Light_Idle, NO_WAVE, 0xFF, 4, &color_Green, 0, 2},
+            // {Light_Idle, NO_WAVE, 0xFF, 4, &color_Red, 0, 0},
+            EffectMacro(4,1, Light_Idle, &color_Blue),
+            EffectMacro(4,2, Light_Idle, &color_Green),
+            EffectMacro(4,0, Light_Idle, &color_Red),
+      };
+
+        static SequenceSM dut(u8_testWaveLen, 0xFF, 0);
+        SECTION("Not Changing colors") {
+            dut.SetEffect(effDemo);
+            CHECK(CheckColor(Color(0, 0, 0xFF, 0), *dut.Tick()));
+            dut.Tick();
+            dut.Tick();
+            CHECK(CheckColor(Color(0, 0, 0xFF, 0), *dut.Tick()));
+            CHECK(CheckColor(Color(0, 0xFF, 0, 0), *dut.Tick())); // <- Switching to next waveform
+        }
+        SECTION("Define other Start Color") {
+            dut.SetEffect(effDemo, &color_Red, nullptr, 0);
+            CHECK(CheckColor(Color(0xFF, 0, 0, 0), *dut.Tick()));
+            dut.Tick();
+            dut.Tick();
+            CHECK(CheckColor(Color(0xFF, 0, 0, 0), *dut.Tick()));
+            CHECK(CheckColor(Color(0, 0xFF, 0, 0), *dut.Tick())); // <- Switching to next waveform
+        }
+    }
+    SECTION("Delayed start of Effects") {
+        EffectMacro effDemo[] = {
+            // State      WV            FS    N  Start         R  Next
+            // {Light_Idle, NO_WAVE, 0xFF, 4, &color_Blue, 0, 1},
+            // {Light_Idle, NO_WAVE, 0xFF, 4, &color_Green, 0, 2},
+            EffectMacro(4,1, Light_Idle, &color_Blue),
+            EffectMacro(4,2, Light_Idle, &color_Green),
+      };
+        static SequenceSM dut(u8_testWaveLen, 0xFF, 0);
+        dut.SetEffect(effDemo, NO_COLOR, 2);
+        CHECK(CheckColor(Color(0, 0, 0, 0), *dut.Tick()));
+        CHECK(CheckColor(Color(0, 0, 0, 0), *dut.Tick()));
+        CHECK(CheckColor(Color(0, 0, 0xFF, 0), *dut.Tick()));
+        dut.Tick();
+        dut.Tick();
+        CHECK(CheckColor(Color(0, 0, 0xFF, 0), *dut.Tick()));
+        CHECK(CheckColor(Color(0, 0xFF, 0, 0), *dut.Tick())); // <- Switching to next waveform
+    }
 
     // SECTION("Running with cross fadeing 2 Steps") { // @todo Cross-Fade
     //     static SequenceSM dut(u8_testWaveLen, 0xFF,2);
@@ -132,168 +137,188 @@ TEST_CASE("Running Effect SequenceMachine with different Setups", "[EffectSquenc
     // }
 }
 
-// TEST_CASE("Tick and GetColor on SequenceMachine yield same results", "[EffectSquenceStateMachine]") {
-//     EffectMacro effDemo[] = {
-//         // State      WV            FS    N  Start         R  Next
-//         {Light_Idle, NO_WAVE, 0xFF, 1, &color_Blue, 0, 1},
-//         {Light_Idle, NO_WAVE, 0xFF, 1, &color_Green, 0, 2},
-//         {Light_Idle, NO_WAVE, 0xFF, 1, &color_Red, 0, 0},
-//     };
-//     static SequenceSM dut(u8_testWaveLen, 0xFF, 0);
-//     dut.SetEffect(effDemo);
+TEST_CASE("Tick and GetColor on SequenceMachine yield same results", "[EffectSquenceStateMachine]") {
+    EffectMacro effDemo[] = {
+        // State        WV       FS    N  Start         R  Next
+        // {Light_Idle, NO_WAVE, 0xFF, 1, &color_Blue, 0, 1},
+        // {Light_Idle, NO_WAVE, 0xFF, 1, &color_Green, 0, 2},
+        // {Light_Idle, NO_WAVE, 0xFF, 1, &color_Red, 0, 0},
+        EffectMacro(1,1, Light_Idle, &color_Blue),
+        EffectMacro(1,2, Light_Idle, &color_Green),
+        EffectMacro(1,0, Light_Idle, &color_Red),
+    };
+    static SequenceSM dut(u8_testWaveLen, 0xFF, 0);
+    dut.SetEffect(effDemo);
 
-//     const Color * tc1 = dut.Tick();
-//     const Color gc1 = dut.GetColor();
-//     CHECK(CheckColor(Color(0, 0, 0xFF, 0), gc1));
-//     CHECK(CheckColor(Color(0, 0, 0xFF, 0), *tc1));
-//     const Color * tc2 = dut.Tick();
-//     const Color gc2 = dut.GetColor();
-//     CHECK(CheckColor(Color(0, 0xFF, 0, 0), gc2));
-//     CHECK(CheckColor(Color(0, 0xFF, 0, 0), *tc2));
-//     const Color * tc3 = dut.Tick();
-//     const Color gc3 = dut.GetColor();
-//     CHECK(CheckColor(Color(0xFF, 0, 0, 0), gc3));
-//     CHECK(CheckColor(Color(0xFF, 0, 0, 0), *tc3));
-// }
+    const Color * tc1 = dut.Tick();
+    const Color gc1 = dut.GetColor();
+    CHECK(CheckColor(Color(0, 0, 0xFF, 0), gc1));
+    CHECK(CheckColor(Color(0, 0, 0xFF, 0), *tc1));
+    const Color * tc2 = dut.Tick();
+    const Color gc2 = dut.GetColor();
+    CHECK(CheckColor(Color(0, 0xFF, 0, 0), gc2));
+    CHECK(CheckColor(Color(0, 0xFF, 0, 0), *tc2));
+    const Color * tc3 = dut.Tick();
+    const Color gc3 = dut.GetColor();
+    CHECK(CheckColor(Color(0xFF, 0, 0, 0), gc3));
+    CHECK(CheckColor(Color(0xFF, 0, 0, 0), *tc3));
+}
 
-// TEST_CASE("Processing different SequenceMacros correctly", "[EffectSquenceStateMachine]") {
-//     SECTION("Minimal setup, Processing Next-Index correctly") {
-//         EffectMacro effDemo[] = {
-//             // State      WV            FS    N  Start         R  Next
-//             {Light_Blank, (uint8_t *)0, 0xFF, 4, &color_Black, 0, 1},
-//             {Light_Wave, gau8_testWave1, 0xFF, 4, &color_Red, 0, 2},
-//             {Light_RevWave, gau8_testWave1, 0xFF, 4, &color_Blue, 0, 1}, // <- Back to 1
-//         };
+TEST_CASE("Processing different SequenceMacros correctly", "[EffectSquenceStateMachine]") {
+    SECTION("Minimal setup, Processing Next-Index correctly") {
+        EffectMacro effDemo[] = {
+            // State      WV            FS    N  Start         R  Next
+            // {Light_Blank, (uint8_t *)0, 0xFF, 4, &color_Black, 0, 1},
+            // {Light_Wave, gau8_testWave1, 0xFF, 4, &color_Red, 0, 2},
+            // {Light_RevWave, gau8_testWave1, 0xFF, 4, &color_Blue, 0, 1}, // <- Back to 1
+            EffectMacro(4,1, Light_Blank, &color_Black),
+            EffectMacro(4,2, gau8_testWave1, Light_Wave, &color_Red),
+            EffectMacro(4,1, gau8_testWave1, Light_RevWave, &color_Blue),
+        };
 
-//         static SequenceSM dut(u8_testWaveLen);
-//         dut.SetEffect(effDemo); // => Start with 0
-//         CHECK(CheckColor(Color(0, 0, 0, 0), *dut.Tick()));
-//         CHECK(CheckColor(Color(0, 0, 0, 0), *dut.Tick()));
-//         CHECK(CheckColor(Color(0, 0, 0, 0), *dut.Tick()));
-//         CHECK(CheckColor(Color(0, 0, 0, 0), *dut.Tick())); // => Next 1
-//         CHECK(CheckColor(Color(1, 0, 0, 0), *dut.Tick())); // <- Switching to next waveform
-//         CHECK(CheckColor(Color(3, 0, 0, 0), *dut.Tick()));
-//         CHECK(CheckColor(Color(5, 0, 0, 0), *dut.Tick()));
-//         CHECK(CheckColor(Color(7, 0, 0, 0), *dut.Tick())); // => Next 2
-//         CHECK(CheckColor(Color(0, 0, 8, 0), *dut.Tick())); // <- Switching to next waveform
-//         CHECK(CheckColor(Color(0, 0, 6, 0), *dut.Tick()));
-//         CHECK(CheckColor(Color(0, 0, 4, 0), *dut.Tick()));
-//         CHECK(CheckColor(Color(0, 0, 2, 0), *dut.Tick())); // => Next 1
-//         CHECK(CheckColor(Color(1, 0, 0, 0), *dut.Tick())); // <- Switching to next waveform
-//         CHECK(CheckColor(Color(3, 0, 0, 0), *dut.Tick()));
-//     }
-//     SECTION("Stretching and compressing waveforms correctly") {
-//         EffectMacro effDemo[] = {
-//             // State      WV            FS    N  Start         R  Next
-//             {Light_Blank, (uint8_t *)0, 0xFF, 1, &color_Black, 0, 1},
-//             {Light_Wave, gau8_testWave1, 0xFF, 2, &color_Red, 0, 2},
-//             {Light_Wave, gau8_testWave1, 0xFF, 4, &color_Red, 0, 3},
-//             {Light_Wave, gau8_testWave1, 0xFF, 8, &color_Red, 0, 0},
-//         };
+        static SequenceSM dut(u8_testWaveLen);
+        dut.SetEffect(effDemo); // => Start with 0
+        CHECK(CheckColor(Color(0, 0, 0, 0), *dut.Tick()));
+        CHECK(CheckColor(Color(0, 0, 0, 0), *dut.Tick()));
+        CHECK(CheckColor(Color(0, 0, 0, 0), *dut.Tick()));
+        CHECK(CheckColor(Color(0, 0, 0, 0), *dut.Tick())); // => Next 1
+        CHECK(CheckColor(Color(1, 0, 0, 0), *dut.Tick())); // <- Switching to next waveform
+        CHECK(CheckColor(Color(3, 0, 0, 0), *dut.Tick()));
+        CHECK(CheckColor(Color(5, 0, 0, 0), *dut.Tick()));
+        CHECK(CheckColor(Color(7, 0, 0, 0), *dut.Tick())); // => Next 2
+        CHECK(CheckColor(Color(0, 0, 8, 0), *dut.Tick())); // <- Switching to next waveform
+        CHECK(CheckColor(Color(0, 0, 6, 0), *dut.Tick()));
+        CHECK(CheckColor(Color(0, 0, 4, 0), *dut.Tick()));
+        CHECK(CheckColor(Color(0, 0, 2, 0), *dut.Tick())); // => Next 1
+        CHECK(CheckColor(Color(1, 0, 0, 0), *dut.Tick())); // <- Switching to next waveform
+        CHECK(CheckColor(Color(3, 0, 0, 0), *dut.Tick()));
+    }
+    SECTION("Stretching and compressing waveforms correctly") {
+        EffectMacro effDemo[] = {
+            // State      WV            FS    N  Start         R  Next
+            // {Light_Blank, (uint8_t *)0, 0xFF, 1, &color_Black, 0, 1},
+            // {Light_Wave, gau8_testWave1, 0xFF, 2, &color_Red, 0, 2},
+            // {Light_Wave, gau8_testWave1, 0xFF, 4, &color_Red, 0, 3},
+            // {Light_Wave, gau8_testWave1, 0xFF, 8, &color_Red, 0, 0},
+            EffectMacro(1,1, Light_Blank, &color_Black),
+            EffectMacro(2,2, gau8_testWave1, Light_Wave, &color_Red),
+            EffectMacro(4,3, gau8_testWave1, Light_Wave, &color_Red),
+            EffectMacro(8,0, gau8_testWave1, Light_Wave, &color_Red),
+        };
 
-//         static SequenceSM dut(u8_testWaveLen);
-//         dut.SetEffect(effDemo);                            // => Start with 0
-//         CHECK(CheckColor(Color(0, 0, 0, 0), *dut.Tick())); // => Next 1
-//         CHECK(CheckColor(Color(1, 0, 0, 0), *dut.Tick())); // <- Switching to next waveform
-//         CHECK(CheckColor(Color(5, 0, 0, 0), *dut.Tick())); // => Next 2
+        static SequenceSM dut(u8_testWaveLen);
+        dut.SetEffect(effDemo);                            // => Start with 0
+        CHECK(CheckColor(Color(0, 0, 0, 0), *dut.Tick())); // => Next 1
+        CHECK(CheckColor(Color(1, 0, 0, 0), *dut.Tick())); // <- Switching to next waveform
+        CHECK(CheckColor(Color(5, 0, 0, 0), *dut.Tick())); // => Next 2
 
-//         CHECK(CheckColor(Color(1, 0, 0, 0), *dut.Tick())); // <- Switching to next waveform
-//         CHECK(CheckColor(Color(3, 0, 0, 0), *dut.Tick()));
-//         CHECK(CheckColor(Color(5, 0, 0, 0), *dut.Tick()));
-//         CHECK(CheckColor(Color(7, 0, 0, 0), *dut.Tick())); // => Next 3
+        CHECK(CheckColor(Color(1, 0, 0, 0), *dut.Tick())); // <- Switching to next waveform
+        CHECK(CheckColor(Color(3, 0, 0, 0), *dut.Tick()));
+        CHECK(CheckColor(Color(5, 0, 0, 0), *dut.Tick()));
+        CHECK(CheckColor(Color(7, 0, 0, 0), *dut.Tick())); // => Next 3
 
-//         CHECK(CheckColor(Color(1, 0, 0, 0), *dut.Tick())); // <- Switching to next waveform
-//         CHECK(CheckColor(Color(2, 0, 0, 0), *dut.Tick()));
-//         CHECK(CheckColor(Color(3, 0, 0, 0), *dut.Tick()));
-//         CHECK(CheckColor(Color(4, 0, 0, 0), *dut.Tick()));
-//         CHECK(CheckColor(Color(5, 0, 0, 0), *dut.Tick()));
-//         CHECK(CheckColor(Color(6, 0, 0, 0), *dut.Tick()));
-//         CHECK(CheckColor(Color(7, 0, 0, 0), *dut.Tick()));
-//         CHECK(CheckColor(Color(8, 0, 0, 0), *dut.Tick())); // => Next 0
+        CHECK(CheckColor(Color(1, 0, 0, 0), *dut.Tick())); // <- Switching to next waveform
+        CHECK(CheckColor(Color(2, 0, 0, 0), *dut.Tick()));
+        CHECK(CheckColor(Color(3, 0, 0, 0), *dut.Tick()));
+        CHECK(CheckColor(Color(4, 0, 0, 0), *dut.Tick()));
+        CHECK(CheckColor(Color(5, 0, 0, 0), *dut.Tick()));
+        CHECK(CheckColor(Color(6, 0, 0, 0), *dut.Tick()));
+        CHECK(CheckColor(Color(7, 0, 0, 0), *dut.Tick()));
+        CHECK(CheckColor(Color(8, 0, 0, 0), *dut.Tick())); // => Next 0
 
-//         CHECK(CheckColor(Color(0, 0, 0, 0), *dut.Tick())); // => Next 1
-//     }
-//     SECTION("Minimal setup, Processing repeats correctly") {
-//         EffectMacro effDemo[] = {
-//             // State      WV            FS    N  Start         R  Next
-//             {Light_Blank, (uint8_t *)0, 0xFF, 2, &color_Black, 0, 1},
-//             {Light_Wave, gau8_testWave1, 0xFF, 4, &color_Red, 1, 2},
-//             {Light_RevWave, gau8_testWave1, 0xFF, 2, &color_Blue, 2, 1}, // <- Back to 1
-//         };
+        CHECK(CheckColor(Color(0, 0, 0, 0), *dut.Tick())); // => Next 1
+    }
+    SECTION("Minimal setup, Processing repeats correctly") {
+        EffectMacro effDemo[] = {
+            // State      WV            FS    N  Start         R  Next
+            // {Light_Blank, (uint8_t *)0, 0xFF, 2, &color_Black, 0, 1},
+            // {Light_Wave, gau8_testWave1, 0xFF, 4, &color_Red, 1, 2},
+            // {Light_RevWave, gau8_testWave1, 0xFF, 2, &color_Blue, 2, 1}, // <- Back to 1
+            EffectMacro(2,1, Light_Blank, &color_Black),
+            EffectMacro(4,2, gau8_testWave1, Light_Wave, &color_Red, 1),
+            EffectMacro(2,1, gau8_testWave1, Light_RevWave, &color_Blue, 2),
+        };
 
-//         static SequenceSM dut(u8_testWaveLen);
-//         dut.SetEffect(effDemo); // => Start with 0
-//         CHECK(CheckColor(Color(0, 0, 0, 0), *dut.Tick()));
-//         CHECK(CheckColor(Color(0, 0, 0, 0), *dut.Tick())); // => Next 1
+        static SequenceSM dut(u8_testWaveLen);
+        dut.SetEffect(effDemo); // => Start with 0
+        CHECK(CheckColor(Color(0, 0, 0, 0), *dut.Tick()));
+        CHECK(CheckColor(Color(0, 0, 0, 0), *dut.Tick())); // => Next 1
 
-//         CHECK(CheckColor(Color(1, 0, 0, 0), *dut.Tick())); // <- Switching to next waveform
-//         CHECK(CheckColor(Color(3, 0, 0, 0), *dut.Tick()));
-//         CHECK(CheckColor(Color(5, 0, 0, 0), *dut.Tick()));
-//         CHECK(CheckColor(Color(7, 0, 0, 0), *dut.Tick())); // => Repeat
-//         CHECK(CheckColor(Color(1, 0, 0, 0), *dut.Tick())); // <-
-//         CHECK(CheckColor(Color(3, 0, 0, 0), *dut.Tick()));
-//         CHECK(CheckColor(Color(5, 0, 0, 0), *dut.Tick()));
-//         CHECK(CheckColor(Color(7, 0, 0, 0), *dut.Tick())); // => Next 2
+        CHECK(CheckColor(Color(1, 0, 0, 0), *dut.Tick())); // <- Switching to next waveform
+        CHECK(CheckColor(Color(3, 0, 0, 0), *dut.Tick()));
+        CHECK(CheckColor(Color(5, 0, 0, 0), *dut.Tick()));
+        CHECK(CheckColor(Color(7, 0, 0, 0), *dut.Tick())); // => Repeat
+        CHECK(CheckColor(Color(1, 0, 0, 0), *dut.Tick())); // <-
+        CHECK(CheckColor(Color(3, 0, 0, 0), *dut.Tick()));
+        CHECK(CheckColor(Color(5, 0, 0, 0), *dut.Tick()));
+        CHECK(CheckColor(Color(7, 0, 0, 0), *dut.Tick())); // => Next 2
 
-//         CHECK(CheckColor(Color(0, 0, 8, 0), *dut.Tick())); // <- Switching to next waveform
-//         CHECK(CheckColor(Color(0, 0, 4, 0), *dut.Tick())); // => Repeat
-//         CHECK(CheckColor(Color(0, 0, 8, 0), *dut.Tick())); // <-
-//         CHECK(CheckColor(Color(0, 0, 4, 0), *dut.Tick())); // => Repeat
-//         CHECK(CheckColor(Color(0, 0, 8, 0), *dut.Tick())); // <-
-//         CHECK(CheckColor(Color(0, 0, 4, 0), *dut.Tick())); // => Next
+        CHECK(CheckColor(Color(0, 0, 8, 0), *dut.Tick())); // <- Switching to next waveform
+        CHECK(CheckColor(Color(0, 0, 4, 0), *dut.Tick())); // => Repeat
+        CHECK(CheckColor(Color(0, 0, 8, 0), *dut.Tick())); // <-
+        CHECK(CheckColor(Color(0, 0, 4, 0), *dut.Tick())); // => Repeat
+        CHECK(CheckColor(Color(0, 0, 8, 0), *dut.Tick())); // <-
+        CHECK(CheckColor(Color(0, 0, 4, 0), *dut.Tick())); // => Next
 
-//         CHECK(CheckColor(Color(1, 0, 0, 0), *dut.Tick())); // <- Switching to next waveform
-//         CHECK(CheckColor(Color(3, 0, 0, 0), *dut.Tick()));
-//     }
-// }
+        CHECK(CheckColor(Color(1, 0, 0, 0), *dut.Tick())); // <- Switching to next waveform
+        CHECK(CheckColor(Color(3, 0, 0, 0), *dut.Tick()));
+    }
+}
 
-// TEST_CASE("Setting All different effects of SequenceSM", "[EffectSquenceStateMachine, Constructor]") {
-//     EffectMacro effDemo[] = {
-//         // State      WV                FS    N   Start         R  Next
-//         {Light_Blank, NO_WAVE, 0xFF, 2, &color_Red, 0, 1},
-//         {Light_Idle, NO_WAVE, 0xFF, 4, USEOLD_COLOR, 0, 2},
-//         {Light_Blank, NO_WAVE, 0xFF, 2, USEOLD_COLOR, 0, 3},
-//         {Light_Wave, gau8_testWave1, 0xFF, 4, USEOLD_COLOR, 0, 4},
-//         {Light_Freeze, NO_WAVE, 0xFF, 4, USEOLD_COLOR, 0, 5},
-//         {Light_RevWave, gau8_testWave1, 0xFF, 4, USEOLD_COLOR, 0, 6},
-//         {Light_Flicker, NO_WAVE, 0x80, 16, USEOLD_COLOR, 0, 0}, // <- Back to 1
-//     };
-//     static SequenceSM dut(u8_testWaveLen, 0x80, 0);
-//     dut.SetEffect(effDemo);
+TEST_CASE("Setting All different effects of SequenceSM", "[EffectSquenceStateMachine, Constructor]") {
+    EffectMacro effDemo[] = {
+        // State      WV                FS    N   Start         R  Next
+        // {Light_Blank, NO_WAVE, 0xFF, 2, &color_Red, 0, 1},
+        // {Light_Idle, NO_WAVE, 0xFF, 4, USEOLD_COLOR, 0, 2},
+        // {Light_Blank, NO_WAVE, 0xFF, 2, USEOLD_COLOR, 0, 3},
+        // {Light_Wave, gau8_testWave1, 0xFF, 4, USEOLD_COLOR, 0, 4},
+        // {Light_Freeze, NO_WAVE, 0xFF, 4, USEOLD_COLOR, 0, 5},
+        // {Light_RevWave, gau8_testWave1, 0xFF, 4, USEOLD_COLOR, 0, 6},
+        // {Light_Flicker, NO_WAVE, 0x80, 16, USEOLD_COLOR, 0, 0}, // <- Back to 1
+        EffectMacro(2,1, Light_Blank, &color_Red),
+        EffectMacro(4,2, Light_Idle),
+        EffectMacro(2,3, Light_Blank),
+        EffectMacro(4,4, gau8_testWave1, Light_Wave),
+        EffectMacro(4,5, Light_Freeze),
+        EffectMacro(4,6, gau8_testWave1, Light_RevWave),
+        EffectMacro(16,1, Light_Flicker),
+   };
+    static SequenceSM dut(u8_testWaveLen, 0x80, 0);
+    dut.SetEffect(effDemo);
 
-//     CHECK(CheckColor(Color(0, 0, 0, 0), *dut.Tick())); // <- Blank
-//     CHECK(CheckColor(Color(0, 0, 0, 0), *dut.Tick())); // => Next 1
+    CHECK(CheckColor(Color(0, 0, 0, 0), *dut.Tick())); // <- Blank
+    CHECK(CheckColor(Color(0, 0, 0, 0), *dut.Tick())); // => Next 1
 
-//     CHECK(CheckColor(Color(0x80, 0, 0, 0), *dut.Tick())); // <- Switch to Idle
-//     CHECK(CheckColor(Color(0x80, 0, 0, 0), *dut.Tick()));
-//     CHECK(CheckColor(Color(0x80, 0, 0, 0), *dut.Tick()));
-//     CHECK(CheckColor(Color(0x80, 0, 0, 0), *dut.Tick())); // => Next 2
+    CHECK(CheckColor(Color(0x80, 0, 0, 0), *dut.Tick())); // <- Switch to Idle
+    CHECK(CheckColor(Color(0x80, 0, 0, 0), *dut.Tick()));
+    CHECK(CheckColor(Color(0x80, 0, 0, 0), *dut.Tick()));
+    CHECK(CheckColor(Color(0x80, 0, 0, 0), *dut.Tick())); // => Next 2
 
-//     CHECK(CheckColor(Color(0, 0, 0, 0), *dut.Tick())); // <- Blank
-//     CHECK(CheckColor(Color(0, 0, 0, 0), *dut.Tick())); // => Next 3
+    CHECK(CheckColor(Color(0, 0, 0, 0), *dut.Tick())); // <- Blank
+    CHECK(CheckColor(Color(0, 0, 0, 0), *dut.Tick())); // => Next 3
 
-//     CHECK(CheckColor(Color(1, 0, 0, 0), *dut.Tick())); // <- Switching to next waveform
-//     CHECK(CheckColor(Color(3, 0, 0, 0), *dut.Tick()));
-//     CHECK(CheckColor(Color(5, 0, 0, 0), *dut.Tick()));
-//     CHECK(CheckColor(Color(7, 0, 0, 0), *dut.Tick())); // => Next 4
+    CHECK(CheckColor(Color(1, 0, 0, 0), *dut.Tick())); // <- Switching to next waveform
+    CHECK(CheckColor(Color(3, 0, 0, 0), *dut.Tick()));
+    CHECK(CheckColor(Color(5, 0, 0, 0), *dut.Tick()));
+    CHECK(CheckColor(Color(7, 0, 0, 0), *dut.Tick())); // => Next 4
 
-//     CHECK(CheckColor(Color(7, 0, 0, 0), *dut.Tick())); // <- Switching to Freeze
-//     CHECK(CheckColor(Color(7, 0, 0, 0), *dut.Tick()));
-//     CHECK(CheckColor(Color(7, 0, 0, 0), *dut.Tick()));
-//     CHECK(CheckColor(Color(7, 0, 0, 0), *dut.Tick())); // => Next 5
+    CHECK(CheckColor(Color(7, 0, 0, 0), *dut.Tick())); // <- Switching to Freeze
+    CHECK(CheckColor(Color(7, 0, 0, 0), *dut.Tick()));
+    CHECK(CheckColor(Color(7, 0, 0, 0), *dut.Tick()));
+    CHECK(CheckColor(Color(7, 0, 0, 0), *dut.Tick())); // => Next 5
 
-//     CHECK(CheckColor(Color(8, 0, 0, 0), *dut.Tick())); // <- Switching to next waveform
-//     CHECK(CheckColor(Color(6, 0, 0, 0), *dut.Tick()));
-//     CHECK(CheckColor(Color(4, 0, 0, 0), *dut.Tick()));
-//     CHECK(CheckColor(Color(2, 0, 0, 0), *dut.Tick())); // => Next 6
+    CHECK(CheckColor(Color(8, 0, 0, 0), *dut.Tick())); // <- Switching to next waveform
+    CHECK(CheckColor(Color(6, 0, 0, 0), *dut.Tick()));
+    CHECK(CheckColor(Color(4, 0, 0, 0), *dut.Tick()));
+    CHECK(CheckColor(Color(2, 0, 0, 0), *dut.Tick())); // => Next 6
 
-//     // Dynamic range is set to 30 internally // @todo change someday
-//     for (size_t i = 0; i < 16; i++) {
-//         uint8_t ch = dut.Tick()->GetColor().red;
-//         // INFO(printf("  %d = %d", i, ch));
-//         CHECK(((ch >= 0x80) && (ch <= (0x80 + 30))));
-//     }
-// }
+    // Dynamic range is set to 30 internally // @todo change someday
+    for (size_t i = 0; i < 16; i++) {
+        uint8_t ch = dut.Tick()->GetColor().red;
+        // INFO(printf("  %d = %d", i, ch));
+        CHECK(((ch >= 0x80) && (ch <= (0x80 + 30))));
+    }
+}
 
 TEST_CASE("SequenceSM Plots for manual investigation", "[EffectSquenceStateMachine, Constructor]") {
     EffectMacro effDemo[] = {

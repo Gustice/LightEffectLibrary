@@ -15,7 +15,8 @@
                 "_UNICODE"
             ],
             "cppStandard": "c++11",
-            "cStandard": "c99"
+            "cStandard": "c99",
+            "compileCommands": "${workspaceFolder}/build/compile_commands.json"
         }
     ],
     "version": 4

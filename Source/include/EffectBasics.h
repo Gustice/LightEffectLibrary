@@ -53,11 +53,13 @@ class EffectMacro {
     const int8_t next;
 
     constexpr EffectMacro(uint8_t duration, uint8_t next, eEffect state = eEffect::Light_Freeze, Color_t const *pColor = USEOLD_COLOR)
-        : state(state), pWave(NO_WAVE), FsIntensity(gu8_idleIntensity), duration(duration),
+        : state(state), pWave(NO_WAVE), FsIntensity(gu8_fullIntensity), duration(duration),
           pColor(pColor), repeats(0), next(next){};
-    constexpr EffectMacro(uint8_t duration, uint8_t next, uint8_t const *pWave, Color_t const *pColor = USEOLD_COLOR)
-        : state(eEffect::Light_Blank), pWave(pWave), FsIntensity(gu8_idleIntensity), duration(duration), pColor(pColor),
-          repeats(0), next(next){};
+
+    constexpr EffectMacro(uint8_t duration, uint8_t next, uint8_t const *pWave, eEffect state, Color_t const *pColor = USEOLD_COLOR, uint8_t repeat = 0)
+        : state(state), pWave(pWave), FsIntensity(gu8_fullIntensity), duration(duration), pColor(pColor),
+          repeats(repeat), next(next){};
+
     constexpr EffectMacro(EffMacro_t macro)
         : state(macro.state), pWave(macro.pWave), FsIntensity(macro.FsIntensity), duration(macro.duration),
           pColor(macro.pColor), repeats(macro.repeats), next(macro.next){};

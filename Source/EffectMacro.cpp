@@ -46,7 +46,7 @@ EffMacro_t eff_StdWipe[] = {
 
 const EffectMacro StdPulse[] = {
     EffectMacro(32, 1, Light_Idle, &color_White),
-    EffectMacro(32, 2, gau8_offsetPulse),
+    EffectMacro(32, 2, gau8_offsetPulse, eEffect::Light_Wave),
     EffectMacro(32, 1) // <- Back to one to not change color
 };
 
