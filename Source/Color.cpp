@@ -67,8 +67,8 @@ const Color CColdWhite(color_ColdWhite);
 const Color CSpookyWhite(color_SpookyWhite);
 ///@}
 
-const Color_t *p_noColor    = (Color_t *)0;
-const Color *  p_noColorObj = (Color *)0;
+const Color_t *pNoColor    = (Color_t *)0;
+const Color *  pNoColorObj = (Color *)0;
 
 //@todo test this and differentiate to approach below
 // Color Color::operator*(uint8_t k){

@@ -3,7 +3,7 @@
 extern "C"{
 #endif
 
-#include "Color.h"
+#include "color_t.h"
 #include "EffectBasics.h"
 #include "EffectStateMachine.h"
 #include <stdint.h>

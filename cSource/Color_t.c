@@ -9,7 +9,7 @@
  *
  */
 
-#include "Color.h"
+#include "color_t.h"
 #include <stdbool.h>
 #include <string.h>
 
@@ -22,27 +22,27 @@
  */
 ///@{
 /// Black color structure constant
-const color_t color_Black = {0x00, 0x00, 0x00, 0x00};
+const color_t cBlack = {0x00, 0x00, 0x00, 0x00};
 /// Red color structure constant
-const color_t color_Red = {0xFF, 0x00, 0x00, 0x00};
+const color_t cRed = {0xFF, 0x00, 0x00, 0x00};
 /// Green color structure constant
-const color_t color_Green = {0x00, 0xFF, 0x00, 0x00};
+const color_t cGreen = {0x00, 0xFF, 0x00, 0x00};
 /// Blue color structure constant
-const color_t color_Blue = {0x00, 0x00, 0xFF, 0x00};
+const color_t cBlue = {0x00, 0x00, 0xFF, 0x00};
 /// Magenta color structure constant
-const color_t color_Magenta = {0x80, 0x00, 0x80, 0x00};
+const color_t cMagenta = {0x80, 0x00, 0x80, 0x00};
 /// Cyan color structure constant
-const color_t color_Cyan = {0x00, 0x80, 0x80, 0x00};
+const color_t cCyan = {0x00, 0x80, 0x80, 0x00};
 /// Yellow color structure constant
-const color_t color_Yellow = {0x80, 0x80, 0x00, 0x00};
+const color_t cYellow = {0x80, 0x80, 0x00, 0x00};
 /// White color structure constant
-const color_t color_White = {0x55, 0x55, 0x55, 0x00};
+const color_t cWhite = {0x55, 0x55, 0x55, 0x00};
 /// Warm white color structure constant (with higher red channel value)
-const color_t color_WarmWhite = {0x7F, 0x4F, 0x4F, 0x00};
+const color_t cWarmWhite = {0x7F, 0x4F, 0x4F, 0x00};
 /// Black color structure constant (with higher blue channel value)
-const color_t color_ColdWhite = {0x4F, 0x4F, 0x7F, 0x00};
+const color_t cColdWhite = {0x4F, 0x4F, 0x7F, 0x00};
 /// Black color structure constant (with higher green channel value)
-const color_t color_SpookyWhite = {0x4F, 0x7F, 0x4F, 0x00};
+const color_t cSpookyWhite = {0x4F, 0x7F, 0x4F, 0x00};
 
 ///@}
 
@@ -62,6 +62,13 @@ void MixColor(color_t *self, color_t c2) {
     self->white = self->white + c2.white;
 }
 
+void MixColorScaled(color_t * self, color_t c2, uint8_t k)
+{
+    ScaleColor(&c2, k);
+    ScaleColor(self, (UINT8_MAX - k));
+    MixColor(self, c2);
+}
+
 bool ColorIsEqual(color_t *self, color_t c2) {
     return ((self->blue == c2.blue) && (self->green == c2.green) && (self->red == c2.red) && (self->white == c2.white));
 }
@@ -77,7 +84,7 @@ void SetColor(color_t *self, color_t c2) {
     self->white = c2.white;
 }
 
-void SetColor(color_t *self, uint8_t r, uint8_t g, uint8_t b, uint8_t w) {
+void SetColorByRgb(color_t *self, uint8_t r, uint8_t g, uint8_t b, uint8_t w) {
     self->red   = r;
     self->green = g;
     self->blue  = b;

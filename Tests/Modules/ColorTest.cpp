@@ -28,7 +28,7 @@ bool ColorIsEqualToStream(Color &C, const uint8_t s[sizeof(Color_t)]) {
     return false;
 }
 
-void DivideByPowOfN(uint8_t stream[sizeof(Color_t)], int n) {
+static void DivideByPowOfN(uint8_t stream[sizeof(Color_t)], int n) {
     for (size_t i = 0; i < sizeof(Color_t); i++) {
         stream[i] = (stream[i] >> n);
     }

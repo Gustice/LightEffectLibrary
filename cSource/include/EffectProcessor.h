@@ -3,11 +3,10 @@
 extern "C"{
 #endif
 
-#include "Color.h"
+#include "color_t.h"
 #include "EffectStateMachine.h"
+#include "EffectWaveforms.h"
 #include <stdint.h>
-
-extern const uint8_t gu8_idleIntensity; // @todo this is bad
 
 class EffectProcessor {
   public:

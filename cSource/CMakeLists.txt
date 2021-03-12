@@ -1,6 +1,6 @@
 # The main program
 add_library(cLEL_library STATIC 
-                    "Color.c" 
+                    "Color_t.c" 
                     # "EffectMacro.cpp" 
                     # "EffectProcessor.cpp" 
                     # "EffectStateMachine.cpp" 

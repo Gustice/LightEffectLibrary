@@ -147,8 +147,8 @@ class Color {
 Color operator*(Color c1, uint8_t k);
 Color operator+(Color c1, Color c2);
 
-extern const Color_t *p_noColor;
-extern const Color *  p_noColorObj;
+extern const Color_t *pNoColor;
+extern const Color *  pNoColorObj;
 
 extern const Color_t color_Black;
 extern const Color_t color_Red;

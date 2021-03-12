@@ -3,10 +3,10 @@
 extern "C" {
 #endif
 
-#include "Color_t.h"
+#include "color_t.h"
 #include <stdint.h>
 
-enum eEffect {
+typedef enum eEffect {
     Light_Blank = 0,
     Light_Idle,
     Light_Freeze,
@@ -15,11 +15,11 @@ enum eEffect {
     Light_Flicker,
 
     Light_States,
-};
+} eEffect_t;
 
 typedef const struct EffectMacroElement_def {
     /// Effect type
-    eEffect state;
+    eEffect_t state;
     /// waveform reference
     uint8_t const *pWave;
     /// Full-Scale-intensity

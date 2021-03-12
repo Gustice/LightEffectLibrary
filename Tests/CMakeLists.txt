@@ -8,10 +8,13 @@ add_executable(tests TestMain.cpp
                     Modules/EffectProcessorTest.cpp
                     Modules/EffectStateMachineTest.cpp
                     Modules/EffectSequenceStateMachineTest.cpp
+                    
+                    cModules/cColorTest.cpp
+                    
                     IntegrationTest.cpp 
                 )
 
-target_link_libraries(tests LEL_library 
+target_link_libraries(tests LEL_library cLEL_library 
                             catch 
 )
 add_compile_definitions(TSTOUTPUT_DIR="Tests/Output/")
