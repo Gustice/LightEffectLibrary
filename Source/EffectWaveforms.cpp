@@ -6,7 +6,7 @@
  * @date 2019-10-01
  *
  * @copyright Copyright (c) 2019
- *
+ * @note The defined waveforms are generated with a the WaveformGenerator
  */
 #include "EffectWaveforms.h"
 

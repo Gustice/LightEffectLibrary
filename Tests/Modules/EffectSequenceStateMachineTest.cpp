@@ -1,5 +1,5 @@
 
-#include "EffectStateMachine.h"
+#include "SequenceStateMachine.h"
 #include "EffectWaveforms.h"
 #include "MyUtils.h"
 
@@ -10,7 +10,7 @@ static const uint8_t u8_testWaveLen                 = sizeof(gau8_testWave1);
 static const uint8_t gau8_testWave2[u8_testWaveLen] = {11, 21, 31, 41, 51, 61, 71, 81};
 
 TEST_CASE("Constructing Effect SequenceMachine", "[EffectSquenceStateMachine, Constructor]") {
-    static SequenceSM dut(u8_testWaveLen, 0, 3);
+    static SequenceSM dut(u8_testWaveLen, 1, 0, 3);
     REQUIRE(true);
 }
 
@@ -40,7 +40,7 @@ TEST_CASE("Running Effect SequenceMachine with different Setups", "[EffectSquenc
         uint8_t halfIntens = 0x80u;
 
         SECTION("Running with full intensity(applies for idle state)") {
-            static SequenceSM dut(u8_testWaveLen, 0xFF, 0);
+            static SequenceSM dut(u8_testWaveLen, 1, 0xFF, 0);
             dut.SetEffect(effDemo);
 
             CHECK(CheckColor(Color(0, 0, 0xFF, 0), *dut.Tick()));
@@ -51,7 +51,7 @@ TEST_CASE("Running Effect SequenceMachine with different Setups", "[EffectSquenc
         }
 
         SECTION("Running with half default idle intensity(applies for idle state)") {
-            static SequenceSM dut(u8_testWaveLen, 0x80, 0);
+            static SequenceSM dut(u8_testWaveLen, 1, 0x80, 0);
             dut.SetEffect(effDemo);
 
             CHECK(CheckColor(Color(0, 0, 0x80, 0), *dut.Tick()));
@@ -61,7 +61,7 @@ TEST_CASE("Running Effect SequenceMachine with different Setups", "[EffectSquenc
             CHECK(CheckColor(Color(0, 0x80, 0, 0), *dut.Tick())); // <- Switching to next waveform
         }
         SECTION("Define other start intensity") {
-            static SequenceSM dut(u8_testWaveLen, 0xFF, 0);
+            static SequenceSM dut(u8_testWaveLen, 1, 0xFF, 0);
             dut.SetEffect(effDemo, NO_COLOR, &halfIntens, 0);
             CHECK(CheckColor(Color(0, 0, 0x80, 0), *dut.Tick()));
             dut.Tick();
@@ -81,7 +81,7 @@ TEST_CASE("Running Effect SequenceMachine with different Setups", "[EffectSquenc
             EffectMacro(4,0, Light_Idle, &color_Red),
       };
 
-        static SequenceSM dut(u8_testWaveLen, 0xFF, 0);
+        static SequenceSM dut(u8_testWaveLen, 1, 0xFF, 0);
         SECTION("Not Changing colors") {
             dut.SetEffect(effDemo);
             CHECK(CheckColor(Color(0, 0, 0xFF, 0), *dut.Tick()));
@@ -107,7 +107,7 @@ TEST_CASE("Running Effect SequenceMachine with different Setups", "[EffectSquenc
             EffectMacro(4,1, Light_Idle, &color_Blue),
             EffectMacro(4,2, Light_Idle, &color_Green),
       };
-        static SequenceSM dut(u8_testWaveLen, 0xFF, 0);
+        static SequenceSM dut(u8_testWaveLen, 1, 0xFF, 0);
         dut.SetEffect(effDemo, NO_COLOR, 2);
         CHECK(CheckColor(Color(0, 0, 0, 0), *dut.Tick()));
         CHECK(CheckColor(Color(0, 0, 0, 0), *dut.Tick()));
@@ -147,7 +147,7 @@ TEST_CASE("Tick and GetColor on SequenceMachine yield same results", "[EffectSqu
         EffectMacro(1,2, Light_Idle, &color_Green),
         EffectMacro(1,0, Light_Idle, &color_Red),
     };
-    static SequenceSM dut(u8_testWaveLen, 0xFF, 0);
+    static SequenceSM dut(u8_testWaveLen, 1, 0xFF, 0);
     dut.SetEffect(effDemo);
 
     const Color * tc1 = dut.Tick();
@@ -176,7 +176,7 @@ TEST_CASE("Processing different SequenceMacros correctly", "[EffectSquenceStateM
             EffectMacro(4,1, gau8_testWave1, Light_RevWave, &color_Blue),
         };
 
-        static SequenceSM dut(u8_testWaveLen);
+        static SequenceSM dut(u8_testWaveLen, 1);
         dut.SetEffect(effDemo); // => Start with 0
         CHECK(CheckColor(Color(0, 0, 0, 0), *dut.Tick()));
         CHECK(CheckColor(Color(0, 0, 0, 0), *dut.Tick()));
@@ -206,7 +206,7 @@ TEST_CASE("Processing different SequenceMacros correctly", "[EffectSquenceStateM
             EffectMacro(8,0, gau8_testWave1, Light_Wave, &color_Red),
         };
 
-        static SequenceSM dut(u8_testWaveLen);
+        static SequenceSM dut(u8_testWaveLen, 1);
         dut.SetEffect(effDemo);                            // => Start with 0
         CHECK(CheckColor(Color(0, 0, 0, 0), *dut.Tick())); // => Next 1
         CHECK(CheckColor(Color(1, 0, 0, 0), *dut.Tick())); // <- Switching to next waveform
@@ -239,7 +239,7 @@ TEST_CASE("Processing different SequenceMacros correctly", "[EffectSquenceStateM
             EffectMacro(2,1, gau8_testWave1, Light_RevWave, &color_Blue, 2),
         };
 
-        static SequenceSM dut(u8_testWaveLen);
+        static SequenceSM dut(u8_testWaveLen, 1);
         dut.SetEffect(effDemo); // => Start with 0
         CHECK(CheckColor(Color(0, 0, 0, 0), *dut.Tick()));
         CHECK(CheckColor(Color(0, 0, 0, 0), *dut.Tick())); // => Next 1
@@ -283,7 +283,7 @@ TEST_CASE("Setting All different effects of SequenceSM", "[EffectSquenceStateMac
         EffectMacro(4,6, gau8_testWave1, Light_RevWave),
         EffectMacro(16,1, Light_Flicker),
    };
-    static SequenceSM dut(u8_testWaveLen, 0x80, 0);
+    static SequenceSM dut(u8_testWaveLen, 1, 0x80, 0);
     dut.SetEffect(effDemo);
 
     CHECK(CheckColor(Color(0, 0, 0, 0), *dut.Tick())); // <- Blank
@@ -336,7 +336,7 @@ TEST_CASE("SequenceSM Plots for manual investigation", "[EffectSquenceStateMachi
         EffectMacro( EffMacro_t{Light_Blank, NO_WAVE, 0xFF, 4, USEOLD_COLOR, 0, 11}),
         EffectMacro( EffMacro_t{Light_Flicker, NO_WAVE, 0xFF, 64, USEOLD_COLOR, 0, 0}),
     };
-    static SequenceSM dut(cu16_TemplateLength, 0x80, 0);
+    static SequenceSM dut(cu16_TemplateLength, 1, 0x80, 0);
     dut.SetEffect(effDemo);
 
     std::ofstream plotFile;

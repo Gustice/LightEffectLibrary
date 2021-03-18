@@ -1,11 +1,11 @@
 /**
- * @file EffectStateMachine.h
+ * @file SequenceStateMachine.h
  * @author Gustice
  * @brief Effect-State-Machine-Class for processing Effect Macros
  * @version 0.1
- * @date 2019-10-01
+ * @date 2021-03-12
  *
- * @copyright Copyright (c) 2019
+ * @copyright Copyright (c) 2021
  *
  */
 #pragma once
@@ -16,34 +16,22 @@
 
 namespace Effect {
 
-/**
- * @brief Effect State Machine Class
- * @details Processes Effect macro array Macro entry subsequently
- * Processing is executed in following manner:
- *  \li Index-incrementing each Tick
- *      \li ticks until duration \ref EffMacro is finished
- *      \li each tick the index incremented by templateLength/duration
- *  \li Repeats-processing
- *      \li Each repeat the tick and the index are set back to start
- *      \li Switches to next Macro enty
- *      \li Next entry is given by 'next' index
- *      \li Color changes can be executed optionally
- */
-class EffectSM {
+class SequenceSM {
   public:
     /**
      * @brief Construct a new Effect State Machine object
      * @param templateLength Length of waveforms that are used to display
      */
-    EffectSM(uint16_t const templateLength) : EffectSM(templateLength, 0, 0){};
-    ~EffectSM();
+    SequenceSM(uint16_t const templateLength, uint8_t targetCount)
+        : SequenceSM(templateLength, targetCount, 0, 0) {};
+    ~SequenceSM();
 
-    EffectSM(uint16_t const templateLength, uint8_t const intensity, uint8_t const crossFade);
+    SequenceSM(uint16_t const templateLength, uint8_t targetCount, uint8_t const intensity, uint8_t const crossFade);
     /// @todo Configuration could be given by structure
 
-    void SetEffect(EffMacro_t *sequence, Color_t const *startColor = NO_COLOR, uint8_t initialDelay = 0);
-    void SetEffect(EffMacro_t *sequence, Color_t const *startColor, const uint8_t *intens, const uint8_t delayedStart);
-    void SetEffect(const EffectMacro *sequence);
+    void SetEffect(const EffectMacro *sequence, Color_t const *startColor = NO_COLOR, uint8_t initialDelay = 0);
+    void SetEffect(const EffectMacro *sequence, Color_t const *startColor, const uint8_t *intens,
+                   const uint8_t delayedStart);
 
     virtual Color const *Tick(void);
     uint8_t              GetDissolveRatio(void);
@@ -80,7 +68,7 @@ class EffectSM {
      * @brief Get index to current macro in sequence
      * @return EffMacro_type const* const
      */
-    EffMacro_t const *const GetStep(void) { return _p_effMac; };
+    EffectMacro const *const GetStep(void) { return _p_effMac; };
 
     /**
      * @brief Get Process values of state machen
@@ -92,21 +80,22 @@ class EffectSM {
     /// @todo change to protected and tests results
   protected:
     /// First element of Effect macro stack
-    EffMacro_t const *_p_effSeq;
+    EffectMacro const *_p_effSeq;
     /// Currently indexed Effect-part
-    EffMacro_t const *_p_effMac;
+    EffectMacro const *_p_effMac;
 
     Color *_outputColor; /// @todo !!
 
-    // Color& (*apF_Effects)(EffectSM * SM);
-    typedef Color const * pEffPrc(EffectSM *);
-    static pEffPrc *const apF_Processors[6];
-    static Color const *  UpdateBlank(EffectSM *SM);
-    static Color const *  UpdateIdle(EffectSM *SM);
-    static Color const *  UpdateFreeze(EffectSM *SM);
-    static Color const *  UpdateWave(EffectSM *SM);
-    static Color const *  UpdateRevWave(EffectSM *SM);
-    static Color const *  UpdateFlicker(EffectSM *SM);
+    // Color& (*apF_Effects)(SequenceSM * SM);
+    typedef Color const * pEffPrc(SequenceSM *);
+    void UpdateBlank();
+    void UpdateIdle();
+    void UpdateFreeze();
+    void UpdateWave();
+    void UpdateRevWave();
+    void UpdateFlicker();
+
+    void ApplyColorToAllElements(Color & color);
 
     /// Last color
     Color _lastColor;
@@ -115,6 +104,8 @@ class EffectSM {
     /// \li Either forced by start with parameter
     /// \li Or given by current Effect-part
     Color _curentColor;
+  
+    const size_t _targetCount;
 
     /// Concentrated parameter values of instance
     SM_ParameterValues_t SMIParams;
@@ -125,12 +116,6 @@ class EffectSM {
     /// @todo callback for finished to exclude these indexes
 
     void SetIndexes(void);
-
-    EffectSM(void){};
 };
-
-
-
-
 
 } // namespace Effect
