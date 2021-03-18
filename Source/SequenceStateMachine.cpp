@@ -11,6 +11,7 @@
 
 #include "SequenceStateMachine.h"
 #include "EffectWaveforms.h"
+#include <assert.h>
 #include <math.h>
 #include <stdlib.h>
 
@@ -18,9 +19,9 @@ namespace Effect {
 
 const EffectMacro delaySequence(1, 0);
 
-SequenceSM::SequenceSM(uint16_t const templateLength, uint8_t targetCount, uint8_t const intensity,
-                       uint8_t crossFade)
-    : _targetCount(targetCount) {
+SequenceSM::SequenceSM(uint16_t const templateLength, uint8_t targetCount, uint8_t const intensity, uint8_t crossFade)
+    : _templateLength(templateLength), _targetCount(targetCount) {
+    assert(targetCount > 0);
     SMIParams.templateLength = templateLength;
     SMIParams.idleIntens     = intensity;
     SMIParams.fadeSteps      = 0;
@@ -91,7 +92,7 @@ void SequenceSM::SetEffect(const EffectMacro *sequence, Color_t const *startColo
  *
  * @return uint8_t
  */
-Color const *SequenceSM::Tick(void) {
+Color *SequenceSM::Tick(void) {
     // tick-increment
     if (--SMPValues.tick == 0) {
         // repeats-decrement
@@ -118,13 +119,30 @@ Color const *SequenceSM::Tick(void) {
     }
 
     switch (_p_effMac->state) {
-    case eEffect::Light_Blank: UpdateBlank(); break; 
-    case eEffect::Light_Idle: UpdateIdle(); break; 
-    case eEffect::Light_Freeze: UpdateFreeze(); break; 
-    case eEffect::Light_Wave: UpdateWave(); break; 
-    case eEffect::Light_RevWave: UpdateRevWave(); break; 
-    case eEffect::Light_Flicker: UpdateFlicker(); break; 
+    case eEffect::Light_Blank:
+        UpdateBlank();
+        break;
+    case eEffect::Light_Idle:
+        UpdateIdle();
+        break;
+    case eEffect::Light_Freeze:
+        UpdateFreeze();
+        break;
+    case eEffect::Light_Wave:
+        UpdateWave();
+        break;
+    case eEffect::Light_RevWave:
+        UpdateRevWave();
+        break;
+    case eEffect::Light_Flicker:
+        UpdateFlicker();
+        break;
+    case eEffect::LightCustom: {
+        EffectMacro const *const cEffStep = GetStep();
+        return cEffStep->pProcessor(this, _outputColor, _targetCount);
+    } break;
     default:
+
         break;
     }
 
@@ -177,7 +195,7 @@ void SequenceSM::UpdateWave() {
 void SequenceSM::UpdateRevWave() {
     EffectMacro const *const cEffStep  = GetStep();
     uint8_t                  lastIndex = SMIParams.templateLength - 1;
-    Color cOut = GetColor() * cEffStep->pWave[lastIndex - GetWaveIdx()] * cEffStep->FsIntensity;
+    Color                    cOut      = GetColor() * cEffStep->pWave[lastIndex - GetWaveIdx()] * cEffStep->FsIntensity;
 
     ApplyColorToAllElements(cOut);
 }
@@ -194,6 +212,45 @@ void SequenceSM::ApplyColorToAllElements(Color &color) {
     for (size_t i = 0; i < _targetCount; i++) {
         _outputColor[i] = color;
     }
+}
+
+Color const *LightSparkleSequence(SequenceSM *obj, Color *colors, size_t len) {
+    const Color cColor = obj->GetColor();
+    uint8_t     k, kr;
+
+    kr      = ((int16_t)rand() * 14 / 0xFF);
+    k       = 50 + kr * kr;
+    *colors = cColor * k;
+    return colors;
+}
+
+Color const *LightSwipeSequence(SequenceSM *obj, Color *colors, size_t len) {
+    EffectMacro const *const cEffStep = obj->GetStep();
+    const Color              cColor   = obj->GetColor();
+    uint8_t                  cStep    = obj->GetWaveIdx();
+    uint8_t                  step     = obj->_templateLength;
+
+    colors[0] = cColor * cEffStep->pWave[cStep] * cEffStep->FsIntensity;
+
+    if (len < 2)
+        return colors;
+    colors[1] = cColor * cEffStep->pWave[obj->_templateLength - 1 - step] * cEffStep->FsIntensity;
+
+    return colors;
+}
+
+Color const *LightWaveSequence(SequenceSM *obj, Color *colors, size_t len) {
+    EffectMacro const *const cEffStep = obj->GetStep();
+    const Color              cColor   = obj->GetColor();
+    uint8_t                  cStep    = obj->GetWaveIdx();
+    uint8_t                  step     = obj->_templateLength / len;
+
+    for (int i = 0; i < len; i++) {
+        colors[i] = cColor * cEffStep->pWave[cStep] * cEffStep->FsIntensity;
+        cStep += step;
+    }
+
+    return colors;
 }
 
 } // namespace Effect

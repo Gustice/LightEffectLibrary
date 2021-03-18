@@ -13,7 +13,7 @@ enum eEffect {
     Light_Wave,
     Light_RevWave,
     Light_Flicker,
-
+    LightCustom,
     Light_States,
 };
 
@@ -35,6 +35,16 @@ typedef const struct EffMacro_def {
 } EffMacro_t;
 #define COUNT_EFFECT_ELEMENT(effect) (sizeof(effect) / sizeof(EffMacro_type))
 
+
+class SequenceSM;
+/**
+ * @brief Custom Sequence effect to process
+ * @param obj Reference to object
+ * @param len Target count of sequencer
+ * @return typedef const* 
+ */
+typedef Color * (*pEffPrc)(SequenceSM * obj, Color * colors, size_t len);
+
 class EffectMacro {
   public:
     /// Effect type
@@ -51,18 +61,24 @@ class EffectMacro {
     const int8_t repeats;
     /// Next SubEffect
     const int8_t next;
+    /// Custom processor function
+    const pEffPrc pProcessor;
 
     constexpr EffectMacro(uint8_t duration, uint8_t next, eEffect state = eEffect::Light_Freeze, Color_t const *pColor = USEOLD_COLOR)
         : state(state), pWave(NO_WAVE), FsIntensity(gu8_fullIntensity), duration(duration),
-          pColor(pColor), repeats(0), next(next){};
+          pColor(pColor), repeats(0), next(next), pProcessor(nullptr){};
 
     constexpr EffectMacro(uint8_t duration, uint8_t next, uint8_t const *pWave, eEffect state, Color_t const *pColor = USEOLD_COLOR, uint8_t repeat = 0)
         : state(state), pWave(pWave), FsIntensity(gu8_fullIntensity), duration(duration), pColor(pColor),
-          repeats(repeat), next(next){};
+          repeats(repeat), next(next), pProcessor(nullptr){};
+
+    constexpr EffectMacro(uint8_t duration, uint8_t next, pEffPrc pProcessor, uint8_t const *pWave, Color_t const *pColor = USEOLD_COLOR, uint8_t repeat = 0)
+        : state(eEffect::LightCustom), pWave(pWave), FsIntensity(gu8_fullIntensity), duration(duration), pColor(pColor),
+          repeats(repeat), next(next), pProcessor(pProcessor) {};
 
     constexpr EffectMacro(EffMacro_t macro)
         : state(macro.state), pWave(macro.pWave), FsIntensity(macro.FsIntensity), duration(macro.duration),
-          pColor(macro.pColor), repeats(macro.repeats), next(macro.next){};
+          pColor(macro.pColor), repeats(macro.repeats), next(macro.next), pProcessor(nullptr){};
 };
 
 typedef struct {

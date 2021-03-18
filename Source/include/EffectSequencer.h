@@ -20,17 +20,18 @@ namespace Effect {
 
 class EffectSequencer {
   public:
-    EffectSequencer(uint16_t const templateLength, uint8_t const fadeSteps);
+    EffectSequencer(uint16_t const templateLength, uint8_t targetCount, uint8_t const fadeSteps);
     ~EffectSequencer();
     void SetEffect(EffectMacro *sequence, Color_t const *sColor = NO_COLOR, uint8_t intens = gu8_idleIntensity);
     Color const * Tick(void);
 
   private:
     uint8_t _colorSize;
-    Color   _pColor;
-    Color   _pColorOld;
+    Color * _pColor;
+    Color * _pColorOld;
     uint8_t _fadeSteps;
     uint8_t _fadingCnt;
+    const uint8_t _targetCount;
     SequenceSM * _EffPV;
     SequenceSM * _EffPV_old;
 

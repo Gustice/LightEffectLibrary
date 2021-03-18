@@ -22,8 +22,7 @@ class SequenceSM {
      * @brief Construct a new Effect State Machine object
      * @param templateLength Length of waveforms that are used to display
      */
-    SequenceSM(uint16_t const templateLength, uint8_t targetCount)
-        : SequenceSM(templateLength, targetCount, 0, 0) {};
+    SequenceSM(uint16_t const templateLength, uint8_t targetCount) : SequenceSM(templateLength, targetCount, 0, 0){};
     ~SequenceSM();
 
     SequenceSM(uint16_t const templateLength, uint8_t targetCount, uint8_t const intensity, uint8_t const crossFade);
@@ -33,8 +32,11 @@ class SequenceSM {
     void SetEffect(const EffectMacro *sequence, Color_t const *startColor, const uint8_t *intens,
                    const uint8_t delayedStart);
 
-    virtual Color const *Tick(void);
-    uint8_t              GetDissolveRatio(void);
+    virtual Color *Tick(void);
+    uint8_t        GetDissolveRatio(void);
+
+    const size_t _templateLength;
+    const size_t _targetCount;
 
     /**
      * @brief Set the Dynamic Range of effects
@@ -87,7 +89,6 @@ class SequenceSM {
     Color *_outputColor; /// @todo !!
 
     // Color& (*apF_Effects)(SequenceSM * SM);
-    typedef Color const * pEffPrc(SequenceSM *);
     void UpdateBlank();
     void UpdateIdle();
     void UpdateFreeze();
@@ -95,7 +96,7 @@ class SequenceSM {
     void UpdateRevWave();
     void UpdateFlicker();
 
-    void ApplyColorToAllElements(Color & color);
+    void ApplyColorToAllElements(Color &color);
 
     /// Last color
     Color _lastColor;
@@ -104,8 +105,6 @@ class SequenceSM {
     /// \li Either forced by start with parameter
     /// \li Or given by current Effect-part
     Color _curentColor;
-  
-    const size_t _targetCount;
 
     /// Concentrated parameter values of instance
     SM_ParameterValues_t SMIParams;
