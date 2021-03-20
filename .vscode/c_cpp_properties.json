@@ -6,7 +6,7 @@
             "compilerPath": "C:\\MinGW\\bin\\gcc.exe",
             "includePath": [
                 "${workspaceFolder}/**",
-                "${workspaceFolder}/Source/**",
+                "${workspaceFolder}/EffectSource/**",
                 "${workspaceFolder}/Tests/**"
             ],
             "defines": [

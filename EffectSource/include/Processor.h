@@ -45,40 +45,4 @@ class EffectProcessor {
     EffectProcessor();
 };
 
-
-
-
-
-// #define SINGLEEFFECT_COLORWITH 1
-// class SingleEffect : public EffectProcessor {
-// 	public:
-// 	SingleEffect(uint16_t const templateLength);
-
-// 	private:
-// 	Color _Color[SINGLEEFFECT_COLORWITH];
-// 	Color _ColorOld[SINGLEEFFECT_COLORWITH];
-// 	void genImage(Color * color, EffectSM * effStat);
-// };
-
-// #define DUALEEFECT_COLORWITH 2
-// class DualEffect : public EffectProcessor {
-// 	public:
-// 	DualEffect(uint16_t const templateLength);
-
-// 	private:
-// 	Color _Color[DUALEEFECT_COLORWITH];
-// 	Color _ColorOld[DUALEFFECT_COLORWITH];
-// 	void genImage(Color * color, EffectSM * effStat);
-// };
-
-// class MultiEffect : public EffectProcessor {
-// 	public:
-// 	MultiEffect(uint8_t u8_Length);
-
-// 	private:
-// 	Color * _pColor;
-// 	Color * _pColorOld;
-// 	void genImage(Color * color, EffectSM * effStat);
-// };
-
 } // namespace Effect

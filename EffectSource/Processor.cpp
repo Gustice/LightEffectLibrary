@@ -23,7 +23,7 @@ EffectProcessor::EffectProcessor(uint16_t const templateLength, uint8_t const fa
     : _pColor(), _pColorOld() {
     _EffPV = new EffectSM(templateLength); 
     _EffPV_old = new EffectSM(templateLength);
-    _EffPV->SetEffect(eff_Dark, 0);
+    _EffPV->SetEffect(macDark, 0);
     _fadeSteps = fadeSteps;
 }
 

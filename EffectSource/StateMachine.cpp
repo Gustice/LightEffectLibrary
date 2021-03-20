@@ -47,12 +47,9 @@ EffectSM::EffectSM(uint16_t const templateLength, uint8_t const intensity, uint8
 
 /**
  * @brief Destroy the Effect State Machine
- * 
+ *
  */
-    EffectSM::~EffectSM() {
-        delete _outputColor;
-    }
-
+EffectSM::~EffectSM() { delete _outputColor; }
 
 void EffectSM::SetEffect(Macro_t *sequence, color_t const *startColor, uint8_t initialDelay) {
     SetEffect(sequence, startColor, &SMIParams.idleIntens, initialDelay);
@@ -177,15 +174,14 @@ Color const *EffectSM::UpdateFreeze(EffectSM *SM) {
 
 Color const *EffectSM::UpdateWave(EffectSM *SM) {
     Macro_t const *const cEffStep = SM->GetStep();
-    *(SM->_outputColor) = SM->GetColor() * cEffStep->pWave[SM->GetWaveIdx()] * cEffStep->FsIntensity;
+    *(SM->_outputColor)           = SM->GetColor() * cEffStep->pWave[SM->GetWaveIdx()] * cEffStep->FsIntensity;
     return SM->_outputColor;
 }
 
 Color const *EffectSM::UpdateRevWave(EffectSM *SM) {
     Macro_t const *const cEffStep  = SM->GetStep();
-    uint8_t                 lastIndex = SM->SMIParams.templateLength - 1;
-    *(SM->_outputColor) =
-        SM->GetColor() * cEffStep->pWave[lastIndex - SM->GetWaveIdx()] * cEffStep->FsIntensity;
+    uint8_t              lastIndex = SM->SMIParams.templateLength - 1;
+    *(SM->_outputColor) = SM->GetColor() * cEffStep->pWave[lastIndex - SM->GetWaveIdx()] * cEffStep->FsIntensity;
     return SM->_outputColor;
 }
 

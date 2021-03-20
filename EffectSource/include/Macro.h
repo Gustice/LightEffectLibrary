@@ -8,14 +8,14 @@
 
 namespace Effect {
 
-extern Macro_t eff_Dark[];
-extern Macro_t eff_StartIdle[];
-extern Macro_t eff_Idle[];
-extern Macro_t eff_StdPulse[];
-extern Macro_t eff_NervousPulse[];
-extern Macro_t eff_StdWipe[];
-extern Macro_t eff_AsymPulse[];
-extern Macro_t eff_ShiftAsymPulse[];
+extern Macro_t macDark[];
+extern Macro_t macStartIdle[];
+extern Macro_t macIdle[];
+extern Macro_t macStdPulse[];
+extern Macro_t macNervousPulse[];
+extern Macro_t macStdWipe[];
+extern Macro_t macAsymPulse[];
+extern Macro_t macShiftAsymPulse[];
 
 extern Sequence someScene;
 extern Sequence idleScene;

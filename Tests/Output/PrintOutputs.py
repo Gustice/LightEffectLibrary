@@ -4,10 +4,12 @@ import matplotlib.pyplot as plt
 import seaborn as sns
 
 # Plot State-Machine Output
+df0 = pd.read_csv('Tests/Output/cEffectStateMachine.csv')
 df1 = pd.read_csv('Tests/Output/EffectStateMachine.csv')
 df2 = pd.read_csv('Tests/Output/EffectSequenceStepper.csv')
-plt.plot(df1['cycle'], df1['value'], label='longRun')
-plt.plot(df2['cycle'], df2['value'], label='alternativ')
+plt.plot(df0['cycle'], df0['value'], label='cStyle')
+plt.plot(df1['cycle'], df1['value'], label='c++')
+plt.plot(df2['cycle'], df2['value'], label='c++ alt')
 plt.xlabel('iteration')
 plt.ylabel('intensity')
 plt.title('LongRun')

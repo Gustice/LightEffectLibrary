@@ -13,184 +13,137 @@
 #include <math.h>
 #include <stdlib.h>
 
-/// Optional prequel for delayed start.
-/// \li Duration must be != 0
-/// \li Next entry will be first entry in given Effect sequence
-EffMacro_t delayPrequel[] = {
-    {Light_Blank, (uint8_t *)0, 0, 1, &color_Black, 0, 0},
+Color_t const *UpdateBlank(EffectSM_t *self) {
+    ScaleColor(self->outputColor, 0);
+    return self->outputColor;
+}
+
+Color_t const *UpdateIdle(EffectSM_t *self) {
+    SetColor(self->outputColor, self->curentColor);
+    ScaleColor(self->outputColor, self->SMIParams.idleIntens);
+    return self->outputColor;
+}
+
+Color_t const *UpdateFreeze(EffectSM_t *self) {
+    // just do nothing and Return currently set color
+    return self->outputColor;
+}
+
+Color_t const *UpdateWave(EffectSM_t *self) {
+
+    EffMacro_t const *const cEffStep = self->p_effMac;
+    SetColor(self->outputColor, self->curentColor);
+    ScaleColor(self->outputColor, cEffStep->pWave[SM_GetWaveIdx(self)]);
+    ScaleColor(self->outputColor, cEffStep->FsIntensity);
+    return self->outputColor;
+}
+
+Color_t const *UpdateRevWave(EffectSM_t *self) {
+    EffMacro_t const *const cEffStep  = self->p_effMac;
+    uint8_t                 lastIndex = self->SMIParams.templateLength - 1;
+    SetColor(self->outputColor, self->curentColor);
+    ScaleColor(self->outputColor, cEffStep->pWave[lastIndex - SM_GetWaveIdx(self)]);
+    ScaleColor(self->outputColor, cEffStep->FsIntensity);
+    return self->outputColor;
+}
+
+Color_t const *UpdateFlicker(EffectSM_t *self) {
+    uint8_t k;
+    k = rand();
+    k = self->SMIParams.idleIntens + ((int16_t)k * (self->SMIParams.dynamicRange) / 0xFF);
+    SetColor(self->outputColor, self->curentColor);
+    ScaleColor(self->outputColor, k);
+    return self->outputColor;
+}
+
+static const EffMacro_t delayPrequel[] = {
+    {Light_Blank, (uint8_t *)0, 0, 1, &cBlack, 0, 0},
 };
 
+typedef Color_t const *pEffPrcHandle(EffectSM_t *self);
 /// Function table to processing Functions
-EffectSM::pEffPrc *const EffectSM::apF_Processors[6] = {
-    EffectSM::UpdateBlank, EffectSM::UpdateIdle,    EffectSM::UpdateFreeze,
-    EffectSM::UpdateWave,  EffectSM::UpdateRevWave, EffectSM::UpdateFlicker,
+pEffPrcHandle *const apF_Processors[6] = {
+    UpdateBlank, UpdateIdle, UpdateFreeze, UpdateWave, UpdateRevWave, UpdateFlicker,
 };
 
-/**
- * @brief Construct a new Effect State Machine object
- *
- * @param templateLength
- * @param intensity
- * @param crossFade @todo not implemented yet
- */
-EffectSM::EffectSM(uint16_t const templateLength, uint8_t const intensity, uint8_t const crossFade) {
-    SMIParams.templateLength = templateLength;
-    SMIParams.idleIntens     = intensity;
-    SMIParams.fadeSteps      = 0;
-    SMIParams.dynamicRange   = 30;
-    if (crossFade > 0)
-        SMIParams.fadeSteps = crossFade; // @todo
-    _outputColor = new Color;
+void SM_Construct(EffectSM_t *self, SM_ParameterValues_t param, Color_t *color) {
+    memset(self, 0, sizeof(EffectSM_t));
+    memcpy(&(self->SMIParams), &param, sizeof(SM_ParameterValues_t));
+    self->outputColor = color;
 }
 
-/**
- * @brief Destroy the Effect State Machine
- * 
- */
-    EffectSM::~EffectSM() {
-        delete _outputColor;
-    }
+const uint8_t SM_GetWaveIdx(EffectSM_t *self) { return ((self->SMPValues.waveIdx & 0xFF00u) >> 8); };
 
+void SM_SetDynamicRange(EffectSM_t *self, uint8_t range) { self->SMIParams.dynamicRange = range; };
 
-void EffectSM::SetEffect(EffMacro_t *sequence, color_t const *startColor, uint8_t initialDelay) {
-    SetEffect(sequence, startColor, &SMIParams.idleIntens, initialDelay);
+void SetIndexes(EffectSM_t *self) {
+    self->SMPValues.waveStep = ((self->SMIParams.templateLength) << 8);
+    self->SMPValues.waveStep /= self->p_effMac->duration;
+    self->SMPValues.waveIdx = (uint16_t)(0 - self->SMPValues.waveStep);
 }
 
-/**
- * @brief Sets the effect state machine to process given effect macro
- *
- * @param sequence
- * @param startColor
- * @param delayedStart
- * @param intens
- */
-void EffectSM::SetEffect(EffMacro_t *sequence, color_t const *startColor, const uint8_t *intens,
-                         const uint8_t delayedStart) {
-    if (startColor != noColor) {
-        _curentColor.SetColor(*startColor);
-    } else {
-        _curentColor.SetColor(*sequence->color);
-    }
-    _lastColor.SetColor(_curentColor.GetColor());
-    if (intens != nullptr) {
-        SMIParams.idleIntens = *intens;
-    }
-
-    SMPValues.macroIdx = 0;
-
-    _p_effSeq = sequence;
-    if (delayedStart > 0) {
-        _p_effMac      = delayPrequel;
-        SMPValues.tick = delayedStart;
-    } else {
-        _p_effMac      = sequence;
-        SMPValues.tick = _p_effMac->duration;
-    }
-
-    SMPValues.tick++;
-    SMPValues.dissolveCnt = 0;
-    SMPValues.repeats     = _p_effMac->repeats;
-    this->SetIndexes();
-}
-
-/**
- * @brief Executes one tick of the statemachine
- * @details Each tick the tick variable is decremented. After the limit is reached,
- *  the current macro line is either repeated or the next macro line is started (with
- *  an optional color change).\n
- * If the color is changed by switching the macro line, a dissolve counterr is concurrently
- *  triggered (see \ref GetDissolveRatio). This counter can be used to cross fade between
- *  different colors.
- *
- * @note Tick must be called regularly. For standard light applications all 40 ms seems to be
- *  a convenient values.
- *
- * @return uint8_t
- */
-Color const *EffectSM::Tick(void) {
+Color_t const *SM_Tick(EffectSM_t *self) {
     // tick-increment
-    if (--SMPValues.tick == 0) {
+    if (--self->SMPValues.tick == 0) {
         // repeats-decrement
-        if (SMPValues.repeats-- == 0) {
-            SMPValues.macroIdx = _p_effMac->next;
-            _p_effMac          = &(_p_effSeq[_p_effMac->next]);
-            SMPValues.repeats  = _p_effMac->repeats;
+        if (self->SMPValues.repeats-- == 0) {
+            self->SMPValues.macroIdx = self->p_effMac->next;
+            self->p_effMac           = &(self->p_effSeq[self->p_effMac->next]);
+            self->SMPValues.repeats  = self->p_effMac->repeats;
 
             // execute color change if necessary
-            if (_p_effMac->color != noColor) {
-                SMPValues.dissolveCnt = SMIParams.fadeSteps;
-                _lastColor.SetColor(_curentColor.GetColor());
-                _curentColor.SetColor(*_p_effMac->color);
+            if (self->p_effMac->color != NO_COLOR) {
+                self->SMPValues.dissolveCnt = self->SMIParams.fadeSteps;
+                SetColor(&self->lastColor, self->curentColor);
+                SetColor(&self->curentColor, *self->p_effMac->color);
             }
         }
 
-        SMPValues.tick = _p_effMac->duration;
-        this->SetIndexes();
+        self->SMPValues.tick = self->p_effMac->duration;
+        SetIndexes(self);
     }
 
-    SMPValues.waveIdx += SMPValues.waveStep;
-    if (SMPValues.dissolveCnt > 0) {
-        SMPValues.dissolveCnt--;
+    self->SMPValues.waveIdx += self->SMPValues.waveStep;
+    if (self->SMPValues.dissolveCnt > 0) {
+        self->SMPValues.dissolveCnt--;
     }
 
-    return apF_Processors[_p_effMac->state](this);
+    return apF_Processors[self->p_effMac->state](self);
 }
 
-/**
- * @brief Sets Waveform index according du desired duration, waveform-length and current step
- */
-void EffectSM::SetIndexes(void) {
-    SMPValues.waveStep = ((SMIParams.templateLength) << 8);
-    SMPValues.waveStep /= _p_effMac->duration;
-    SMPValues.waveIdx = (uint16_t)(0 - SMPValues.waveStep);
+void SM_SetEffect(EffectSM_t *self, EffMacro_t *sequence, Color_t const *startColor, const uint8_t *intens,
+                  const uint8_t delayedStart) {
+    if (startColor != NO_COLOR) {
+        SetColor(&self->curentColor, *startColor);
+    } else {
+        SetColor(&self->curentColor, *sequence->color);
+    }
+    SetColor(&self->lastColor, self->curentColor);
+    if (intens != (uint8_t *)NULL) {
+        self->SMIParams.idleIntens = *intens;
+    }
+
+    self->SMPValues.macroIdx = 0;
+
+    self->p_effSeq = sequence;
+    if (delayedStart > 0) {
+        self->p_effMac       = delayPrequel;
+        self->SMPValues.tick = delayedStart;
+    } else {
+        self->p_effMac       = sequence;
+        self->SMPValues.tick = self->p_effMac->duration;
+    }
+
+    self->SMPValues.tick++;
+    self->SMPValues.dissolveCnt = 0;
+    self->SMPValues.repeats     = self->p_effMac->repeats;
+    SetIndexes(self);
 }
 
-/**
- * @brief Returns fading ramp in cases the color were switched
- * @return uint8_t
- */
-/// @todo it seems not te be very clever to delegate this on higher level
-uint8_t EffectSM::GetDissolveRatio(void) {
-    if (SMIParams.fadeSteps == 0)
+uint8_t SM_GetDissolveRatio(EffectSM_t *self) {
+    if (self->SMIParams.fadeSteps == 0)
         return 0;
 
-    uint8_t dissolving = (uint8_t)((uint16_t)0xFF * SMPValues.dissolveCnt / SMIParams.fadeSteps);
+    uint8_t dissolving = (uint8_t)((uint16_t)0xFF * self->SMPValues.dissolveCnt / self->SMIParams.fadeSteps);
     return dissolving;
-}
-
-Color const *EffectSM::UpdateBlank(EffectSM *SM) {
-    *(SM->_outputColor) = SM->_curentColor * 0;
-    return SM->_outputColor;
-}
-
-Color const *EffectSM::UpdateIdle(EffectSM *SM) {
-    *(SM->_outputColor) = SM->_curentColor * SM->SMIParams.idleIntens;
-    return SM->_outputColor;
-}
-
-Color const *EffectSM::UpdateFreeze(EffectSM *SM) {
-    // just do nothing and Return currently set color
-    return SM->_outputColor;
-}
-
-Color const *EffectSM::UpdateWave(EffectSM *SM) {
-    EffMacro_t const *const cEffStep = SM->GetStep();
-    *(SM->_outputColor) = SM->GetColor() * cEffStep->pWave[SM->GetWaveIdx()] * cEffStep->FsIntensity;
-    return SM->_outputColor;
-}
-
-Color const *EffectSM::UpdateRevWave(EffectSM *SM) {
-    EffMacro_t const *const cEffStep  = SM->GetStep();
-    uint8_t                 lastIndex = SM->SMIParams.templateLength - 1;
-    *(SM->_outputColor) =
-        SM->GetColor() * cEffStep->pWave[lastIndex - SM->GetWaveIdx()] * cEffStep->FsIntensity;
-    return SM->_outputColor;
-}
-
-Color const *EffectSM::UpdateFlicker(EffectSM *SM) {
-    uint8_t k;
-    k                   = rand();
-    k                   = SM->SMIParams.idleIntens + ((int16_t)k * (SM->SMIParams.dynamicRange) / 0xFF);
-    *(SM->_outputColor) = SM->_curentColor * k;
-    return SM->_outputColor;
 }
