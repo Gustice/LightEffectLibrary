@@ -4,7 +4,8 @@
         "ostream": "cpp",
         "iosfwd": "cpp",
         "fstream": "cpp",
-        "stdbool.h": "c"
+        "stdbool.h": "c",
+        "stdlib.h": "c"
     },
     "cSpell.words": [
         "asym"

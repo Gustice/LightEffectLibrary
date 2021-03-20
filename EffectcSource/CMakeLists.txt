@@ -2,7 +2,7 @@
 add_library(cLEL_library STATIC 
                     "Color_t.c" 
                     "EffectMacro.c" 
-                    # "EffectProcessor.c" 
+                    "EffectProcessor.c" 
                     "EffectStateMachine.c" 
                     "EffectWaveforms.c"
 )
