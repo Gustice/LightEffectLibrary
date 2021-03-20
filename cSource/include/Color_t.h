@@ -30,9 +30,7 @@ typedef struct {
 
 #define NO_WAVE ((uint8_t *)0)
 #define NO_COLOR ((Color_t *)0)       ///< Pointer constant to "no color"
-#define NO_COLOR_OBJ ((Color *)0)     ///< Null color object
 #define USEOLD_COLOR NO_COLOR         ///< Used old color agreement (if no color pointer)
-#define USEOLD_COLOR_OBJ NO_COLOR_OBJ ///< Alternative use old color agreement
 
 void ScaleColor(Color_t * self, uint8_t k);
 void MixColor(Color_t * self, Color_t c2);

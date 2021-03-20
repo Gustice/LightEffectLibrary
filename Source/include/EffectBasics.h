@@ -64,17 +64,17 @@ class EffectMacro {
     const pEffPrc pProcessor;
 
     constexpr EffectMacro(uint8_t duration, uint8_t next, eEffect state = eEffect::Light_Freeze,
-                          color_t const *pColor = USEOLD_COLOR)
-        : state(state), pWave(NO_WAVE), FsIntensity(gu8_fullIntensity), duration(duration), pColor(pColor), repeats(0),
-          next(next), pProcessor(nullptr){};
+                          color_t const *pColor = oldColor)
+        : state(state), pWave(nullptr), FsIntensity(gu8_fullIntensity), duration(duration), pColor(pColor), repeats(0),
+          next(next), pProcessor(nullptr){}; // @todo try to use noWave for pWave-init
 
     constexpr EffectMacro(uint8_t duration, uint8_t next, uint8_t const *pWave, eEffect state,
-                          color_t const *pColor = USEOLD_COLOR, uint8_t repeat = 0)
+                          color_t const *pColor = oldColor, uint8_t repeat = 0)
         : state(state), pWave(pWave), FsIntensity(gu8_fullIntensity), duration(duration), pColor(pColor),
           repeats(repeat), next(next), pProcessor(nullptr){};
 
     constexpr EffectMacro(uint8_t duration, uint8_t next, pEffPrc pProcessor, uint8_t const *pWave,
-                          color_t const *pColor = USEOLD_COLOR, uint8_t repeat = 0)
+                          color_t const *pColor = oldColor, uint8_t repeat = 0)
         : state(eEffect::LightCustom), pWave(pWave), FsIntensity(gu8_fullIntensity), duration(duration), pColor(pColor),
           repeats(repeat), next(next), pProcessor(pProcessor){};
 

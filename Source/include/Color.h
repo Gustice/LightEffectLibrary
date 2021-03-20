@@ -14,6 +14,10 @@
 #include <stdint.h>
 #include <string.h>
 
+/// No Waveform definition
+extern uint8_t const * const noWave;
+
+
 /**
  * @brief Color Structure
  * @details Defines red/green/blue and white color channel values
@@ -25,11 +29,10 @@ typedef struct {
     uint8_t white;
 } color_t;
 
-#define NO_WAVE ((uint8_t *)0)
-#define NO_COLOR ((color_t *)0)       ///< Pointer constant to "no color"
-#define NO_COLOR_OBJ ((Color *)0)     ///< Null color object
-#define USEOLD_COLOR NO_COLOR         ///< Used old color agreement (if no color pointer)
-#define USEOLD_COLOR_OBJ NO_COLOR_OBJ ///< Alternative use old color agreement
+/// Pointer constant to "no color"
+extern color_t const * const noColor; 
+/// Pointer constant to "no color"
+extern color_t const * const oldColor; 
 
 /**
  * @brief   Color class
@@ -147,8 +150,10 @@ class Color {
 Color operator*(Color c1, uint8_t k);
 Color operator+(Color c1, Color c2);
 
-extern const color_t *pNoColor;
-extern const Color *  pNoColorObj;
+/// Null color object
+extern const Color & noColorObj; 
+/// Used old color agreement (if no color pointer)
+extern const Color & oldColorObj; 
 
 extern const color_t color_Black;
 extern const color_t color_Red;

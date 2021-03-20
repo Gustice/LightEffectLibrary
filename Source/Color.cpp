@@ -12,6 +12,13 @@
 #include "Color.h"
 #include <string.h>
 
+uint8_t const * const noWave = nullptr;
+color_t const * const noColor = nullptr;
+color_t const * const oldColor = nullptr; 
+const Color & noColorObj = nullptr;
+const Color & oldColorObj = nullptr; 
+
+
 /** @name Color structure definition
  *  @details Different predefined colors
  *  @note The colors are defined that the sum of all channels equals roughly 100 %,
@@ -66,29 +73,6 @@ const Color CColdWhite(color_ColdWhite);
 /// Black color object constant (with higher green channel value)
 const Color CSpookyWhite(color_SpookyWhite);
 ///@}
-
-const color_t *pNoColor    = (color_t *)0;
-const Color *  pNoColorObj = (Color *)0;
-
-//@todo test this and differentiate to approach below
-// Color Color::operator*(uint8_t k){
-//     _color.red   = (uint8_t)((uint16_t)_color.red * k / 0xFF);
-//     _color.green = (uint8_t)((uint16_t)_color.green * k / 0xFF);
-//     _color.blue  = (uint8_t)((uint16_t)_color.blue * k / 0xFF);
-//     _color.white = (uint8_t)((uint16_t)_color.white * k / 0xFF);
-//     return _color;
-// };
-
-// Color Color::operator+(Color c2) {
-//     _color.red   = _color.red + c2._color.red;
-//     _color.green = _color.green + c2._color.green;
-//     _color.blue  = _color.blue + c2._color.blue;
-//     _color.white = _color.white + c2._color.white;
-//     return _color;
-// };
-
-//@todo Change operator overwrite to reference Types
-//@optimize Calling of calculation with inline calc
 
 /**
  * @brief Scale color by scaling each color-channel by given factor

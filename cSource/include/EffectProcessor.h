@@ -12,7 +12,7 @@ class EffectProcessor {
   public:
     EffectProcessor(uint16_t const templateLength, uint8_t const fadeSteps);
     ~EffectProcessor();
-    void SetEffect(EffMacro_t *sequence, Color_t const *sColor = NO_COLOR, uint8_t intens = gu8_idleIntensity);
+    void SetEffect(EffMacro_t *sequence, Color_t const *sColor = noColor, uint8_t intens = gu8_idleIntensity);
     Color const * Tick(void);
 
   private:

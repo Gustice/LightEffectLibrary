@@ -22,7 +22,7 @@ class EffectSequencer {
   public:
     EffectSequencer(uint16_t const templateLength, uint8_t targetCount, uint8_t const fadeSteps);
     ~EffectSequencer();
-    void SetEffect(EffectMacro *sequence, color_t const *sColor = NO_COLOR, uint8_t intens = gu8_idleIntensity);
+    void SetEffect(EffectMacro *sequence, color_t const *sColor = noColor, uint8_t intens = gu8_idleIntensity);
     Color const * Tick(void);
 
   private:

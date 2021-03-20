@@ -66,7 +66,7 @@ void EffectSM::SetEffect(EffMacro_t *sequence, color_t const *startColor, uint8_
  */
 void EffectSM::SetEffect(EffMacro_t *sequence, color_t const *startColor, const uint8_t *intens,
                          const uint8_t delayedStart) {
-    if (startColor != NO_COLOR) {
+    if (startColor != noColor) {
         _curentColor.SetColor(*startColor);
     } else {
         _curentColor.SetColor(*sequence->color);
@@ -117,7 +117,7 @@ Color const *EffectSM::Tick(void) {
             SMPValues.repeats  = _p_effMac->repeats;
 
             // execute color change if necessary
-            if (_p_effMac->color != NO_COLOR) {
+            if (_p_effMac->color != noColor) {
                 SMPValues.dissolveCnt = SMIParams.fadeSteps;
                 _lastColor.SetColor(_curentColor.GetColor());
                 _curentColor.SetColor(*_p_effMac->color);

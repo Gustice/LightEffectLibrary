@@ -31,8 +31,8 @@ TEST_CASE("Running Effect StateMachine with different Setups", "[EffectStateMach
     SECTION("Running with different intensities(applies for idle state)") {
         EffMacro_t effDemo[] = {
             // State      WV            FS    N  Start         R  Next
-            {Light_Idle, NO_WAVE, 0xFF, 4, &color_Blue, 0, 1},
-            {Light_Idle, NO_WAVE, 0xFF, 4, &color_Green, 0, 2},
+            {Light_Idle, noWave, 0xFF, 4, &color_Blue, 0, 1},
+            {Light_Idle, noWave, 0xFF, 4, &color_Green, 0, 2},
         };
         uint8_t fullIntens = 0xFFu;
         uint8_t halfIntens = 0x80u;
@@ -60,7 +60,7 @@ TEST_CASE("Running Effect StateMachine with different Setups", "[EffectStateMach
         }
         SECTION("Define other start intensity") {
             static EffectSM dut(u8_testWaveLen, 0xFF, 0);
-            dut.SetEffect(effDemo, NO_COLOR, &halfIntens, 0);
+            dut.SetEffect(effDemo, noColor, &halfIntens, 0);
             CHECK(CheckColor(Color(0, 0, 0x80, 0), *dut.Tick()));
             dut.Tick();
             dut.Tick();
@@ -71,9 +71,9 @@ TEST_CASE("Running Effect StateMachine with different Setups", "[EffectStateMach
     SECTION("Starting Effect with different colors") {
         EffMacro_t effDemo[] = {
             // State     WV       FS    N  Start         R  Next
-            {Light_Idle, NO_WAVE, 0xFF, 4, &color_Blue, 0, 1},
-            {Light_Idle, NO_WAVE, 0xFF, 4, &color_Green, 0, 2},
-            {Light_Idle, NO_WAVE, 0xFF, 4, &color_Red, 0, 0},
+            {Light_Idle, noWave, 0xFF, 4, &color_Blue, 0, 1},
+            {Light_Idle, noWave, 0xFF, 4, &color_Green, 0, 2},
+            {Light_Idle, noWave, 0xFF, 4, &color_Red, 0, 0},
         };
 
         static EffectSM dut(u8_testWaveLen, 0xFF, 0);
@@ -97,11 +97,11 @@ TEST_CASE("Running Effect StateMachine with different Setups", "[EffectStateMach
     SECTION("Delayed start of Effects") {
         EffMacro_t effDemo[] = {
             // State      WV            FS    N  Start         R  Next
-            {Light_Idle, NO_WAVE, 0xFF, 4, &color_Blue, 0, 1},
-            {Light_Idle, NO_WAVE, 0xFF, 4, &color_Green, 0, 2},
+            {Light_Idle, noWave, 0xFF, 4, &color_Blue, 0, 1},
+            {Light_Idle, noWave, 0xFF, 4, &color_Green, 0, 2},
         };
         static EffectSM dut(u8_testWaveLen, 0xFF, 0);
-        dut.SetEffect(effDemo, NO_COLOR, 2);
+        dut.SetEffect(effDemo, noColor, 2);
         CHECK(CheckColor(Color(0, 0, 0, 0), *dut.Tick()));
         CHECK(CheckColor(Color(0, 0, 0, 0), *dut.Tick()));
         CHECK(CheckColor(Color(0, 0, 0xFF, 0), *dut.Tick()));
@@ -133,9 +133,9 @@ TEST_CASE("Running Effect StateMachine with different Setups", "[EffectStateMach
 TEST_CASE("Tick and GetColor on StateMachine yield same results", "[EffectStateMachine]") {
     EffMacro_t effDemo[] = {
         // State      WV            FS    N  Start         R  Next
-        {Light_Idle, NO_WAVE, 0xFF, 1, &color_Blue, 0, 1},
-        {Light_Idle, NO_WAVE, 0xFF, 1, &color_Green, 0, 2},
-        {Light_Idle, NO_WAVE, 0xFF, 1, &color_Red, 0, 0},
+        {Light_Idle, noWave, 0xFF, 1, &color_Blue, 0, 1},
+        {Light_Idle, noWave, 0xFF, 1, &color_Green, 0, 2},
+        {Light_Idle, noWave, 0xFF, 1, &color_Red, 0, 0},
     };
     static EffectSM dut(u8_testWaveLen, 0xFF, 0);
     dut.SetEffect(effDemo);
@@ -248,13 +248,13 @@ TEST_CASE("Processing different EffectMacros correctly", "[EffectStateMachine]")
 TEST_CASE("Setting All different effects of EffectSM", "[EffectStateMachine, Constructor]") {
     EffMacro_t effDemo[] = {
         // State      WV                FS    N   Start         R  Next
-        {Light_Blank, NO_WAVE, 0xFF, 2, &color_Red, 0, 1},
-        {Light_Idle, NO_WAVE, 0xFF, 4, USEOLD_COLOR, 0, 2},
-        {Light_Blank, NO_WAVE, 0xFF, 2, USEOLD_COLOR, 0, 3},
-        {Light_Wave, gau8_testWave1, 0xFF, 4, USEOLD_COLOR, 0, 4},
-        {Light_Freeze, NO_WAVE, 0xFF, 4, USEOLD_COLOR, 0, 5},
-        {Light_RevWave, gau8_testWave1, 0xFF, 4, USEOLD_COLOR, 0, 6},
-        {Light_Flicker, NO_WAVE, 0x80, 16, USEOLD_COLOR, 0, 0}, // <- Back to 1
+        {Light_Blank, noWave, 0xFF, 2, &color_Red, 0, 1},
+        {Light_Idle, noWave, 0xFF, 4, oldColor, 0, 2},
+        {Light_Blank, noWave, 0xFF, 2, oldColor, 0, 3},
+        {Light_Wave, gau8_testWave1, 0xFF, 4, oldColor, 0, 4},
+        {Light_Freeze, noWave, 0xFF, 4, oldColor, 0, 5},
+        {Light_RevWave, gau8_testWave1, 0xFF, 4, oldColor, 0, 6},
+        {Light_Flicker, noWave, 0x80, 16, oldColor, 0, 0}, // <- Back to 1
     };
     static EffectSM dut(u8_testWaveLen, 0x80, 0);
     dut.SetEffect(effDemo);
@@ -296,18 +296,18 @@ TEST_CASE("Setting All different effects of EffectSM", "[EffectStateMachine, Con
 TEST_CASE("EffectSM Plots for manual investigation", "[EffectStateMachine, Constructor]") {
     EffMacro_t effDemo[] = {
         // State      WV                  FS    N   Start         R  Next
-        {Light_Blank, NO_WAVE, 0xFF, 4, &color_Red, 0, 1},
-        {Light_Wave, gau8_fullPulse, 0xFF, 128, USEOLD_COLOR, 0, 2},
-        {Light_Blank, NO_WAVE, 0xFF, 4, USEOLD_COLOR, 0, 3},
-        {Light_Wave, gau8_fullSlope, 0xFF, 128, USEOLD_COLOR, 0, 4},
-        {Light_Blank, NO_WAVE, 0xFF, 4, USEOLD_COLOR, 0, 5},
-        {Light_Wave, gau8_initSlope, 0xFF, 128, USEOLD_COLOR, 0, 6},
-        {Light_Blank, NO_WAVE, 0xFF, 4, USEOLD_COLOR, 0, 7},
-        {Light_Wave, gau8_offsetPulse, 0xFF, 128, USEOLD_COLOR, 0, 8},
-        {Light_Blank, NO_WAVE, 0xFF, 4, USEOLD_COLOR, 0, 9},
-        {Light_Wave, gau8_offsetSlope, 0xFF, 128, USEOLD_COLOR, 0, 10},
-        {Light_Blank, NO_WAVE, 0xFF, 4, USEOLD_COLOR, 0, 11},
-        {Light_Flicker, NO_WAVE, 0xFF, 64, USEOLD_COLOR, 0, 0},
+        {Light_Blank, noWave, 0xFF, 4, &color_Red, 0, 1},
+        {Light_Wave, gau8_fullPulse, 0xFF, 128, oldColor, 0, 2},
+        {Light_Blank, noWave, 0xFF, 4, oldColor, 0, 3},
+        {Light_Wave, gau8_fullSlope, 0xFF, 128, oldColor, 0, 4},
+        {Light_Blank, noWave, 0xFF, 4, oldColor, 0, 5},
+        {Light_Wave, gau8_initSlope, 0xFF, 128, oldColor, 0, 6},
+        {Light_Blank, noWave, 0xFF, 4, oldColor, 0, 7},
+        {Light_Wave, gau8_offsetPulse, 0xFF, 128, oldColor, 0, 8},
+        {Light_Blank, noWave, 0xFF, 4, oldColor, 0, 9},
+        {Light_Wave, gau8_offsetSlope, 0xFF, 128, oldColor, 0, 10},
+        {Light_Blank, noWave, 0xFF, 4, oldColor, 0, 11},
+        {Light_Flicker, noWave, 0xFF, 64, oldColor, 0, 0},
     };
     static EffectSM dut(cu16_TemplateLength, 0x80, 0);
     dut.SetEffect(effDemo);

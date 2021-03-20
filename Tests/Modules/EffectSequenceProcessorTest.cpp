@@ -30,19 +30,19 @@ static const uint8_t gau8_testWave2[u8_testWaveLen] = {11, 21, 31, 41, 51, 61, 7
 TEST_CASE("Running Effect Sequencer with different ChangePoints", "[EffectSequencer]") {
     EffectMacro effDemo1[] = {
         // State      WV            FS    N  Start         R  Next
-        EffectMacro(EffMacro_t{Light_Idle, NO_WAVE, 0xFF, 4, &color_Blue, 0, 1}),
-        EffectMacro(EffMacro_t{Light_Idle, NO_WAVE, 0xFF, 4, USEOLD_COLOR, 0, 0}),
+        EffectMacro(EffMacro_t{Light_Idle, noWave, 0xFF, 4, &color_Blue, 0, 1}),
+        EffectMacro(EffMacro_t{Light_Idle, noWave, 0xFF, 4, oldColor, 0, 0}),
     };
     EffectMacro effDemo2[] = {
         // State      WV            FS    N  Start         R  Next
-        EffectMacro(EffMacro_t{Light_Idle, NO_WAVE, 0xFF, 4, &color_Green, 0, 1}),
-        EffectMacro(EffMacro_t{Light_Idle, NO_WAVE, 0xFF, 4, USEOLD_COLOR, 0, 0}),
+        EffectMacro(EffMacro_t{Light_Idle, noWave, 0xFF, 4, &color_Green, 0, 1}),
+        EffectMacro(EffMacro_t{Light_Idle, noWave, 0xFF, 4, oldColor, 0, 0}),
     };
     uint8_t fullIntens = 0xFFu;
     uint8_t halfIntens = 0x80u;
 
     EffectSequencer dut(u8_testWaveLen, 1, 2);
-    dut.SetEffect(effDemo1, NO_COLOR, 0xFF);
+    dut.SetEffect(effDemo1, noColor, 0xFF);
 
     SECTION("Running one step and change first step)") {
 
@@ -50,7 +50,7 @@ TEST_CASE("Running Effect Sequencer with different ChangePoints", "[EffectSequen
         CHECK(CheckColor(Color(0, 0, 0xFF, 0), *dut.Tick()));
         CHECK(CheckColor(Color(0, 0, 0xFF, 0), *dut.Tick()));
         CHECK(CheckColor(Color(0, 0, 0xFF, 0), *dut.Tick()));
-        dut.SetEffect(effDemo2, NO_COLOR, 0xFF);
+        dut.SetEffect(effDemo2, noColor, 0xFF);
         CHECK(CheckColor(Color(0, 0x80, 0x7F, 0), *dut.Tick()));
         CHECK(CheckColor(Color(0, 0xFF, 0, 0), *dut.Tick()));
         CHECK(CheckColor(Color(0, 0xFF, 0, 0), *dut.Tick()));
@@ -64,7 +64,7 @@ TEST_CASE("Running Effect Sequencer with different ChangePoints", "[EffectSequen
         CHECK(CheckColor(Color(0, 0, 0xFF, 0), *dut.Tick()));
         CHECK(CheckColor(Color(0, 0, 0xFF, 0), *dut.Tick()));
         CHECK(CheckColor(Color(0, 0, 0xFF, 0), *dut.Tick()));
-        dut.SetEffect(effDemo2, NO_COLOR, 0xFF);
+        dut.SetEffect(effDemo2, noColor, 0xFF);
         CHECK(CheckColor(Color(0, 0x80, 0x7F, 0), *dut.Tick()));
         CHECK(CheckColor(Color(0, 0xFF, 0, 0), *dut.Tick()));
         CHECK(CheckColor(Color(0, 0xFF, 0, 0), *dut.Tick()));
@@ -75,19 +75,19 @@ TEST_CASE("Running Effect Sequencer with different ChangePoints", "[EffectSequen
 TEST_CASE("Running Effect Sequencer with different Setup -> longer CrossFade", "[EffectSequencer]") {
     EffectMacro effDemo1[] = {
         // State      WV            FS    N  Start         R  Next
-        EffectMacro( EffMacro_t{Light_Idle, NO_WAVE, 0xFF, 8, &color_Blue, 0, 1}),
-        EffectMacro( EffMacro_t{Light_Idle, NO_WAVE, 0xFF, 8, USEOLD_COLOR, 0, 0}),
+        EffectMacro( EffMacro_t{Light_Idle, noWave, 0xFF, 8, &color_Blue, 0, 1}),
+        EffectMacro( EffMacro_t{Light_Idle, noWave, 0xFF, 8, oldColor, 0, 0}),
     };
     EffectMacro effDemo2[] = {
         // State      WV            FS    N  Start         R  Next
-        EffectMacro( EffMacro_t{Light_Idle, NO_WAVE, 0xFF, 8, &color_Green, 0, 1}),
-        EffectMacro( EffMacro_t{Light_Idle, NO_WAVE, 0xFF, 8, USEOLD_COLOR, 0, 0}),
+        EffectMacro( EffMacro_t{Light_Idle, noWave, 0xFF, 8, &color_Green, 0, 1}),
+        EffectMacro( EffMacro_t{Light_Idle, noWave, 0xFF, 8, oldColor, 0, 0}),
     };
     uint8_t fullIntens = 0xFFu;
     uint8_t halfIntens = 0x80u;
 
     EffectSequencer dut(u8_testWaveLen, 1, 4);
-    dut.SetEffect(effDemo1, NO_COLOR, 0xFF);
+    dut.SetEffect(effDemo1, noColor, 0xFF);
 
     CHECK(CheckColor(Color(0, 0, 0x40, 0), *dut.Tick()));
     CHECK(CheckColor(Color(0, 0, 0x80, 0), *dut.Tick()));
@@ -97,7 +97,7 @@ TEST_CASE("Running Effect Sequencer with different Setup -> longer CrossFade", "
     CHECK(CheckColor(Color(0, 0, 0xFF, 0), *dut.Tick()));
     CHECK(CheckColor(Color(0, 0, 0xFF, 0), *dut.Tick()));
     CHECK(CheckColor(Color(0, 0, 0xFF, 0), *dut.Tick()));
-    dut.SetEffect(effDemo2, NO_COLOR, 0xFF);
+    dut.SetEffect(effDemo2, noColor, 0xFF);
     CHECK(CheckColor(Color(0, 0x40, 0xBF, 0), *dut.Tick()));
     CHECK(CheckColor(Color(0, 0x80, 0x7F, 0), *dut.Tick()));
     CHECK(CheckColor(Color(0, 0xC0, 0x3F, 0), *dut.Tick()));
@@ -116,7 +116,7 @@ TEST_CASE("Running Effect Sequencer with custom Effects", "[EffectSequencer]") {
     uint8_t halfIntens = 0x80u;
 
     EffectSequencer dut(u8_testWaveLen, 2, 0);
-    dut.SetEffect(effDemo1, NO_COLOR, 0xFF);
+    dut.SetEffect(effDemo1, noColor, 0xFF);
 
     const Color * c;
     c = dut.Tick();
@@ -148,20 +148,20 @@ TEST_CASE("Running Effect Sequencer with custom Effects", "[EffectSequencer]") {
 TEST_CASE("EffectSequencer plots for manual evaluation", "[EffectSequencer, Constructor]") {
     EffectMacro effDemo1[] = {
         // State      WV            FS    N  Start         R  Next
-        EffectMacro( EffMacro_t{Light_Blank, NO_WAVE, 0xFF, 8, &color_Red, 0, 1}),
-        EffectMacro( EffMacro_t{Light_Wave, gau8_initSlope, 0xFF, 32, USEOLD_COLOR, 0, 2}),
-        EffectMacro( EffMacro_t{Light_Wave, gau8_offsetPulse, 0xFF, 64, USEOLD_COLOR, 0, 3}),
-        EffectMacro( EffMacro_t{Light_Idle, NO_WAVE, 0xFF, 62, USEOLD_COLOR, 0, 2}),
+        EffectMacro( EffMacro_t{Light_Blank, noWave, 0xFF, 8, &color_Red, 0, 1}),
+        EffectMacro( EffMacro_t{Light_Wave, gau8_initSlope, 0xFF, 32, oldColor, 0, 2}),
+        EffectMacro( EffMacro_t{Light_Wave, gau8_offsetPulse, 0xFF, 64, oldColor, 0, 3}),
+        EffectMacro( EffMacro_t{Light_Idle, noWave, 0xFF, 62, oldColor, 0, 2}),
     };
     EffectMacro effDemo2[] = {
         // State      WV            FS    N  Start         R  Next
-        EffectMacro( EffMacro_t{Light_Blank, NO_WAVE, 0xFF, 4, &color_Green, 0, 1}),
-        EffectMacro( EffMacro_t{Light_Wave, gau8_fullPulse, 0xFF, 16, USEOLD_COLOR, 3, 2}),
-        EffectMacro( EffMacro_t{Light_Blank, NO_WAVE, 0xFF, 64, &color_Green, 0, 1}),
+        EffectMacro( EffMacro_t{Light_Blank, noWave, 0xFF, 4, &color_Green, 0, 1}),
+        EffectMacro( EffMacro_t{Light_Wave, gau8_fullPulse, 0xFF, 16, oldColor, 3, 2}),
+        EffectMacro( EffMacro_t{Light_Blank, noWave, 0xFF, 64, &color_Green, 0, 1}),
     };
 
     EffectSequencer dut(cu16_TemplateLength, 1, 16);
-    dut.SetEffect(effDemo1, NO_COLOR, 0x55);
+    dut.SetEffect(effDemo1, noColor, 0x55);
 
     std::ofstream plotFile;
     char          stream[128];
@@ -178,7 +178,7 @@ TEST_CASE("EffectSequencer plots for manual evaluation", "[EffectSequencer, Cons
         plotFile << stream << std::endl;
     }
 
-    dut.SetEffect(effDemo2, NO_COLOR, 0x55);
+    dut.SetEffect(effDemo2, noColor, 0x55);
     for (; i < (128 + 64); i++) {
         color_t c = dut.Tick()->GetColor();
         sprintf(stream, "%3d,%3.2f,%3.2f,%3.2f,%3.2f,%3.2f", i, (float)c.red / (4 * 0xFF), (float)c.green / (4 * 0xFF),
