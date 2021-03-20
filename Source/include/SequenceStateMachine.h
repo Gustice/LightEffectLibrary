@@ -117,4 +117,8 @@ class SequenceSM {
     void SetIndexes(void);
 };
 
+Color *LightSparkleSequence(SequenceSM *obj, Color *colors, size_t len);
+Color *LightSwipeSequence(SequenceSM *obj, Color *colors, size_t len);
+Color *LightWaveSequence(SequenceSM *obj, Color *colors, size_t len);
+
 } // namespace Effect

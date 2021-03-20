@@ -214,7 +214,7 @@ void SequenceSM::ApplyColorToAllElements(Color &color) {
     }
 }
 
-Color const *LightSparkleSequence(SequenceSM *obj, Color *colors, size_t len) {
+Color *LightSparkleSequence(SequenceSM *obj, Color *colors, size_t len) {
     const Color cColor = obj->GetColor();
     uint8_t     k, kr;
 
@@ -224,33 +224,34 @@ Color const *LightSparkleSequence(SequenceSM *obj, Color *colors, size_t len) {
     return colors;
 }
 
-Color const *LightSwipeSequence(SequenceSM *obj, Color *colors, size_t len) {
+Color *LightSwipeSequence(SequenceSM *obj, Color *colors, size_t len) {
     EffectMacro const *const cEffStep = obj->GetStep();
     const Color              cColor   = obj->GetColor();
     uint8_t                  cStep    = obj->GetWaveIdx();
-    uint8_t                  step     = obj->_templateLength;
 
     colors[0] = cColor * cEffStep->pWave[cStep] * cEffStep->FsIntensity;
 
     if (len < 2)
         return colors;
-    colors[1] = cColor * cEffStep->pWave[obj->_templateLength - 1 - step] * cEffStep->FsIntensity;
+    size_t revIdx = obj->_templateLength - 1 - cStep;
+    colors[1] = cColor * cEffStep->pWave[revIdx] * cEffStep->FsIntensity;
 
     return colors;
 }
 
-Color const *LightWaveSequence(SequenceSM *obj, Color *colors, size_t len) {
+Color *LightWaveSequence(SequenceSM *obj, Color *colors, size_t len) {
     EffectMacro const *const cEffStep = obj->GetStep();
     const Color              cColor   = obj->GetColor();
-    uint8_t                  cStep    = obj->GetWaveIdx();
+    uint8_t                  idx    = obj->GetWaveIdx();
     uint8_t                  step     = obj->_templateLength / len;
 
     for (int i = 0; i < len; i++) {
-        colors[i] = cColor * cEffStep->pWave[cStep] * cEffStep->FsIntensity;
-        cStep += step;
+        colors[i] = cColor * cEffStep->pWave[idx] * cEffStep->FsIntensity;
+        idx += step;
     }
 
     return colors;
 }
+
 
 } // namespace Effect

@@ -11,8 +11,8 @@ namespace Effect {
 
 EffectSequencer::EffectSequencer(uint16_t const templateLength, uint8_t targetCount, uint8_t const fadeSteps)
     : _targetCount(targetCount), _pColor(), _pColorOld() {
-    _EffPV = new SequenceSM(templateLength, 1); 
-    _EffPV_old = new SequenceSM(templateLength, 1);
+    _EffPV = new SequenceSM(templateLength, targetCount); 
+    _EffPV_old = new SequenceSM(templateLength, targetCount);
     _EffPV->SetEffect(StdDark, 0);
     _fadeSteps = fadeSteps;
 }

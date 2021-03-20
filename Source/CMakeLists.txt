@@ -5,6 +5,7 @@ add_library(LEL_library STATIC
                     "EffectProcessor.cpp" 
                     "EffectStateMachine.cpp" 
                     "SequenceStateMachine.cpp"
+                    "EffectSequecer.cpp"
                     "EffectWaveforms.cpp"
 )
 

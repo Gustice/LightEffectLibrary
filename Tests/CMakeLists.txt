@@ -7,8 +7,10 @@ add_executable(tests TestMain.cpp
                     Modules/ColorTest.cpp
                     Modules/EffectProcessorTest.cpp
                     Modules/EffectStateMachineTest.cpp
-                    Modules/EffectSequenceStateMachineTest.cpp
                     
+                    Modules/EffectSequenceStateMachineTest.cpp
+                    Modules/EffectSequenceProcessorTest.cpp
+
                     cModules/cColorTest.cpp
                     
                     IntegrationTest.cpp 
