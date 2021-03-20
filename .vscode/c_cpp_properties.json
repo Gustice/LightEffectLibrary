@@ -6,9 +6,7 @@
             "compilerPath": "C:\\MinGW\\bin\\gcc.exe",
             "includePath": [
                 "${workspaceFolder}/**",
-                "${workspaceFolder}/Source/**",
-                "${workspaceFolder}/Source/Modules/**",
-                "${workspaceFolder}/Externals/**",
+                "${workspaceFolder}/EffectSource/**",
                 "${workspaceFolder}/Tests/**"
             ],
             "defines": [
@@ -16,19 +14,10 @@
                 "UNICODE",
                 "_UNICODE"
             ],
-            "browse": {
-                "path": [
-                    "${workspaceFolder}/**",
-                    "${workspaceFolder}/Source/**",
-                    "${workspaceFolder}/Source/Modules/**",
-                    "${workspaceFolder}/Externals/**",
-                    "${workspaceFolder}/Tests/**"
-                ],
-                "limitSymbolsToIncludedHeaders": true,
-                "databaseFilename": ""
-            },
             "cppStandard": "c++11",
-            "cStandard": "c99"
+            "cStandard": "c99",
+            "compileCommands": "${workspaceFolder}/build/compile_commands.json",
+            "configurationProvider": "ms-vscode.cmake-tools"
         }
     ],
     "version": 4

@@ -5,27 +5,15 @@
     "version": "0.2.0",
     "configurations": [
         {
-            "name": "Python: CurrentFile",
-            "type": "python",
-            "request": "launch",
-            "program": "${file}",
-            "console": "integratedTerminal",
-            "cwd": "${workspaceFolder}",
-            "args": [ // Testcase: Compile SampleApp
-                "Source",
-                "-I Source -I Source\\Modules",
-            ]
-        },
-        {
-            "name": "Debug project",
+            "name": "g++.exe - Aktive Datei erstellen und debuggen",
             "type": "cppdbg",
             "request": "launch",
-            "program": "${workspaceFolder}/build/Tests/tests.exe",
+            "program": "${fileDirname}\\${fileBasenameNoExtension}.exe",
             "args": [],
             "stopAtEntry": false,
             "cwd": "${workspaceFolder}",
             "environment": [],
-            "externalConsole": true, // this somehow needs to be set true.
+            "externalConsole": false,
             "MIMode": "gdb",
             "miDebuggerPath": "C:\\MinGW\\bin\\gdb.exe",
             "setupCommands": [
@@ -35,7 +23,7 @@
                     "ignoreFailures": true
                 }
             ],
-            "preLaunchTask": "CMake: Build Project"
-        },
+            "preLaunchTask": "C/C++: g++.exe Aktive Datei kompilieren"
+        }
     ]
 }

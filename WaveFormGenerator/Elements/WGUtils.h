@@ -1,7 +1,5 @@
 #pragma once
 
-#include "../../Source/Modules/EffectProcessor.h"
-#include "../../Source/Modules/EffectWaveforms.h"
 #include <fstream>
 #include <iostream>
 #include <stdint.h>

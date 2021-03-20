@@ -1,3 +1,13 @@
 {
-    "python.pythonPath": "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\Python37_64\\python.exe"
+    "python.pythonPath": "C:\\Python39\\python.exe",
+    "files.associations": {
+        "ostream": "cpp",
+        "iosfwd": "cpp",
+        "fstream": "cpp",
+        "stdbool.h": "c",
+        "stdlib.h": "c"
+    },
+    "cSpell.words": [
+        "asym"
+    ]
 }
