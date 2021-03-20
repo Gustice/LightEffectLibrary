@@ -5,11 +5,11 @@ add_subdirectory(Include)
 # The test program
 add_executable(tests TestMain.cpp 
                     Modules/ColorTest.cpp
-                    Modules/EffectProcessorTest.cpp
-                    Modules/EffectStateMachineTest.cpp
+                    Modules/ProcessorTest.cpp
+                    Modules/StateMachineTest.cpp
                     
-                    Modules/EffectSequenceStateMachineTest.cpp
-                    Modules/EffectSequenceProcessorTest.cpp
+                    Modules/SequenceStepperTest.cpp
+                    Modules/SequenceProcessorTest.cpp
 
                     cModules/cColorTest.cpp
                     

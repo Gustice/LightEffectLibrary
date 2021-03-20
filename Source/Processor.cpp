@@ -1,5 +1,5 @@
 /**
- * @file EffectProcessor.cpp
+ * @file Processor.cpp
  * @author Gustice
  * @brief Implementation of Effect-Processor-Class EffectProcessor.h
  * @version 0.1
@@ -9,10 +9,10 @@
  *
  */
 
-#include "EffectProcessor.h"
-#include "EffectBasics.h"
-#include "EffectMacro.h"
-#include "EffectWaveforms.h"
+#include "Processor.h"
+#include "Basics.h"
+#include "Macro.h"
+#include "Waveforms.h"
 #include <math.h>
 #include <stdlib.h>
 #include <string.h>
@@ -32,7 +32,7 @@ EffectProcessor::~EffectProcessor(){
     delete _EffPV_old;
 }
 
-void EffectProcessor::SetEffect(EffMacro_t *sequence, color_t const *sColor, uint8_t intens) {
+void EffectProcessor::SetEffect(Macro_t *sequence, color_t const *sColor, uint8_t intens) {
     _fadingCnt = _fadeSteps;
 
     EffectSM * pEsm = _EffPV_old;

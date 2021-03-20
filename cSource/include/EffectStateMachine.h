@@ -60,7 +60,7 @@ class EffectSM {
 
     void SetEffect(EffMacro_t *sequence, Color_t const *startColor = noColor, uint8_t initialDelay = 0);
     void SetEffect(EffMacro_t *sequence, Color_t const *startColor, const uint8_t *intens, const uint8_t delayedStart);
-    void SetEffect(const EffectMacro *sequence);
+    void SetEffect(const Sequence *sequence);
 
     virtual Color const *Tick(void);
     uint8_t              GetDissolveRatio(void);

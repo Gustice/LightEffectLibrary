@@ -1,7 +1,7 @@
-#include "EffectSequencer.h"
-#include "EffectBasics.h"
-#include "EffectMacro.h"
-#include "EffectWaveforms.h"
+#include "Sequencer.h"
+#include "Basics.h"
+#include "Macro.h"
+#include "Waveforms.h"
 #include <math.h>
 #include <stdlib.h>
 #include <string.h>
@@ -22,7 +22,7 @@ EffectSequencer::~EffectSequencer(){
     delete _EffPV_old;
 }
 
-void EffectSequencer::SetEffect(EffectMacro *sequence, color_t const *sColor, uint8_t intens) {
+void EffectSequencer::SetEffect(Sequence *sequence, color_t const *sColor, uint8_t intens) {
     _fadingCnt = _fadeSteps;
 
     SequenceSM * pEsm = _EffPV_old;

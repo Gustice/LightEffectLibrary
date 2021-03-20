@@ -1,7 +1,7 @@
 #pragma once
 
 #include "Color.h"
-#include "EffectWaveforms.h"
+#include "Waveforms.h"
 #include <stdint.h>
 
 namespace Effect {
@@ -17,7 +17,7 @@ enum eEffect {
     Light_States,
 };
 
-typedef const struct EffMacro_def {
+typedef const struct Macro_def{
     /// Effect type
     eEffect state;
     /// waveform reference
@@ -32,7 +32,7 @@ typedef const struct EffMacro_def {
     int8_t repeats;
     /// Next SubEffect
     int8_t next;
-} EffMacro_t;
+} Macro_t;
 #define COUNT_EFFECT_ELEMENT(effect) (sizeof(effect) / sizeof(EffMacro_type))
 
 class SequenceSM;
@@ -44,7 +44,7 @@ class SequenceSM;
  */
 typedef Color *(*pEffPrc)(SequenceSM *obj, Color *colors, size_t len);
 
-class EffectMacro {
+class Sequence {
   public:
     /// Effect type
     const eEffect state;
@@ -63,28 +63,28 @@ class EffectMacro {
     /// Custom processor function
     const pEffPrc pProcessor;
 
-    constexpr EffectMacro(uint8_t duration, uint8_t next, eEffect state = eEffect::Light_Freeze,
+    constexpr Sequence(uint8_t duration, uint8_t next, eEffect state = eEffect::Light_Freeze,
                           color_t const *pColor = oldColor)
         : state(state), pWave(nullptr), FsIntensity(gu8_fullIntensity), duration(duration), pColor(pColor), repeats(0),
           next(next), pProcessor(nullptr){}; // @todo try to use noWave for pWave-init
 
-    constexpr EffectMacro(uint8_t duration, uint8_t next, uint8_t const *pWave, eEffect state,
+    constexpr Sequence(uint8_t duration, uint8_t next, uint8_t const *pWave, eEffect state,
                           color_t const *pColor = oldColor, uint8_t repeat = 0)
         : state(state), pWave(pWave), FsIntensity(gu8_fullIntensity), duration(duration), pColor(pColor),
           repeats(repeat), next(next), pProcessor(nullptr){};
 
-    constexpr EffectMacro(uint8_t duration, uint8_t next, pEffPrc pProcessor, uint8_t const *pWave,
+    constexpr Sequence(uint8_t duration, uint8_t next, pEffPrc pProcessor, uint8_t const *pWave,
                           color_t const *pColor = oldColor, uint8_t repeat = 0)
         : state(eEffect::LightCustom), pWave(pWave), FsIntensity(gu8_fullIntensity), duration(duration), pColor(pColor),
           repeats(repeat), next(next), pProcessor(pProcessor){};
 
-    constexpr EffectMacro(EffMacro_t macro)
+    constexpr Sequence(Macro_t macro)
         : state(macro.state), pWave(macro.pWave), FsIntensity(macro.FsIntensity), duration(macro.duration),
           pColor(macro.pColor), repeats(macro.repeats), next(macro.next), pProcessor(nullptr){};
 };
 
 typedef struct {
-    const EffMacro_t *element; // Element for visualization
+    const Macro_t *element; // Element for visualization
     uint8_t           content; // Number of registered steps
     uint8_t           repeats; // Repetitions
 } EffSequence_t;

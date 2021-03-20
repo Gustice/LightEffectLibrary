@@ -1,5 +1,5 @@
 /**
- * @file EffectWaveforms.cpp
+ * @file Waveforms.cpp
  * @author Gustice
  * @brief Implementation of defined Waveforms
  * @version 0.1
@@ -8,7 +8,7 @@
  * @copyright Copyright (c) 2019
  * @note The defined waveforms are generated with a the WaveformGenerator
  */
-#include "EffectWaveforms.h"
+#include "Waveforms.h"
 
 namespace Effect {
 

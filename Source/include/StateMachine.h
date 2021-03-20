@@ -1,42 +1,52 @@
 /**
- * @file SequenceStateMachine.h
+ * @file EffectStateMachine.h
  * @author Gustice
  * @brief Effect-State-Machine-Class for processing Effect Macros
  * @version 0.1
- * @date 2021-03-12
+ * @date 2019-10-01
  *
- * @copyright Copyright (c) 2021
+ * @copyright Copyright (c) 2019
  *
  */
 #pragma once
 
 #include "Color.h"
-#include "EffectBasics.h"
+#include "Basics.h"
 #include <stdint.h>
 
 namespace Effect {
 
-class SequenceSM {
+/**
+ * @brief Effect State Machine Class
+ * @details Processes Effect macro array Macro entry subsequently
+ * Processing is executed in following manner:
+ *  \li Index-incrementing each Tick
+ *      \li ticks until duration \ref EffMacro is finished
+ *      \li each tick the index incremented by templateLength/duration
+ *  \li Repeats-processing
+ *      \li Each repeat the tick and the index are set back to start
+ *      \li Switches to next Macro enty
+ *      \li Next entry is given by 'next' index
+ *      \li Color changes can be executed optionally
+ */
+class EffectSM {
   public:
     /**
      * @brief Construct a new Effect State Machine object
      * @param templateLength Length of waveforms that are used to display
      */
-    SequenceSM(uint16_t const templateLength, uint8_t targetCount) : SequenceSM(templateLength, targetCount, 0, 0){};
-    ~SequenceSM();
+    EffectSM(uint16_t const templateLength) : EffectSM(templateLength, 0, 0){};
+    ~EffectSM();
 
-    SequenceSM(uint16_t const templateLength, uint8_t targetCount, uint8_t const intensity, uint8_t const crossFade);
+    EffectSM(uint16_t const templateLength, uint8_t const intensity, uint8_t const crossFade);
     /// @todo Configuration could be given by structure
 
-    void SetEffect(const EffectMacro *sequence, color_t const *startColor = noColor, uint8_t initialDelay = 0);
-    void SetEffect(const EffectMacro *sequence, color_t const *startColor, const uint8_t *intens,
-                   const uint8_t delayedStart);
+    void SetEffect(Macro_t *sequence, color_t const *startColor = noColor, uint8_t initialDelay = 0);
+    void SetEffect(Macro_t *sequence, color_t const *startColor, const uint8_t *intens, const uint8_t delayedStart);
+    void SetEffect(const Sequence *sequence);
 
-    virtual Color *Tick(void);
-    uint8_t        GetDissolveRatio(void);
-
-    const size_t _templateLength;
-    const size_t _targetCount;
+    virtual Color const *Tick(void);
+    uint8_t              GetDissolveRatio(void);
 
     /**
      * @brief Set the Dynamic Range of effects
@@ -70,7 +80,7 @@ class SequenceSM {
      * @brief Get index to current macro in sequence
      * @return EffMacro_type const* const
      */
-    EffectMacro const *const GetStep(void) { return _p_effMac; };
+    Macro_t const *const GetStep(void) { return _p_effMac; };
 
     /**
      * @brief Get Process values of state machen
@@ -82,21 +92,21 @@ class SequenceSM {
     /// @todo change to protected and tests results
   protected:
     /// First element of Effect macro stack
-    EffectMacro const *_p_effSeq;
+    Macro_t const *_p_effSeq;
     /// Currently indexed Effect-part
-    EffectMacro const *_p_effMac;
+    Macro_t const *_p_effMac;
 
     Color *_outputColor; /// @todo !!
 
-    // Color& (*apF_Effects)(SequenceSM * SM);
-    void UpdateBlank();
-    void UpdateIdle();
-    void UpdateFreeze();
-    void UpdateWave();
-    void UpdateRevWave();
-    void UpdateFlicker();
-
-    void ApplyColorToAllElements(Color &color);
+    // Color& (*apF_Effects)(EffectSM * SM);
+    typedef Color const * pEffPrc(EffectSM *);
+    static pEffPrc *const apF_Processors[6];
+    static Color const *  UpdateBlank(EffectSM *SM);
+    static Color const *  UpdateIdle(EffectSM *SM);
+    static Color const *  UpdateFreeze(EffectSM *SM);
+    static Color const *  UpdateWave(EffectSM *SM);
+    static Color const *  UpdateRevWave(EffectSM *SM);
+    static Color const *  UpdateFlicker(EffectSM *SM);
 
     /// Last color
     Color _lastColor;
@@ -115,10 +125,12 @@ class SequenceSM {
     /// @todo callback for finished to exclude these indexes
 
     void SetIndexes(void);
+
+    EffectSM(void){};
 };
 
-Color *LightSparkleSequence(SequenceSM *obj, Color *colors, size_t len);
-Color *LightSwipeSequence(SequenceSM *obj, Color *colors, size_t len);
-Color *LightWaveSequence(SequenceSM *obj, Color *colors, size_t len);
+
+
+
 
 } // namespace Effect

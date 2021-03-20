@@ -1,6 +1,6 @@
 
-#include "SequenceStateMachine.h"
-#include "EffectWaveforms.h"
+#include "SequenceStepper.h"
+#include "Waveforms.h"
 #include "MyUtils.h"
 
 using namespace Effect;
@@ -29,12 +29,12 @@ static bool CheckColor(Color c1, const Color c2) {
 
 TEST_CASE("Running Effect SequenceMachine with different Setups", "[EffectSquenceStateMachine]") {
     SECTION("Running with different intensities(applies for idle state)") {
-        EffectMacro effDemo[] = {
+        Sequence effDemo[] = {
             // State      WV            FS    N  Start         R  Next
             // {Light_Idle, noWave, 0xFF, 4, &color_Blue, 0, 1},
             // {Light_Idle, noWave, 0xFF, 4, &color_Green, 0, 2},
-            EffectMacro(4,1, Light_Idle, &color_Blue),
-            EffectMacro(4,2, Light_Idle, &color_Green),
+            Sequence(4,1, Light_Idle, &color_Blue),
+            Sequence(4,2, Light_Idle, &color_Green),
         };
         uint8_t fullIntens = 0xFFu;
         uint8_t halfIntens = 0x80u;
@@ -71,14 +71,14 @@ TEST_CASE("Running Effect SequenceMachine with different Setups", "[EffectSquenc
         }
     }
     SECTION("Starting Effect with different colors") {
-        EffectMacro effDemo[] = {
+        Sequence effDemo[] = {
             // State     WV       FS    N  Start         R  Next
             // {Light_Idle, noWave, 0xFF, 4, &color_Blue, 0, 1},
             // {Light_Idle, noWave, 0xFF, 4, &color_Green, 0, 2},
             // {Light_Idle, noWave, 0xFF, 4, &color_Red, 0, 0},
-            EffectMacro(4,1, Light_Idle, &color_Blue),
-            EffectMacro(4,2, Light_Idle, &color_Green),
-            EffectMacro(4,0, Light_Idle, &color_Red),
+            Sequence(4,1, Light_Idle, &color_Blue),
+            Sequence(4,2, Light_Idle, &color_Green),
+            Sequence(4,0, Light_Idle, &color_Red),
       };
 
         static SequenceSM dut(u8_testWaveLen, 1, 0xFF, 0);
@@ -100,12 +100,12 @@ TEST_CASE("Running Effect SequenceMachine with different Setups", "[EffectSquenc
         }
     }
     SECTION("Delayed start of Effects") {
-        EffectMacro effDemo[] = {
+        Sequence effDemo[] = {
             // State      WV            FS    N  Start         R  Next
             // {Light_Idle, noWave, 0xFF, 4, &color_Blue, 0, 1},
             // {Light_Idle, noWave, 0xFF, 4, &color_Green, 0, 2},
-            EffectMacro(4,1, Light_Idle, &color_Blue),
-            EffectMacro(4,2, Light_Idle, &color_Green),
+            Sequence(4,1, Light_Idle, &color_Blue),
+            Sequence(4,2, Light_Idle, &color_Green),
       };
         static SequenceSM dut(u8_testWaveLen, 1, 0xFF, 0);
         dut.SetEffect(effDemo, noColor, 2);
@@ -138,14 +138,14 @@ TEST_CASE("Running Effect SequenceMachine with different Setups", "[EffectSquenc
 }
 
 TEST_CASE("Tick and GetColor on SequenceMachine yield same results", "[EffectSquenceStateMachine]") {
-    EffectMacro effDemo[] = {
+    Sequence effDemo[] = {
         // State        WV       FS    N  Start         R  Next
         // {Light_Idle, noWave, 0xFF, 1, &color_Blue, 0, 1},
         // {Light_Idle, noWave, 0xFF, 1, &color_Green, 0, 2},
         // {Light_Idle, noWave, 0xFF, 1, &color_Red, 0, 0},
-        EffectMacro(1,1, Light_Idle, &color_Blue),
-        EffectMacro(1,2, Light_Idle, &color_Green),
-        EffectMacro(1,0, Light_Idle, &color_Red),
+        Sequence(1,1, Light_Idle, &color_Blue),
+        Sequence(1,2, Light_Idle, &color_Green),
+        Sequence(1,0, Light_Idle, &color_Red),
     };
     static SequenceSM dut(u8_testWaveLen, 1, 0xFF, 0);
     dut.SetEffect(effDemo);
@@ -166,14 +166,14 @@ TEST_CASE("Tick and GetColor on SequenceMachine yield same results", "[EffectSqu
 
 TEST_CASE("Processing different SequenceMacros correctly", "[EffectSquenceStateMachine]") {
     SECTION("Minimal setup, Processing Next-Index correctly") {
-        EffectMacro effDemo[] = {
+        Sequence effDemo[] = {
             // State      WV            FS    N  Start         R  Next
             // {Light_Blank, (uint8_t *)0, 0xFF, 4, &color_Black, 0, 1},
             // {Light_Wave, gau8_testWave1, 0xFF, 4, &color_Red, 0, 2},
             // {Light_RevWave, gau8_testWave1, 0xFF, 4, &color_Blue, 0, 1}, // <- Back to 1
-            EffectMacro(4,1, Light_Blank, &color_Black),
-            EffectMacro(4,2, gau8_testWave1, Light_Wave, &color_Red),
-            EffectMacro(4,1, gau8_testWave1, Light_RevWave, &color_Blue),
+            Sequence(4,1, Light_Blank, &color_Black),
+            Sequence(4,2, gau8_testWave1, Light_Wave, &color_Red),
+            Sequence(4,1, gau8_testWave1, Light_RevWave, &color_Blue),
         };
 
         static SequenceSM dut(u8_testWaveLen, 1);
@@ -194,16 +194,16 @@ TEST_CASE("Processing different SequenceMacros correctly", "[EffectSquenceStateM
         CHECK(CheckColor(Color(3, 0, 0, 0), *dut.Tick()));
     }
     SECTION("Stretching and compressing waveforms correctly") {
-        EffectMacro effDemo[] = {
+        Sequence effDemo[] = {
             // State      WV            FS    N  Start         R  Next
             // {Light_Blank, (uint8_t *)0, 0xFF, 1, &color_Black, 0, 1},
             // {Light_Wave, gau8_testWave1, 0xFF, 2, &color_Red, 0, 2},
             // {Light_Wave, gau8_testWave1, 0xFF, 4, &color_Red, 0, 3},
             // {Light_Wave, gau8_testWave1, 0xFF, 8, &color_Red, 0, 0},
-            EffectMacro(1,1, Light_Blank, &color_Black),
-            EffectMacro(2,2, gau8_testWave1, Light_Wave, &color_Red),
-            EffectMacro(4,3, gau8_testWave1, Light_Wave, &color_Red),
-            EffectMacro(8,0, gau8_testWave1, Light_Wave, &color_Red),
+            Sequence(1,1, Light_Blank, &color_Black),
+            Sequence(2,2, gau8_testWave1, Light_Wave, &color_Red),
+            Sequence(4,3, gau8_testWave1, Light_Wave, &color_Red),
+            Sequence(8,0, gau8_testWave1, Light_Wave, &color_Red),
         };
 
         static SequenceSM dut(u8_testWaveLen, 1);
@@ -229,14 +229,14 @@ TEST_CASE("Processing different SequenceMacros correctly", "[EffectSquenceStateM
         CHECK(CheckColor(Color(0, 0, 0, 0), *dut.Tick())); // => Next 1
     }
     SECTION("Minimal setup, Processing repeats correctly") {
-        EffectMacro effDemo[] = {
+        Sequence effDemo[] = {
             // State      WV            FS    N  Start         R  Next
             // {Light_Blank, (uint8_t *)0, 0xFF, 2, &color_Black, 0, 1},
             // {Light_Wave, gau8_testWave1, 0xFF, 4, &color_Red, 1, 2},
             // {Light_RevWave, gau8_testWave1, 0xFF, 2, &color_Blue, 2, 1}, // <- Back to 1
-            EffectMacro(2,1, Light_Blank, &color_Black),
-            EffectMacro(4,2, gau8_testWave1, Light_Wave, &color_Red, 1),
-            EffectMacro(2,1, gau8_testWave1, Light_RevWave, &color_Blue, 2),
+            Sequence(2,1, Light_Blank, &color_Black),
+            Sequence(4,2, gau8_testWave1, Light_Wave, &color_Red, 1),
+            Sequence(2,1, gau8_testWave1, Light_RevWave, &color_Blue, 2),
         };
 
         static SequenceSM dut(u8_testWaveLen, 1);
@@ -266,7 +266,7 @@ TEST_CASE("Processing different SequenceMacros correctly", "[EffectSquenceStateM
 }
 
 TEST_CASE("Setting All different effects of SequenceSM", "[EffectSquenceStateMachine, Constructor]") {
-    EffectMacro effDemo[] = {
+    Sequence effDemo[] = {
         // State      WV                FS    N   Start         R  Next
         // {Light_Blank, noWave, 0xFF, 2, &color_Red, 0, 1},
         // {Light_Idle, noWave, 0xFF, 4, oldColor, 0, 2},
@@ -275,13 +275,13 @@ TEST_CASE("Setting All different effects of SequenceSM", "[EffectSquenceStateMac
         // {Light_Freeze, noWave, 0xFF, 4, oldColor, 0, 5},
         // {Light_RevWave, gau8_testWave1, 0xFF, 4, oldColor, 0, 6},
         // {Light_Flicker, noWave, 0x80, 16, oldColor, 0, 0}, // <- Back to 1
-        EffectMacro(2,1, Light_Blank, &color_Red),
-        EffectMacro(4,2, Light_Idle),
-        EffectMacro(2,3, Light_Blank),
-        EffectMacro(4,4, gau8_testWave1, Light_Wave),
-        EffectMacro(4,5, Light_Freeze),
-        EffectMacro(4,6, gau8_testWave1, Light_RevWave),
-        EffectMacro(16,1, Light_Flicker),
+        Sequence(2,1, Light_Blank, &color_Red),
+        Sequence(4,2, Light_Idle),
+        Sequence(2,3, Light_Blank),
+        Sequence(4,4, gau8_testWave1, Light_Wave),
+        Sequence(4,5, Light_Freeze),
+        Sequence(4,6, gau8_testWave1, Light_RevWave),
+        Sequence(16,1, Light_Flicker),
    };
     static SequenceSM dut(u8_testWaveLen, 1, 0x80, 0);
     dut.SetEffect(effDemo);
@@ -321,20 +321,20 @@ TEST_CASE("Setting All different effects of SequenceSM", "[EffectSquenceStateMac
 }
 
 TEST_CASE("SequenceSM Plots for manual investigation", "[EffectSquenceStateMachine, Constructor]") {
-    EffectMacro effDemo[] = {
+    Sequence effDemo[] = {
         // State      WV                  FS    N   Start         R  Next
-        EffectMacro( EffMacro_t{Light_Blank, noWave, 0xFF, 4, &color_Red, 0, 1}),
-        EffectMacro( EffMacro_t{Light_Wave, gau8_fullPulse, 0xFF, 128, oldColor, 0, 2}),
-        EffectMacro( EffMacro_t{Light_Blank, noWave, 0xFF, 4, oldColor, 0, 3}),
-        EffectMacro( EffMacro_t{Light_Wave, gau8_fullSlope, 0xFF, 128, oldColor, 0, 4}),
-        EffectMacro( EffMacro_t{Light_Blank, noWave, 0xFF, 4, oldColor, 0, 5}),
-        EffectMacro( EffMacro_t{Light_Wave, gau8_initSlope, 0xFF, 128, oldColor, 0, 6}),
-        EffectMacro( EffMacro_t{Light_Blank, noWave, 0xFF, 4, oldColor, 0, 7}),
-        EffectMacro( EffMacro_t{Light_Wave, gau8_offsetPulse, 0xFF, 128, oldColor, 0, 8}),
-        EffectMacro( EffMacro_t{Light_Blank, noWave, 0xFF, 4, oldColor, 0, 9}),
-        EffectMacro( EffMacro_t{Light_Wave, gau8_offsetSlope, 0xFF, 128, oldColor, 0, 10}),
-        EffectMacro( EffMacro_t{Light_Blank, noWave, 0xFF, 4, oldColor, 0, 11}),
-        EffectMacro( EffMacro_t{Light_Flicker, noWave, 0xFF, 64, oldColor, 0, 0}),
+        Sequence( Macro_t{Light_Blank, noWave, 0xFF, 4, &color_Red, 0, 1}),
+        Sequence( Macro_t{Light_Wave, gau8_fullPulse, 0xFF, 128, oldColor, 0, 2}),
+        Sequence( Macro_t{Light_Blank, noWave, 0xFF, 4, oldColor, 0, 3}),
+        Sequence( Macro_t{Light_Wave, gau8_fullSlope, 0xFF, 128, oldColor, 0, 4}),
+        Sequence( Macro_t{Light_Blank, noWave, 0xFF, 4, oldColor, 0, 5}),
+        Sequence( Macro_t{Light_Wave, gau8_initSlope, 0xFF, 128, oldColor, 0, 6}),
+        Sequence( Macro_t{Light_Blank, noWave, 0xFF, 4, oldColor, 0, 7}),
+        Sequence( Macro_t{Light_Wave, gau8_offsetPulse, 0xFF, 128, oldColor, 0, 8}),
+        Sequence( Macro_t{Light_Blank, noWave, 0xFF, 4, oldColor, 0, 9}),
+        Sequence( Macro_t{Light_Wave, gau8_offsetSlope, 0xFF, 128, oldColor, 0, 10}),
+        Sequence( Macro_t{Light_Blank, noWave, 0xFF, 4, oldColor, 0, 11}),
+        Sequence( Macro_t{Light_Flicker, noWave, 0xFF, 64, oldColor, 0, 0}),
     };
     static SequenceSM dut(cu16_TemplateLength, 1, 0x80, 0);
     dut.SetEffect(effDemo);
@@ -342,7 +342,7 @@ TEST_CASE("SequenceSM Plots for manual investigation", "[EffectSquenceStateMachi
     std::ofstream plotFile;
     char          stream[100];
     uint8_t       cStream[4];
-    plotFile.open(TSTOUTPUT_DIR "EffectSequenceStateMachine.csv");
+    plotFile.open(TSTOUTPUT_DIR "EffectSequenceStepper.csv");
     plotFile << "cycle,value" << std::endl;
 
     for (int i = 0; i < 728; i++) {

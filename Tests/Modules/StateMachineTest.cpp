@@ -1,6 +1,6 @@
 
-#include "EffectStateMachine.h"
-#include "EffectWaveforms.h"
+#include "StateMachine.h"
+#include "Waveforms.h"
 #include "MyUtils.h"
 
 using namespace Effect;
@@ -29,7 +29,7 @@ static bool CheckColor(Color c1, const Color c2) {
 
 TEST_CASE("Running Effect StateMachine with different Setups", "[EffectStateMachine]") {
     SECTION("Running with different intensities(applies for idle state)") {
-        EffMacro_t effDemo[] = {
+        Macro_t effDemo[] = {
             // State      WV            FS    N  Start         R  Next
             {Light_Idle, noWave, 0xFF, 4, &color_Blue, 0, 1},
             {Light_Idle, noWave, 0xFF, 4, &color_Green, 0, 2},
@@ -69,7 +69,7 @@ TEST_CASE("Running Effect StateMachine with different Setups", "[EffectStateMach
         }
     }
     SECTION("Starting Effect with different colors") {
-        EffMacro_t effDemo[] = {
+        Macro_t effDemo[] = {
             // State     WV       FS    N  Start         R  Next
             {Light_Idle, noWave, 0xFF, 4, &color_Blue, 0, 1},
             {Light_Idle, noWave, 0xFF, 4, &color_Green, 0, 2},
@@ -95,7 +95,7 @@ TEST_CASE("Running Effect StateMachine with different Setups", "[EffectStateMach
         }
     }
     SECTION("Delayed start of Effects") {
-        EffMacro_t effDemo[] = {
+        Macro_t effDemo[] = {
             // State      WV            FS    N  Start         R  Next
             {Light_Idle, noWave, 0xFF, 4, &color_Blue, 0, 1},
             {Light_Idle, noWave, 0xFF, 4, &color_Green, 0, 2},
@@ -131,7 +131,7 @@ TEST_CASE("Running Effect StateMachine with different Setups", "[EffectStateMach
 }
 
 TEST_CASE("Tick and GetColor on StateMachine yield same results", "[EffectStateMachine]") {
-    EffMacro_t effDemo[] = {
+    Macro_t effDemo[] = {
         // State      WV            FS    N  Start         R  Next
         {Light_Idle, noWave, 0xFF, 1, &color_Blue, 0, 1},
         {Light_Idle, noWave, 0xFF, 1, &color_Green, 0, 2},
@@ -156,7 +156,7 @@ TEST_CASE("Tick and GetColor on StateMachine yield same results", "[EffectStateM
 
 TEST_CASE("Processing different EffectMacros correctly", "[EffectStateMachine]") {
     SECTION("Minimal setup, Processing Next-Index correctly") {
-        EffMacro_t effDemo[] = {
+        Macro_t effDemo[] = {
             // State      WV            FS    N  Start         R  Next
             {Light_Blank, (uint8_t *)0, 0xFF, 4, &color_Black, 0, 1},
             {Light_Wave, gau8_testWave1, 0xFF, 4, &color_Red, 0, 2},
@@ -181,7 +181,7 @@ TEST_CASE("Processing different EffectMacros correctly", "[EffectStateMachine]")
         CHECK(CheckColor(Color(3, 0, 0, 0), *dut.Tick()));
     }
     SECTION("Stretching and compressing waveforms correctly") {
-        EffMacro_t effDemo[] = {
+        Macro_t effDemo[] = {
             // State      WV            FS    N  Start         R  Next
             {Light_Blank, (uint8_t *)0, 0xFF, 1, &color_Black, 0, 1},
             {Light_Wave, gau8_testWave1, 0xFF, 2, &color_Red, 0, 2},
@@ -212,7 +212,7 @@ TEST_CASE("Processing different EffectMacros correctly", "[EffectStateMachine]")
         CHECK(CheckColor(Color(0, 0, 0, 0), *dut.Tick())); // => Next 1
     }
     SECTION("Minimal setup, Processing repeats correctly") {
-        EffMacro_t effDemo[] = {
+        Macro_t effDemo[] = {
             // State      WV            FS    N  Start         R  Next
             {Light_Blank, (uint8_t *)0, 0xFF, 2, &color_Black, 0, 1},
             {Light_Wave, gau8_testWave1, 0xFF, 4, &color_Red, 1, 2},
@@ -246,7 +246,7 @@ TEST_CASE("Processing different EffectMacros correctly", "[EffectStateMachine]")
 }
 
 TEST_CASE("Setting All different effects of EffectSM", "[EffectStateMachine, Constructor]") {
-    EffMacro_t effDemo[] = {
+    Macro_t effDemo[] = {
         // State      WV                FS    N   Start         R  Next
         {Light_Blank, noWave, 0xFF, 2, &color_Red, 0, 1},
         {Light_Idle, noWave, 0xFF, 4, oldColor, 0, 2},
@@ -294,7 +294,7 @@ TEST_CASE("Setting All different effects of EffectSM", "[EffectStateMachine, Con
 }
 
 TEST_CASE("EffectSM Plots for manual investigation", "[EffectStateMachine, Constructor]") {
-    EffMacro_t effDemo[] = {
+    Macro_t effDemo[] = {
         // State      WV                  FS    N   Start         R  Next
         {Light_Blank, noWave, 0xFF, 4, &color_Red, 0, 1},
         {Light_Wave, gau8_fullPulse, 0xFF, 128, oldColor, 0, 2},

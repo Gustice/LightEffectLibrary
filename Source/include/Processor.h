@@ -11,7 +11,7 @@
 #pragma once
 
 #include "Color.h"
-#include "EffectStateMachine.h"
+#include "StateMachine.h"
 #include <stdint.h>
 
 namespace Effect {
@@ -29,7 +29,7 @@ class EffectProcessor {
   public:
     EffectProcessor(uint16_t const templateLength, uint8_t const fadeSteps);
     ~EffectProcessor();
-    void SetEffect(EffMacro_t *sequence, color_t const *sColor = noColor, uint8_t intens = gu8_idleIntensity);
+    void SetEffect(Macro_t *sequence, color_t const *sColor = noColor, uint8_t intens = gu8_idleIntensity);
     Color const * Tick(void);
 
   private:

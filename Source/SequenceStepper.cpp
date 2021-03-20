@@ -1,7 +1,7 @@
 /**
- * @file SequenceStateMachine.cpp
+ * @file SequenceStepper.cpp
  * @author Gustice
- * @brief Implementation of Effect-State-Machine-Class SequenceStateMachine.h
+ * @brief Implementation of Effect-State-Machine-Class SequenceStepper.h
  * @version 0.1
  * @date 2021-03-12
  *
@@ -9,15 +9,15 @@
  *
  */
 
-#include "SequenceStateMachine.h"
-#include "EffectWaveforms.h"
+#include "SequenceStepper.h"
+#include "Waveforms.h"
 #include <assert.h>
 #include <math.h>
 #include <stdlib.h>
 
 namespace Effect {
 
-const EffectMacro delaySequence(1, 0);
+const Sequence delaySequence(1, 0);
 
 SequenceSM::SequenceSM(uint16_t const templateLength, uint8_t targetCount, uint8_t const intensity, uint8_t crossFade)
     : _templateLength(templateLength), _targetCount(targetCount) {
@@ -37,7 +37,7 @@ SequenceSM::SequenceSM(uint16_t const templateLength, uint8_t targetCount, uint8
  */
 SequenceSM::~SequenceSM() { delete[] _outputColor; }
 
-void SequenceSM::SetEffect(const EffectMacro *sequence, color_t const *startColor, uint8_t initialDelay) {
+void SequenceSM::SetEffect(const Sequence *sequence, color_t const *startColor, uint8_t initialDelay) {
     SetEffect(sequence, startColor, &SMIParams.idleIntens, initialDelay);
 }
 
@@ -49,7 +49,7 @@ void SequenceSM::SetEffect(const EffectMacro *sequence, color_t const *startColo
  * @param delayedStart
  * @param intens
  */
-void SequenceSM::SetEffect(const EffectMacro *sequence, color_t const *startColor, const uint8_t *intens,
+void SequenceSM::SetEffect(const Sequence *sequence, color_t const *startColor, const uint8_t *intens,
                            const uint8_t delayedStart) {
     if (startColor != noColor) {
         _curentColor.SetColor(*startColor);
@@ -138,7 +138,7 @@ Color *SequenceSM::Tick(void) {
         UpdateFlicker();
         break;
     case eEffect::LightCustom: {
-        EffectMacro const *const cEffStep = GetStep();
+        Sequence const *const cEffStep = GetStep();
         return cEffStep->pProcessor(this, _outputColor, _targetCount);
     } break;
     default:
@@ -186,14 +186,14 @@ void SequenceSM::UpdateFreeze() {
 }
 
 void SequenceSM::UpdateWave() {
-    EffectMacro const *const cEffStep = GetStep();
+    Sequence const *const cEffStep = GetStep();
     Color                    cOut     = GetColor() * cEffStep->pWave[GetWaveIdx()] * cEffStep->FsIntensity;
 
     ApplyColorToAllElements(cOut);
 }
 
 void SequenceSM::UpdateRevWave() {
-    EffectMacro const *const cEffStep  = GetStep();
+    Sequence const *const cEffStep  = GetStep();
     uint8_t                  lastIndex = SMIParams.templateLength - 1;
     Color                    cOut      = GetColor() * cEffStep->pWave[lastIndex - GetWaveIdx()] * cEffStep->FsIntensity;
 
@@ -225,7 +225,7 @@ Color *LightSparkleSequence(SequenceSM *obj, Color *colors, size_t len) {
 }
 
 Color *LightSwipeSequence(SequenceSM *obj, Color *colors, size_t len) {
-    EffectMacro const *const cEffStep = obj->GetStep();
+    Sequence const *const cEffStep = obj->GetStep();
     const Color              cColor   = obj->GetColor();
     uint8_t                  cStep    = obj->GetWaveIdx();
 
@@ -240,7 +240,7 @@ Color *LightSwipeSequence(SequenceSM *obj, Color *colors, size_t len) {
 }
 
 Color *LightWaveSequence(SequenceSM *obj, Color *colors, size_t len) {
-    EffectMacro const *const cEffStep = obj->GetStep();
+    Sequence const *const cEffStep = obj->GetStep();
     const Color              cColor   = obj->GetColor();
     uint8_t                  idx    = obj->GetWaveIdx();
     uint8_t                  step     = obj->_templateLength / len;

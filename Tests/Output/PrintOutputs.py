@@ -5,7 +5,7 @@ import seaborn as sns
 
 # Plot State-Machine Output
 df1 = pd.read_csv('Tests/Output/EffectStateMachine.csv')
-df2 = pd.read_csv('Tests/Output/EffectSequenceStateMachine.csv')
+df2 = pd.read_csv('Tests/Output/EffectSequenceStepper.csv')
 plt.plot(df1['cycle'], df1['value'], label='longRun')
 plt.plot(df2['cycle'], df2['value'], label='alternativ')
 plt.xlabel('iteration')

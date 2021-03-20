@@ -1,5 +1,5 @@
 /**
- * @file EffectStateMachine.cpp
+ * @file StateMachine.cpp
  * @author Gustice
  * @brief Implementation of Effect-State-Machine-Class EffectStateMachine.h
  * @version 0.1
@@ -8,8 +8,8 @@
  * @copyright Copyright (c) 2019
  *
  */
-#include "EffectStateMachine.h"
-#include "EffectWaveforms.h"
+#include "StateMachine.h"
+#include "Waveforms.h"
 #include <math.h>
 #include <stdlib.h>
 
@@ -18,7 +18,7 @@ namespace Effect {
 /// Optional prequel for delayed start.
 /// \li Duration must be != 0
 /// \li Next entry will be first entry in given Effect sequence
-EffMacro_t delayPrequel[] = {
+Macro_t delayPrequel[] = {
     {Light_Blank, (uint8_t *)0, 0, 1, &color_Black, 0, 0},
 };
 
@@ -54,7 +54,7 @@ EffectSM::EffectSM(uint16_t const templateLength, uint8_t const intensity, uint8
     }
 
 
-void EffectSM::SetEffect(EffMacro_t *sequence, color_t const *startColor, uint8_t initialDelay) {
+void EffectSM::SetEffect(Macro_t *sequence, color_t const *startColor, uint8_t initialDelay) {
     SetEffect(sequence, startColor, &SMIParams.idleIntens, initialDelay);
 }
 
@@ -66,7 +66,7 @@ void EffectSM::SetEffect(EffMacro_t *sequence, color_t const *startColor, uint8_
  * @param delayedStart
  * @param intens
  */
-void EffectSM::SetEffect(EffMacro_t *sequence, color_t const *startColor, const uint8_t *intens,
+void EffectSM::SetEffect(Macro_t *sequence, color_t const *startColor, const uint8_t *intens,
                          const uint8_t delayedStart) {
     if (startColor != noColor) {
         _curentColor.SetColor(*startColor);
@@ -176,13 +176,13 @@ Color const *EffectSM::UpdateFreeze(EffectSM *SM) {
 }
 
 Color const *EffectSM::UpdateWave(EffectSM *SM) {
-    EffMacro_t const *const cEffStep = SM->GetStep();
+    Macro_t const *const cEffStep = SM->GetStep();
     *(SM->_outputColor) = SM->GetColor() * cEffStep->pWave[SM->GetWaveIdx()] * cEffStep->FsIntensity;
     return SM->_outputColor;
 }
 
 Color const *EffectSM::UpdateRevWave(EffectSM *SM) {
-    EffMacro_t const *const cEffStep  = SM->GetStep();
+    Macro_t const *const cEffStep  = SM->GetStep();
     uint8_t                 lastIndex = SM->SMIParams.templateLength - 1;
     *(SM->_outputColor) =
         SM->GetColor() * cEffStep->pWave[lastIndex - SM->GetWaveIdx()] * cEffStep->FsIntensity;

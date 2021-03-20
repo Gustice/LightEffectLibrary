@@ -1,6 +1,6 @@
 
-#include "EffectStateMachine.h"
-#include "EffectWaveforms.h"
+#include "StateMachine.h"
+#include "Waveforms.h"
 #include "MyUtils.h"
 
 using namespace Effect;
