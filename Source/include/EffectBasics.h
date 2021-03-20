@@ -27,7 +27,7 @@ typedef const struct EffMacro_def {
     /// Effect duration
     uint8_t duration;
     /// SubEffect color
-    const Color_t *pColor;
+    const color_t *pColor;
     /// Num of Repeats
     int8_t repeats;
     /// Next SubEffect
@@ -55,7 +55,7 @@ class EffectMacro {
     /// Effect duration
     const uint8_t duration;
     /// SubEffect color
-    Color_t const *const pColor;
+    color_t const *const pColor;
     /// Num of Repeats
     const int8_t repeats;
     /// Next SubEffect
@@ -64,17 +64,17 @@ class EffectMacro {
     const pEffPrc pProcessor;
 
     constexpr EffectMacro(uint8_t duration, uint8_t next, eEffect state = eEffect::Light_Freeze,
-                          Color_t const *pColor = USEOLD_COLOR)
+                          color_t const *pColor = USEOLD_COLOR)
         : state(state), pWave(NO_WAVE), FsIntensity(gu8_fullIntensity), duration(duration), pColor(pColor), repeats(0),
           next(next), pProcessor(nullptr){};
 
     constexpr EffectMacro(uint8_t duration, uint8_t next, uint8_t const *pWave, eEffect state,
-                          Color_t const *pColor = USEOLD_COLOR, uint8_t repeat = 0)
+                          color_t const *pColor = USEOLD_COLOR, uint8_t repeat = 0)
         : state(state), pWave(pWave), FsIntensity(gu8_fullIntensity), duration(duration), pColor(pColor),
           repeats(repeat), next(next), pProcessor(nullptr){};
 
     constexpr EffectMacro(uint8_t duration, uint8_t next, pEffPrc pProcessor, uint8_t const *pWave,
-                          Color_t const *pColor = USEOLD_COLOR, uint8_t repeat = 0)
+                          color_t const *pColor = USEOLD_COLOR, uint8_t repeat = 0)
         : state(eEffect::LightCustom), pWave(pWave), FsIntensity(gu8_fullIntensity), duration(duration), pColor(pColor),
           repeats(repeat), next(next), pProcessor(pProcessor){};
 

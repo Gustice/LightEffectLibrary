@@ -1,12 +1,12 @@
 
 #include "catch.hpp"
-#include "color_t.h"
+#include "Color_t.h"
 
 // @todo LHF color compare function needed
 
-TEST_CASE("Constructing emtpy color_t structure", "[color_t, Constructor]") {
-    color_t   dut  = {0, 0, 0, 0};
-    const int size = sizeof(color_t);
+TEST_CASE("Constructing emtpy Color_t structure", "[Color_t, Constructor]") {
+    Color_t   dut  = {0, 0, 0, 0};
+    const int size = sizeof(Color_t);
     uint8_t   stream[size];
     WriteByteStreamTo(&dut, stream);
 
@@ -15,7 +15,7 @@ TEST_CASE("Constructing emtpy color_t structure", "[color_t, Constructor]") {
     }
 }
 
-bool ColorIsEqualToStream(color_t c, const uint8_t s[sizeof(color_t)]) {
+bool ColorIsEqualToStream(Color_t c, const uint8_t s[sizeof(Color_t)]) {
     if (((c.red == s[0]) && (c.green == s[1]) && (c.blue == s[2]) && (c.white == s[3])))
         return true;
 
@@ -26,25 +26,25 @@ bool ColorIsEqualToStream(color_t c, const uint8_t s[sizeof(color_t)]) {
     return false;
 }
 
-static void DivideByPowOfN(uint8_t stream[sizeof(color_t)], int n) {
-    for (size_t i = 0; i < sizeof(color_t); i++) {
+static void DivideByPowOfN(uint8_t stream[sizeof(Color_t)], int n) {
+    for (size_t i = 0; i < sizeof(Color_t); i++) {
         stream[i] = (stream[i] >> n);
     }
 }
 
-const int size = sizeof(color_t);
+const int size = sizeof(Color_t);
 
-TEST_CASE("Checking EqualTest-Function", "[color_t, Constructor]") {
+TEST_CASE("Checking EqualTest-Function", "[Color_t, Constructor]") {
     uint8_t setStream[size] = {0x12, 0x34, 0x56, 0x78};
 
-    color_t dut = color_t{setStream[0], setStream[1], setStream[2], setStream[3]};
+    Color_t dut = Color_t{setStream[0], setStream[1], setStream[2], setStream[3]};
     REQUIRE(ColorIsEqualToStream(dut, setStream));
 }
 
-TEST_CASE("Conservate color_t format of WriteByteStreamTo", "[color_t, Format]") {
+TEST_CASE("Conservate Color_t format of WriteByteStreamTo", "[Color_t, Format]") {
     uint8_t setStream[size] = {0x12, 0x34, 0x56, 0x78};
-    color_t setColor;
-    color_t dut;
+    Color_t setColor;
+    Color_t dut;
     SetColorByRgb(&dut, setStream[0], setStream[1], setStream[2], setStream[3]);
 
     uint8_t stream[size];
@@ -55,56 +55,56 @@ TEST_CASE("Conservate color_t format of WriteByteStreamTo", "[color_t, Format]")
     REQUIRE(dut.white == stream[3]);
 }
 
-TEST_CASE("Setting color_t by Parameter or by Structure", "[color_t, Getter]") {
-    SECTION("Setting color_t structure by Structure") {
+TEST_CASE("Setting Color_t by Parameter or by Structure", "[Color_t, Getter]") {
+    SECTION("Setting Color_t structure by Structure") {
         uint8_t setStream[size] = {0x23, 0x45, 0x67, 0x89};
-        color_t setColor;
+        Color_t setColor;
         setColor.red   = setStream[0];
         setColor.green = setStream[1];
         setColor.blue  = setStream[2];
         setColor.white = setStream[3];
 
-        color_t dut;
+        Color_t dut;
         SetColor(&dut, setColor);
         REQUIRE(ColorIsEqualToStream(dut, setStream));
     }
 
-    SECTION("Setting color_t structure by Parameter") {
+    SECTION("Setting Color_t structure by Parameter") {
         uint8_t setStream[size] = {0x9A, 0xBC, 0xDE, 0xF1};
 
-        color_t dut;
+        Color_t dut;
         SetColorByRgb(&dut, setStream[0], setStream[1], setStream[2], setStream[3]);
         REQUIRE(ColorIsEqualToStream(dut, setStream));
     }
 }
 
-TEST_CASE("Using MixColor", "[color_t, Operator]") {
+TEST_CASE("Using MixColor", "[Color_t, Operator]") {
     uint8_t setStream1[size]  = {0x12, 0x34, 0x56, 0x78};
     uint8_t setStream2[size]  = {0x98, 0x76, 0x54, 0x32};
     uint8_t checkStream[size] = {0xAA, 0xAA, 0xAA, 0xAA};
 
-    color_t setColor1 = {
+    Color_t setColor1 = {
         .red   = setStream1[0],
         .green = setStream1[1],
         .blue  = setStream1[2],
         .white = setStream1[3],
     };
-    color_t setColor2 = {
+    Color_t setColor2 = {
         .red   = setStream2[0],
         .green = setStream2[1],
         .blue  = setStream2[2],
         .white = setStream2[3],
     };
 
-    color_t dut1 = color_t(setColor1);
-    color_t dut2 = color_t(setColor2);
+    Color_t dut1 = Color_t(setColor1);
+    Color_t dut2 = Color_t(setColor2);
 
     MixColor(&dut1, dut2);
     REQUIRE(ColorIsEqualToStream(dut1, checkStream));
 }
 
-TEST_CASE("Using MixColorScaled", "[color_t, Method]") {
-    color_t c1, c2, c3;
+TEST_CASE("Using MixColorScaled", "[Color_t, Method]") {
+    Color_t c1, c2, c3;
     SetColor(&c1, cRed);
     SetColor(&c2, cGreen);
     SetColor(&c3, cBlue);
@@ -118,13 +118,13 @@ TEST_CASE("Using MixColorScaled", "[color_t, Method]") {
     REQUIRE(ColorIsEqualToStream(c1, checkStream2));
 }
 
-TEST_CASE("Using ScaleColor with odd data", "[color_t, Operator]") {
-    const int     size            = sizeof(color_t);
+TEST_CASE("Using ScaleColor with odd data", "[Color_t, Operator]") {
+    const int     size            = sizeof(Color_t);
     const uint8_t setStream[size] = {0xFF, 0x3F, 0x0F, 0x3};
     uint8_t       checkStream[size];
     memcpy(checkStream, setStream, sizeof(setStream));
 
-    color_t dut;
+    Color_t dut;
     SetColorByRgb(&dut, setStream[0], setStream[1], setStream[2], setStream[3]);
 
     SECTION("Multiplying by fullscale") {
@@ -163,13 +163,13 @@ TEST_CASE("Using ScaleColor with odd data", "[color_t, Operator]") {
     }
 }
 
-TEST_CASE("Using ScaleColor with even data", "[color_t, Operator]") {
-    const int     size            = sizeof(color_t);
+TEST_CASE("Using ScaleColor with even data", "[Color_t, Operator]") {
+    const int     size            = sizeof(Color_t);
     const uint8_t setStream[size] = {0xFC, 0x3C, 0x0C, 0x4};
     uint8_t       checkStream[size];
     memcpy(checkStream, setStream, sizeof(setStream));
 
-    color_t dut;
+    Color_t dut;
     SetColorByRgb(&dut, setStream[0], setStream[1], setStream[2], setStream[3]);
 
     SECTION("Multiplying by fullscale") {
@@ -214,21 +214,21 @@ TEST_CASE("Using ScaleColor with even data", "[color_t, Operator]") {
     }
 }
 
-TEST_CASE("Comparing color_t", "[color_t]") {
-    color_t c1 = {1,2,3,4};
-    color_t c2 = {1,2,3,4};
+TEST_CASE("Comparing Color_t", "[Color_t]") {
+    Color_t c1 = {1,2,3,4};
+    Color_t c2 = {1,2,3,4};
     CHECK ( (ColorIsEqual(&c1, c2) ));
 
-    color_t cN1 = {0,2,3,4 };
+    Color_t cN1 = {0,2,3,4 };
     CHECK ( ColorNotEqual(&c1, cN1) );
-    color_t cN2 = {1,0,3,4 };
+    Color_t cN2 = {1,0,3,4 };
     CHECK ( ColorNotEqual(&c1, cN2) );
-    color_t cN3 = {1,2,0,4 };
+    Color_t cN3 = {1,2,0,4 };
     CHECK ( ColorNotEqual(&c1, cN3) );
-    color_t cN4 = {1,2,3,0 };
+    Color_t cN4 = {1,2,3,0 };
     CHECK ( ColorNotEqual(&c1, cN4) );
 
-    color_t c3 = {0 ,0,0,0};
+    Color_t c3 = {0 ,0,0,0};
     CHECK ( ColorNotEqual(&c1, c3) );
     SetColorByRgb(&c3, 1,2,3,4);
     CHECK ( (ColorIsEqual(&c1, c3) ));

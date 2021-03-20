@@ -54,7 +54,7 @@ EffectSM::EffectSM(uint16_t const templateLength, uint8_t const intensity, uint8
     }
 
 
-void EffectSM::SetEffect(EffMacro_t *sequence, Color_t const *startColor, uint8_t initialDelay) {
+void EffectSM::SetEffect(EffMacro_t *sequence, color_t const *startColor, uint8_t initialDelay) {
     SetEffect(sequence, startColor, &SMIParams.idleIntens, initialDelay);
 }
 
@@ -66,7 +66,7 @@ void EffectSM::SetEffect(EffMacro_t *sequence, Color_t const *startColor, uint8_
  * @param delayedStart
  * @param intens
  */
-void EffectSM::SetEffect(EffMacro_t *sequence, Color_t const *startColor, const uint8_t *intens,
+void EffectSM::SetEffect(EffMacro_t *sequence, color_t const *startColor, const uint8_t *intens,
                          const uint8_t delayedStart) {
     if (startColor != NO_COLOR) {
         _curentColor.SetColor(*startColor);

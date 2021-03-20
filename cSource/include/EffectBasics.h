@@ -27,7 +27,7 @@ typedef const struct EffectMacroElement_def {
     /// Effect duration
     uint8_t duration;
     /// SubEffect color
-    const color_t *color;
+    const Color_t *color;
     /// Num of Repeats
     int8_t repeats;
     /// Next SubEffect

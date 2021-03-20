@@ -23,10 +23,10 @@ typedef struct {
     uint8_t green;
     uint8_t blue;
     uint8_t white;
-} Color_t;
+} color_t;
 
 #define NO_WAVE ((uint8_t *)0)
-#define NO_COLOR ((Color_t *)0)       ///< Pointer constant to "no color"
+#define NO_COLOR ((color_t *)0)       ///< Pointer constant to "no color"
 #define NO_COLOR_OBJ ((Color *)0)     ///< Null color object
 #define USEOLD_COLOR NO_COLOR         ///< Used old color agreement (if no color pointer)
 #define USEOLD_COLOR_OBJ NO_COLOR_OBJ ///< Alternative use old color agreement
@@ -44,7 +44,7 @@ class Color {
     friend Color operator*(Color c1, uint8_t k);
 
   private:
-    Color_t _color; ///< Color data
+    color_t _color; ///< Color data
 
   public:
     /**
@@ -64,26 +64,26 @@ class Color {
     Color(uint8_t r, uint8_t g, uint8_t b, uint8_t w = 0) { SetColor(r, g, b, w); };
 
     /**
-     * @brief Construct a new Color object according to Color_t structure
+     * @brief Construct a new Color object according to color_t structure
      * @param color Color to set
      */
-    Color(Color_t color) { memcpy(&_color, &color, sizeof(Color_t)); };
+    Color(color_t color) { memcpy(&_color, &color, sizeof(color_t)); };
     /**
-     * @brief Construct a new Color object according to Color_t structure
+     * @brief Construct a new Color object according to color_t structure
      * @param color Color to set
      */
-    Color(Color_t *color) { memcpy(&_color, color, sizeof(Color_t)); };
+    Color(color_t *color) { memcpy(&_color, color, sizeof(color_t)); };
 
     /**
-     * @brief Set the Color object according to Color_t Array
+     * @brief Set the Color object according to color_t Array
      * @param color Color to set
      */
-    void SetColor(const Color_t *color) { memcpy(&_color, color, sizeof(Color_t)); }
+    void SetColor(const color_t *color) { memcpy(&_color, color, sizeof(color_t)); }
     /**
-     * @brief Set the Color object according to Color_t Array
+     * @brief Set the Color object according to color_t Array
      * @param color Color to set
      */
-    void SetColor(const Color_t color) { memcpy(&_color, &color, sizeof(Color_t)); }
+    void SetColor(const color_t color) { memcpy(&_color, &color, sizeof(color_t)); }
 
     /**
      * @brief Set the Color object according to rgb color-channel values
@@ -100,10 +100,10 @@ class Color {
     }
 
     /**
-     * @brief Returns Color as Color_t structure
-     * @return Color_t Color
+     * @brief Returns Color as color_t structure
+     * @return color_t Color
      */
-    Color_t GetColor(void) const { return _color; }
+    color_t GetColor(void) const { return _color; }
 
     /**
      * @brief Scaling and overlaying with given color.
@@ -120,7 +120,7 @@ class Color {
      * @brief Writes Color as formatted bytestream to location
      * @param color
      */
-    void WriteByteStreamTo(uint8_t raw[sizeof(Color_t)]) {
+    void WriteByteStreamTo(uint8_t raw[sizeof(color_t)]) {
         raw[0] = _color.blue;
         raw[1] = _color.green;
         raw[2] = _color.red;
@@ -147,20 +147,20 @@ class Color {
 Color operator*(Color c1, uint8_t k);
 Color operator+(Color c1, Color c2);
 
-extern const Color_t *pNoColor;
+extern const color_t *pNoColor;
 extern const Color *  pNoColorObj;
 
-extern const Color_t color_Black;
-extern const Color_t color_Red;
-extern const Color_t color_Green;
-extern const Color_t color_Blue;
-extern const Color_t color_Magenta;
-extern const Color_t color_Cyan;
-extern const Color_t color_Yellow;
-extern const Color_t color_White;
-extern const Color_t color_WarmWhite;
-extern const Color_t color_ColdWhite;
-extern const Color_t color_SpookyWhite;
+extern const color_t color_Black;
+extern const color_t color_Red;
+extern const color_t color_Green;
+extern const color_t color_Blue;
+extern const color_t color_Magenta;
+extern const color_t color_Cyan;
+extern const color_t color_Yellow;
+extern const color_t color_White;
+extern const color_t color_WarmWhite;
+extern const color_t color_ColdWhite;
+extern const color_t color_SpookyWhite;
 
 // @todo this might be useless
 extern const Color CBlack;

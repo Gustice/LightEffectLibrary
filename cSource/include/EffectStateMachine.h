@@ -58,8 +58,8 @@ class EffectSM {
     EffectSM(uint16_t const templateLength, uint8_t const intensity, uint8_t const crossFade);
     /// @todo Configuration could be given by structure
 
-    void SetEffect(EffMacro_t *sequence, color_t const *startColor = NO_COLOR, uint8_t initialDelay = 0);
-    void SetEffect(EffMacro_t *sequence, color_t const *startColor, const uint8_t *intens, const uint8_t delayedStart);
+    void SetEffect(EffMacro_t *sequence, Color_t const *startColor = NO_COLOR, uint8_t initialDelay = 0);
+    void SetEffect(EffMacro_t *sequence, Color_t const *startColor, const uint8_t *intens, const uint8_t delayedStart);
     void SetEffect(const EffectMacro *sequence);
 
     virtual Color const *Tick(void);

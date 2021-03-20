@@ -22,7 +22,7 @@ EffectSequencer::~EffectSequencer(){
     delete _EffPV_old;
 }
 
-void EffectSequencer::SetEffect(EffectMacro *sequence, Color_t const *sColor, uint8_t intens) {
+void EffectSequencer::SetEffect(EffectMacro *sequence, color_t const *sColor, uint8_t intens) {
     _fadingCnt = _fadeSteps;
 
     SequenceSM * pEsm = _EffPV_old;

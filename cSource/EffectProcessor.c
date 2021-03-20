@@ -31,7 +31,7 @@ EffectProcessor::~EffectProcessor(){
     delete _EffPV_old;
 }
 
-void EffectProcessor::SetEffect(EffMacro_t *sequence, color_t const *sColor, uint8_t intens) {
+void EffectProcessor::SetEffect(EffMacro_t *sequence, Color_t const *sColor, uint8_t intens) {
     _fadingCnt = _fadeSteps;
 
     EffectSM * pEsm = _EffPV_old;
