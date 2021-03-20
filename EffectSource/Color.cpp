@@ -15,8 +15,8 @@
 uint8_t const * const noWave = nullptr;
 color_t const * const noColor = nullptr;
 color_t const * const oldColor = nullptr; 
-const Color & noColorObj = nullptr;
-const Color & oldColorObj = nullptr; 
+// const Color & noColorObj = nullptr;
+// const Color & oldColorObj = nullptr; 
 
 
 /** @name Color structure definition
