@@ -14,6 +14,7 @@ add_executable(tests TestMain.cpp
                     cModules/cColorTest.cpp
                     cModules/cEffectStateMachineTest.cpp
                     cModules/cEffectProcessorTest.cpp
+                    cModules/cMacroVisualization.cpp
                     
                     IntegrationTest.cpp 
                 )

@@ -1,13 +1,13 @@
 /**
  * @file EffectStateMachine.cpp
  * @author Gustice
- * @brief Implementation of Effect-State-Machine-Class EffectStateMachine.h
+ * @brief Implementation of Effect-State-Machine
  * @version 0.1
  * @date 2019-10-01
  *
  * @copyright Copyright (c) 2019
- *
  */
+
 #include "EffectStateMachine.h"
 #include "EffectWaveforms.h"
 #include <math.h>
@@ -59,6 +59,7 @@ Color_t const *UpdateFlicker(EffectSM_t *self) {
 static const EffMacro_t delayPrequel[] = {
     {Light_Blank, (uint8_t *)0, 0, 1, &cBlack, 0, 0},
 };
+
 
 typedef Color_t const *pEffPrcHandle(EffectSM_t *self);
 /// Function table to processing Functions
@@ -138,12 +139,4 @@ void SM_SetEffect(EffectSM_t *self, EffMacro_t *sequence, Color_t const *startCo
     self->SMPValues.dissolveCnt = 0;
     self->SMPValues.repeats     = self->p_effMac->repeats;
     SetIndexes(self);
-}
-
-uint8_t SM_GetDissolveRatio(EffectSM_t *self) {
-    if (self->SMIParams.fadeSteps == 0)
-        return 0;
-
-    uint8_t dissolving = (uint8_t)((uint16_t)0xFF * self->SMPValues.dissolveCnt / self->SMIParams.fadeSteps);
-    return dissolving;
 }

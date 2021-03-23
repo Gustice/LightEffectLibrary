@@ -1,12 +1,11 @@
 /**
- * @file EffectProcessor.cpp
+ * @file EffectProcessor.c
  * @author Gustice
- * @brief Implementation of Effect-Processor-Class EffectProcessor.h
+ * @brief Implementation of Effect-Processor
  * @version 0.1
  * @date 2019-10-03
  *
  * @copyright Copyright (c) 2019
- *
  */
 
 #include "EffectProcessor.h"
@@ -18,13 +17,6 @@
 #include <string.h>
 
 Color_t *crossFadeColors(EffectProcessor_t *self, uint8_t k) {
-    // int i;
-    // for (i = 0; i < _colorSize; i++) {
-    //     ColorOld[i] = ColorOld[i] * k;
-    //     Color[i]    = Color[i] * (0xFF - k);
-    //     Color[i]    = Color[i] + _ColorOld[i];
-    // }
-
     ScaleColor(&self->ColorOld, k);
     ScaleColor(&self->Color, 0xFF-k);
     MixColor(&self->Color, self->ColorOld);
@@ -65,12 +57,6 @@ Color_t const *EP_Tick(EffectProcessor_t *self) {
 
         SetColor(&self->ColorOld, *SM_Tick(&self->EffPV_old));
         crossFadeColors(self, k);
-        // } else { // Process soft cross dissolve between different colors, if needed
-        //     uint8_t k = _EffPV.GetDissolveRatio();
-        //     if (k > 0) {
-        //         crossFadeColors(k);
-        //     }
-        //     memcpy(&_ColorOld, &_Color, sizeof(Color));
     }
 
     return &self->Color;
