@@ -1,3 +1,13 @@
+/**
+ * @file Basics.h
+ * @author Gustice
+ * @brief Definitions for color effects
+ * @version 0.1
+ * @date 2021-03-23
+ * 
+ * @copyright Copyright (c) 2021
+ */
+
 #pragma once
 
 #include "Color.h"
@@ -6,17 +16,31 @@
 
 namespace Effect {
 
+/**
+ * @brief Effect that is applied to color
+ */
 enum eEffect {
+    /// Black out lights
     Light_Blank = 0,
+    /// Continuous illumination in idle intensity
     Light_Idle,
+    /// Keep latest state on hold
     Light_Freeze,
+    /// Step through a defined waveform
     Light_Wave,
+    /// Step through a defined waveform backwards
     Light_RevWave,
+    /// Show flicker effect with idle intensity as static part with dynamic flicker-range
     Light_Flicker,
+    /// Custom effect, this is provided by Effect-Sequence
     LightCustom,
+
     Light_States,
 };
 
+/**
+ * @brief Definition of effect that is processed each step
+ */
 typedef const struct Macro_def{
     /// Effect type
     eEffect state;
@@ -27,7 +51,7 @@ typedef const struct Macro_def{
     /// Effect duration
     uint8_t duration;
     /// SubEffect color
-    const color_t *pColor;
+    const Color::color_t *pColor;
     /// Num of Repeats
     int8_t repeats;
     /// Next SubEffect
@@ -44,6 +68,10 @@ class SequenceSM;
  */
 typedef Color *(*pEffPrc)(SequenceSM *obj, Color *colors, size_t len);
 
+
+/**
+ * @brief Definition of effect-sequence that is processed each step
+ */
 class Sequence {
   public:
     /// Effect type
@@ -55,7 +83,7 @@ class Sequence {
     /// Effect duration
     const uint8_t duration;
     /// SubEffect color
-    color_t const *const pColor;
+    Color::color_t const *const pColor;
     /// Num of Repeats
     const int8_t repeats;
     /// Next SubEffect
@@ -63,34 +91,51 @@ class Sequence {
     /// Custom processor function
     const pEffPrc pProcessor;
 
+    /**
+     * @brief Const-Constructor for simple effects
+     */
     constexpr Sequence(uint8_t duration, uint8_t next, eEffect state = eEffect::Light_Freeze,
-                          color_t const *pColor = oldColor)
+                          Color::color_t const *pColor = oldColor)
         : state(state), pWave(nullptr), FsIntensity(gu8_fullIntensity), duration(duration), pColor(pColor), repeats(0),
           next(next), pProcessor(nullptr){}; // @todo try to use noWave for pWave-init
 
+    /**
+     * @brief Const-Constructor for waveform effects
+     */
     constexpr Sequence(uint8_t duration, uint8_t next, uint8_t const *pWave, eEffect state,
-                          color_t const *pColor = oldColor, uint8_t repeat = 0)
+                          Color::color_t const *pColor = oldColor, uint8_t repeat = 0)
         : state(state), pWave(pWave), FsIntensity(gu8_fullIntensity), duration(duration), pColor(pColor),
           repeats(repeat), next(next), pProcessor(nullptr){};
 
+    /**
+     * @brief Const-Constructor for elaborated effects with custom algorithm
+     */
     constexpr Sequence(uint8_t duration, uint8_t next, pEffPrc pProcessor, uint8_t const *pWave,
-                          color_t const *pColor = oldColor, uint8_t repeat = 0)
+                          Color::color_t const *pColor = oldColor, uint8_t repeat = 0)
         : state(eEffect::LightCustom), pWave(pWave), FsIntensity(gu8_fullIntensity), duration(duration), pColor(pColor),
           repeats(repeat), next(next), pProcessor(pProcessor){};
 
+    /**
+     * @brief Const-Constructor by legacy structure
+     */
     constexpr Sequence(Macro_t macro)
         : state(macro.state), pWave(macro.pWave), FsIntensity(macro.FsIntensity), duration(macro.duration),
           pColor(macro.pColor), repeats(macro.repeats), next(macro.next), pProcessor(nullptr){};
 };
 
+/// Effect sequence frame
 typedef struct {
-    const Macro_t *element; // Element for visualization
-    uint8_t           content; // Number of registered steps
-    uint8_t           repeats; // Repetitions
+    /// Element for visualization
+    const Macro_t *element; 
+    /// Number of registered steps
+    uint8_t           content; 
+    /// Repetitions
+    uint8_t           repeats; 
 } EffSequence_t;
 #define COUNT_EFFECT_MACRO(effect) (sizeof(effect) / sizeof(EffSequence_type))
-extern const EffSequence_t em_Idle[];
 
+
+/// Collection of process values to maintain processing state machine
 typedef struct SM_ProcessValues_def {
     /// Decrementing tick, counting duration
     uint8_t tick;
@@ -106,6 +151,7 @@ typedef struct SM_ProcessValues_def {
     uint16_t waveStep;
 } SM_ProcessValues_t;
 
+/// Collection of object configuration at statup
 typedef struct SM_ParamValues_def {
     /// Idle intensity as background color
     uint8_t idleIntens;

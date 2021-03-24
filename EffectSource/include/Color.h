@@ -15,24 +15,7 @@
 #include <string.h>
 
 /// No Waveform definition
-extern uint8_t const * const noWave;
-
-
-/**
- * @brief Color Structure
- * @details Defines red/green/blue and white color channel values
- */
-typedef struct {
-    uint8_t red;
-    uint8_t green;
-    uint8_t blue;
-    uint8_t white;
-} color_t;
-
-/// Pointer constant to "no color"
-extern color_t const * const noColor; 
-/// Pointer constant to "no color"
-extern color_t const * const oldColor; 
+extern uint8_t const *const noWave;
 
 /**
  * @brief   Color class
@@ -45,6 +28,18 @@ extern color_t const * const oldColor;
 class Color {
     friend Color operator+(Color c1, Color c2);
     friend Color operator*(Color c1, uint8_t k);
+
+  public:
+    /**
+     * @brief Color Structure
+     * @details Defines red/green/blue and white color channel values
+     */
+    typedef struct {
+        uint8_t red;
+        uint8_t green;
+        uint8_t blue;
+        uint8_t white;
+    } color_t;
 
   private:
     color_t _color; ///< Color data
@@ -130,52 +125,101 @@ class Color {
         raw[3] = _color.white;
     }
 
-    // Color operator*(uint8_t k);
-    // Color operator+(Color * c2);
+    /**
+     * @brief Assign overload
+     */
     Color operator=(Color const *c2) {
         SetColor(c2->_color);
         return *this;
     }
 
+    /**
+     * @brief Checks if both color values are equal
+     */
     bool operator==(Color const &c2) {
         return ((_color.blue == c2._color.blue) && (_color.green == c2._color.green) && (_color.red == c2._color.red) &&
                 (_color.white == c2._color.white));
     }
+
+    /**
+     * @brief Checks if both color values are not equal
+     */
     bool operator!=(Color const &c2) {
         return ((_color.blue != c2._color.blue) || (_color.green != c2._color.green) || (_color.red != c2._color.red) ||
                 (_color.white != c2._color.white));
     }
 };
 
+/**
+ * @brief Scale color by scaling each color-channel by given factor
+ * @param c1 Color
+ * @param k Scale-factor uint8_t.Max is fullscale
+ * @return Scaled Color
+ */
 Color operator*(Color c1, uint8_t k);
+
+/**
+ * @brief Overlaying to colors my adding each color channel value
+ * @note Colors channels should not overlap since there is no automatic ratio correction.
+ *    Use *-Operator first in order to scale each color value a a way that no overflow can occur
+ * @param c1 Color 1
+ * @param c2 Color 2
+ * @return Overlayed Color
+ */
 Color operator+(Color c1, Color c2);
 
+/// Pointer constant to "no color"
+extern Color::color_t const *const noColor;
+/// Pointer constant to "no color"
+extern Color::color_t const *const oldColor;
+
 /// Null color object
-extern const Color & noColorObj; 
+extern const Color &noColorObj;
 /// Used old color agreement (if no color pointer)
-extern const Color & oldColorObj; 
+extern const Color &oldColorObj;
 
-extern const color_t color_Black;
-extern const color_t color_Red;
-extern const color_t color_Green;
-extern const color_t color_Blue;
-extern const color_t color_Magenta;
-extern const color_t color_Cyan;
-extern const color_t color_Yellow;
-extern const color_t color_White;
-extern const color_t color_WarmWhite;
-extern const color_t color_ColdWhite;
-extern const color_t color_SpookyWhite;
+/// Black color structure constant
+extern const Color::color_t color_Black;
+/// Red color structure constant
+extern const Color::color_t color_Red;
+/// Green color structure constant
+extern const Color::color_t color_Green;
+/// Blue color structure constant
+extern const Color::color_t color_Blue;
+/// Magenta color structure constant
+extern const Color::color_t color_Magenta;
+/// Cyan color structure constant
+extern const Color::color_t color_Cyan;
+/// Yellow color structure constant
+extern const Color::color_t color_Yellow;
+/// White color structure constant
+extern const Color::color_t color_White;
+/// Warm white color structure constant (with higher red channel value)
+extern const Color::color_t color_WarmWhite;
+/// Black color structure constant (with higher blue channel value)
+extern const Color::color_t color_ColdWhite;
+/// Black color structure constant (with higher green channel value)
+extern const Color::color_t color_SpookyWhite;
 
-// @todo this might be useless
+/// Black color object constant
 extern const Color CBlack;
+/// Red color object constant
 extern const Color CRed;
+/// Green color object constant
 extern const Color CGreen;
+/// Blue color object constant
 extern const Color CBlue;
+/// Magenta color object constant
 extern const Color CMagenta;
+/// Cyan color object constant
 extern const Color CCyan;
+/// Yellow color object constant
 extern const Color CYellow;
+/// White color object constant
 extern const Color CWhite;
+/// Warm white color object constant (with higher red channel value)
 extern const Color CWarmWhite;
+/// Black color object constant (with higher green channel value)
 extern const Color CColdWhite;
+/// Black color object constant (with higher blue channel value)
 extern const Color CSpookyWhite;

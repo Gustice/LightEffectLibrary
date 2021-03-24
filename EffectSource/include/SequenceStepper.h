@@ -10,32 +10,89 @@
  */
 #pragma once
 
-#include "Color.h"
 #include "Basics.h"
+#include "Color.h"
 #include <stdint.h>
 
 namespace Effect {
 
+/**
+ * @brief Effect Sequencer State Machines Class
+ * @details Maintains State-Machines, Processes effect-switching, and invokes generation
+ *  of raw data stream for LEDs.
+ *      \li If effect scenarios are changed a crossfading is executed
+ *      \li Rawdatastream for each Color object is generated
+ */
 class SequenceSM {
   public:
     /**
      * @brief Construct a new Effect State Machine object
      * @param templateLength Length of waveforms that are used to display
+     * @param targetCount Count of target LEDs
      */
     SequenceSM(uint16_t const templateLength, uint8_t targetCount) : SequenceSM(templateLength, targetCount, 0, 0){};
+
+    /**
+     * @brief Destroy the Effect State Machine
+     */
     ~SequenceSM();
 
+    /**
+     * @brief Construct a new Effect State Machine object
+     * @param templateLength Length of waveforms that are used to display
+     * @param targetCount Count of target LEDs
+     * @param intensity Idle intensity for effect. Use nullptr to start with default intensity
+     * @param crossFade Steps count for cross fade
+     */
     SequenceSM(uint16_t const templateLength, uint8_t targetCount, uint8_t const intensity, uint8_t const crossFade);
     /// @todo Configuration could be given by structure
 
-    void SetEffect(const Sequence *sequence, color_t const *startColor = noColor, uint8_t initialDelay = 0);
-    void SetEffect(const Sequence *sequence, color_t const *startColor, const uint8_t *intens,
+    /**
+     * @brief Set the Effect object
+     *
+     * @param sequence reference to sequence that has to be processed next
+     * @param startColor Start color. Use noColor to start with default color
+     * @param initialDelay Number of steps that are waited before effect is started
+     */
+    void SetEffect(const Sequence *sequence, Color::color_t const *startColor = noColor, uint8_t initialDelay = 0);
+
+    /**
+     * @brief Set the Effect object
+     *
+     * @param sequence reference to sequence that has to be processed next
+     * @param startColor Start color. Use noColor to start with default color
+     * @param intens Idle intensity for effect. Use NULL to start with default intensity
+     * @param delayedStart Number of steps that are waited before effect is started
+     */
+    void SetEffect(const Sequence *sequence, Color::color_t const *startColor, const uint8_t *intens,
                    const uint8_t delayedStart);
 
+    /**
+     * @brief Execute step of state machine
+     * @details Each tick the tick variable is decremented. After the limit is reached,
+     *  the current macro line is either repeated or the next macro line is started (with
+     *  an optional color change).\n
+     * If the color is changed by switching the macro line, a dissolve counterr is concurrently
+     *  triggered (see \ref GetDissolveRatio). This counter can be used to cross fade between
+     *  different colors.
+     *
+     * @note Tick must be called regularly. For standard light applications all 40 ms seems to be
+     *  a convenient values.
+     *
+     * @return Color * Reference to color container
+     */
     virtual Color *Tick(void);
-    uint8_t        GetDissolveRatio(void);
 
+    /**
+     * @brief Get the Dissolve for intermediate crossfade between Effect parts
+     * @return uint8_t current scaling
+     */
+    uint8_t GetDissolveRatio(void);
+
+    /// Length of waveforms that are used to display
     const size_t _templateLength;
+
+    /// Count of target LEDs
     const size_t _targetCount;
 
     /**
@@ -86,16 +143,23 @@ class SequenceSM {
     /// Currently indexed Effect-part
     Sequence const *_p_effMac;
 
+    /// Reference to calculated color
     Color *_outputColor; /// @todo !!
 
-    // Color& (*apF_Effects)(SequenceSM * SM);
+    /// Execute Blank-Effect
     void UpdateBlank();
+    /// Execute Idle-Effect
     void UpdateIdle();
+    /// Execute Freeze-Effect
     void UpdateFreeze();
+    /// Execute Wave-Effect
     void UpdateWave();
+    /// Execute ReverseWave-Effect
     void UpdateRevWave();
+    /// Execute Flicker-Effect
     void UpdateFlicker();
 
+    /// Apply calculated color to all Elements
     void ApplyColorToAllElements(Color &color);
 
     /// Last color
@@ -117,8 +181,13 @@ class SequenceSM {
     void SetIndexes(void);
 };
 
+/// Sparkle effect. Similar to flicker but with low key nose with fewer spikes
 Color *LightSparkleSequence(SequenceSM *obj, Color *colors, size_t len);
+
+/// Spipe Effect for tow LEDs. One LED is moved forward. The other is moved backwards
 Color *LightSwipeSequence(SequenceSM *obj, Color *colors, size_t len);
+
+/// Rotating a wave accross Targets
 Color *LightWaveSequence(SequenceSM *obj, Color *colors, size_t len);
 
 } // namespace Effect

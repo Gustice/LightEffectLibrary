@@ -3,6 +3,17 @@ import pandas as pd
 import matplotlib.pyplot as plt
 import seaborn as sns
 
+
+dfm1 = pd.read_csv('Tests/Output/BuildInMacros.csv')
+plt.plot(dfm1['cycle'], dfm1.iloc[:,1], label=dfm1.columns[1])
+plt.plot(dfm1['cycle'], dfm1.iloc[:,2], label=dfm1.columns[2])
+plt.plot(dfm1['cycle'], dfm1.iloc[:,3], label=dfm1.columns[3])
+plt.plot(dfm1['cycle'], dfm1.iloc[:,4], label=dfm1.columns[4])
+plt.plot(dfm1['cycle'], dfm1.iloc[:,5], label=dfm1.columns[5])
+plt.title('Predefined macros')
+plt.legend()
+plt.show()
+
 dfm1 = pd.read_csv('Tests/Output/cBuildInMacros.csv')
 plt.plot(dfm1['cycle'], dfm1.iloc[:,1], label=dfm1.columns[1])
 plt.plot(dfm1['cycle'], dfm1.iloc[:,2], label=dfm1.columns[2])

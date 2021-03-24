@@ -31,25 +31,13 @@ SequenceSM::SequenceSM(uint16_t const templateLength, uint8_t targetCount, uint8
     _outputColor = new Color[_targetCount];
 }
 
-/**
- * @brief Destroy the Effect State Machine
- *
- */
 SequenceSM::~SequenceSM() { delete[] _outputColor; }
 
-void SequenceSM::SetEffect(const Sequence *sequence, color_t const *startColor, uint8_t initialDelay) {
+void SequenceSM::SetEffect(const Sequence *sequence, Color::color_t const *startColor, uint8_t initialDelay) {
     SetEffect(sequence, startColor, &SMIParams.idleIntens, initialDelay);
 }
 
-/**
- * @brief Sets the effect state machine to process given effect macro
- *
- * @param sequence
- * @param startColor
- * @param delayedStart
- * @param intens
- */
-void SequenceSM::SetEffect(const Sequence *sequence, color_t const *startColor, const uint8_t *intens,
+void SequenceSM::SetEffect(const Sequence *sequence, Color::color_t const *startColor, const uint8_t *intens,
                            const uint8_t delayedStart) {
     if (startColor != noColor) {
         _curentColor.SetColor(*startColor);
@@ -78,20 +66,6 @@ void SequenceSM::SetEffect(const Sequence *sequence, color_t const *startColor, 
     this->SetIndexes();
 }
 
-/**
- * @brief Executes one tick of the statemachine
- * @details Each tick the tick variable is decremented. After the limit is reached,
- *  the current macro line is either repeated or the next macro line is started (with
- *  an optional color change).\n
- * If the color is changed by switching the macro line, a dissolve counterr is concurrently
- *  triggered (see \ref GetDissolveRatio). This counter can be used to cross fade between
- *  different colors.
- *
- * @note Tick must be called regularly. For standard light applications all 40 ms seems to be
- *  a convenient values.
- *
- * @return uint8_t
- */
 Color *SequenceSM::Tick(void) {
     // tick-increment
     if (--SMPValues.tick == 0) {

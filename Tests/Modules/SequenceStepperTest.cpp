@@ -18,8 +18,8 @@ static bool CheckColor(Color c1, const Color c2) {
     if (c1 == c2)
         return true;
 
-    color_t v1 = c1.GetColor();
-    color_t v2 = c2.GetColor();
+    Color::color_t v1 = c1.GetColor();
+    Color::color_t v2 = c2.GetColor();
     INFO(printf(" rgbw: 0x%02x 0x%02x 0x%02x 0x%02x != 0x%02x 0x%02x 0x%02x 0x%02x\n", v1.red, v1.green, v1.blue,
                 v1.white, v2.red, v2.green, v2.blue, v2.white));
     INFO(printf(" rgbw: %d %d %d %d != %d %d %d %d\n", v1.red, v1.green, v1.blue, v1.white, v2.red, v2.green, v2.blue,

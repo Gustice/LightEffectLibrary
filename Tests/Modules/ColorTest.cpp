@@ -6,7 +6,7 @@
 
 TEST_CASE("Constructing emtpy Color Object", "[Color, Constructor]") {
     Color     dut  = Color();
-    const int size = sizeof(color_t);
+    const int size = sizeof(Color::color_t);
     uint8_t   stream[size];
     dut.WriteByteStreamTo(stream);
 
@@ -15,8 +15,8 @@ TEST_CASE("Constructing emtpy Color Object", "[Color, Constructor]") {
     }
 }
 
-bool ColorIsEqualToStream(Color &C, const uint8_t s[sizeof(color_t)]) {
-    color_t c = C.GetColor();
+bool ColorIsEqualToStream(Color &C, const uint8_t s[sizeof(Color::color_t)]) {
+    Color::color_t c = C.GetColor();
 
     if (((c.red == s[0]) && (c.green == s[1]) && (c.blue == s[2]) && (c.white == s[3])))
         return true;
@@ -28,13 +28,13 @@ bool ColorIsEqualToStream(Color &C, const uint8_t s[sizeof(color_t)]) {
     return false;
 }
 
-static void DivideByPowOfN(uint8_t stream[sizeof(color_t)], int n) {
-    for (size_t i = 0; i < sizeof(color_t); i++) {
+static void DivideByPowOfN(uint8_t stream[sizeof(Color::color_t)], int n) {
+    for (size_t i = 0; i < sizeof(Color::color_t); i++) {
         stream[i] = (stream[i] >> n);
     }
 }
 
-const int size = sizeof(color_t);
+const int size = sizeof(Color::color_t);
 
 TEST_CASE("Constructing Color Object by Parameter", "[Color, Constructor]") {
     uint8_t setStream[size] = {0x12, 0x34, 0x56, 0x78};
@@ -45,7 +45,7 @@ TEST_CASE("Constructing Color Object by Parameter", "[Color, Constructor]") {
 
 TEST_CASE("Constructing Color Object by structure", "[Color, Constructor]") {
     uint8_t setStream[size] = {0x23, 0x45, 0x67, 0x89};
-    color_t setColor;
+    Color::color_t setColor;
     setColor.red   = setStream[0];
     setColor.green = setStream[1];
     setColor.blue  = setStream[2];
@@ -65,7 +65,7 @@ TEST_CASE("White Channel stays zero if white parameter is omitted", "[Color, Con
 
 TEST_CASE("Conservate format of WriteByteStreamTo", "[Color, Format]") {
     uint8_t setStream[size] = {0x12, 0x34, 0x56, 0x78};
-    color_t setColor;
+    Color::color_t setColor;
     setColor.red   = setStream[0];
     setColor.green = setStream[1];
     setColor.blue  = setStream[2];
@@ -76,7 +76,7 @@ TEST_CASE("Conservate format of WriteByteStreamTo", "[Color, Format]") {
     dut.WriteByteStreamTo(stream);
     REQUIRE(ColorIsEqualToStream(dut, setStream));
 
-    color_t c = dut.GetColor();
+    Color::color_t c = dut.GetColor();
     dut.WriteByteStreamTo(stream);
     REQUIRE(c.red == stream[2]);
     REQUIRE(c.green == stream[1]);
@@ -101,7 +101,7 @@ TEST_CASE("Setting Color by Parameter or by Structure", "[Color, Getter]") {
     }
     SECTION("Setting Color Object by Structure") {
         uint8_t setStream[size] = {0x23, 0x45, 0x67, 0x89};
-        color_t setColor;
+        Color::color_t setColor;
         setColor.red   = setStream[0];
         setColor.green = setStream[1];
         setColor.blue  = setStream[2];
@@ -117,13 +117,13 @@ TEST_CASE("Using Add-Operator", "[Color, Operator]") {
     uint8_t setStream2[size]  = {0x98, 0x76, 0x54, 0x32};
     uint8_t checkStream[size] = {0xAA, 0xAA, 0xAA, 0xAA};
 
-    color_t setColor1;
+    Color::color_t setColor1;
     setColor1.red   = setStream1[0];
     setColor1.green = setStream1[1];
     setColor1.blue  = setStream1[2];
     setColor1.white = setStream1[3];
 
-    color_t setColor2;
+    Color::color_t setColor2;
     setColor2.red   = setStream2[0];
     setColor2.green = setStream2[1];
     setColor2.blue  = setStream2[2];
@@ -152,12 +152,12 @@ TEST_CASE("Using Mix-Method", "[Color, Method]") {
 
 
 TEST_CASE("Using Multiply-Operator with odd data", "[Color, Operator]") {
-    const int     size            = sizeof(color_t);
+    const int     size            = sizeof(Color::color_t);
     const uint8_t setStream[size] = {0xFF, 0x3F, 0x0F, 0x3};
     uint8_t       checkStream[size];
     memcpy(checkStream, setStream, sizeof(setStream));
 
-    color_t setColor;
+    Color::color_t setColor;
     setColor.red   = setStream[0];
     setColor.green = setStream[1];
     setColor.blue  = setStream[2];
@@ -203,12 +203,12 @@ TEST_CASE("Using Multiply-Operator with odd data", "[Color, Operator]") {
 }
 
 TEST_CASE("Using Multiply-Operator with even data", "[Color, Operator]") {
-    const int     size            = sizeof(color_t);
+    const int     size            = sizeof(Color::color_t);
     const uint8_t setStream[size] = {0xFC, 0x3C, 0x0C, 0x4};
     uint8_t       checkStream[size];
     memcpy(checkStream, setStream, sizeof(setStream));
 
-    color_t setColor;
+    Color::color_t setColor;
     setColor.red   = setStream[0];
     setColor.green = setStream[1];
     setColor.blue  = setStream[2];
@@ -262,18 +262,18 @@ TEST_CASE("Using Multiply-Operator with even data", "[Color, Operator]") {
 }
 
 TEST_CASE("Object remains untouched after Add-Operator is used", "[Color, Operator]") {
-    const int size              = sizeof(color_t);
+    const int size              = sizeof(Color::color_t);
     uint8_t   setStream1[size]  = {0x12, 0x34, 0x56, 0x78};
     uint8_t   setStream2[size]  = {0x98, 0x76, 0x54, 0x32};
     uint8_t   checkStream[size] = {0xAA, 0xAA, 0xAA, 0xAA};
 
-    color_t setColor1;
+    Color::color_t setColor1;
     setColor1.red   = setStream1[0];
     setColor1.green = setStream1[1];
     setColor1.blue  = setStream1[2];
     setColor1.white = setStream1[3];
 
-    color_t setColor2;
+    Color::color_t setColor2;
     setColor2.red   = setStream2[0];
     setColor2.green = setStream2[1];
     setColor2.blue  = setStream2[2];
@@ -292,7 +292,7 @@ TEST_CASE("Object remains untouched after Multiply-Operator is used", "[Color, O
     const uint8_t setStream[size] = {0xFF, 0x3F, 0x0F, 0x3};
     uint8_t       checkStream[size];
 
-    color_t setColor;
+    Color::color_t setColor;
     setColor.red   = setStream[0];
     setColor.green = setStream[1];
     setColor.blue  = setStream[2];
@@ -310,7 +310,7 @@ TEST_CASE("Object remains untouched after Multiply-Operator is used", "[Color, O
 
 TEST_CASE("Testsing usage of predefined Colors", "[Color]") {
     Color   dut = CWhite;
-    color_t c    = dut.GetColor();
+    Color::color_t c    = dut.GetColor();
 
     uint8_t check[size] = {0x55, 0x55, 0x55, 0x00}; // this is white
     REQUIRE(ColorIsEqualToStream(dut, check));
@@ -318,7 +318,7 @@ TEST_CASE("Testsing usage of predefined Colors", "[Color]") {
 
 
 TEST_CASE("Comparing Color", "[Color]") {
-    color_t cDef = {1,2,3,4};
+    Color::color_t cDef = {1,2,3,4};
     Color c1(cDef);
     Color c2(1,2,3,4);
     CHECK ( (c1 == c2 ));

@@ -6,7 +6,6 @@
  * @date 2019-10-03
  *
  * @copyright Copyright (c) 2019
- *
  */
 
 #include "Processor.h"
@@ -32,7 +31,7 @@ EffectProcessor::~EffectProcessor(){
     delete _EffPV_old;
 }
 
-void EffectProcessor::SetEffect(Macro_t *sequence, color_t const *sColor, uint8_t intens) {
+void EffectProcessor::SetEffect(Macro_t *sequence, Color::color_t const *sColor, uint8_t intens) {
     _fadingCnt = _fadeSteps;
 
     EffectSM * pEsm = _EffPV_old;

@@ -23,18 +23,12 @@ Macro_t delayPrequel[] = {
 };
 
 /// Function table to processing Functions
-EffectSM::pEffPrc *const EffectSM::apF_Processors[6] = {
+EffectSM::pEffPrc *const EffectSM::apF_Processors[7] = {
     EffectSM::UpdateBlank, EffectSM::UpdateIdle,    EffectSM::UpdateFreeze,
-    EffectSM::UpdateWave,  EffectSM::UpdateRevWave, EffectSM::UpdateFlicker,
+    EffectSM::UpdateWave,  EffectSM::UpdateRevWave, EffectSM::UpdateFlicker, 
+    EffectSM::UpdateFreeze // @todo custom effect not in use here
 };
 
-/**
- * @brief Construct a new Effect State Machine object
- *
- * @param templateLength
- * @param intensity
- * @param crossFade @todo not implemented yet
- */
 EffectSM::EffectSM(uint16_t const templateLength, uint8_t const intensity, uint8_t const crossFade) {
     SMIParams.templateLength = templateLength;
     SMIParams.idleIntens     = intensity;
@@ -45,25 +39,21 @@ EffectSM::EffectSM(uint16_t const templateLength, uint8_t const intensity, uint8
     _outputColor = new Color;
 }
 
-/**
- * @brief Destroy the Effect State Machine
- *
- */
 EffectSM::~EffectSM() { delete _outputColor; }
 
-void EffectSM::SetEffect(Macro_t *sequence, color_t const *startColor, uint8_t initialDelay) {
+void EffectSM::SetEffect(Macro_t *sequence, Color::color_t const *startColor, uint8_t initialDelay) {
     SetEffect(sequence, startColor, &SMIParams.idleIntens, initialDelay);
 }
 
 /**
- * @brief Sets the effect state machine to process given effect macro
+ * @brief 
  *
  * @param sequence
  * @param startColor
  * @param delayedStart
  * @param intens
  */
-void EffectSM::SetEffect(Macro_t *sequence, color_t const *startColor, const uint8_t *intens,
+void EffectSM::SetEffect(Macro_t *sequence, Color::color_t const *startColor, const uint8_t *intens,
                          const uint8_t delayedStart) {
     if (startColor != noColor) {
         _curentColor.SetColor(*startColor);
@@ -92,20 +82,6 @@ void EffectSM::SetEffect(Macro_t *sequence, color_t const *startColor, const uin
     this->SetIndexes();
 }
 
-/**
- * @brief Executes one tick of the statemachine
- * @details Each tick the tick variable is decremented. After the limit is reached,
- *  the current macro line is either repeated or the next macro line is started (with
- *  an optional color change).\n
- * If the color is changed by switching the macro line, a dissolve counterr is concurrently
- *  triggered (see \ref GetDissolveRatio). This counter can be used to cross fade between
- *  different colors.
- *
- * @note Tick must be called regularly. For standard light applications all 40 ms seems to be
- *  a convenient values.
- *
- * @return uint8_t
- */
 Color const *EffectSM::Tick(void) {
     // tick-increment
     if (--SMPValues.tick == 0) {
@@ -135,19 +111,12 @@ Color const *EffectSM::Tick(void) {
     return apF_Processors[_p_effMac->state](this);
 }
 
-/**
- * @brief Sets Waveform index according du desired duration, waveform-length and current step
- */
 void EffectSM::SetIndexes(void) {
     SMPValues.waveStep = ((SMIParams.templateLength) << 8);
     SMPValues.waveStep /= _p_effMac->duration;
     SMPValues.waveIdx = (uint16_t)(0 - SMPValues.waveStep);
 }
 
-/**
- * @brief Returns fading ramp in cases the color were switched
- * @return uint8_t
- */
 /// @todo it seems not te be very clever to delegate this on higher level
 uint8_t EffectSM::GetDissolveRatio(void) {
     if (SMIParams.fadeSteps == 0)

@@ -4,9 +4,9 @@
  * @brief Effect-Processor-Class for processing effect scenarios and switching actions
  * @version 0.1
  * @date 2021-03-12
- * 
+ *
  * @copyright Copyright (c) 2021
- * 
+ *
  */
 #pragma once
 
@@ -14,28 +14,68 @@
 #include "SequenceStepper.h"
 #include <stdint.h>
 
-
 namespace Effect {
 
-
+/**
+ * @brief EffectSequencer Class
+ * @details Maintains State-Machines, Processes effect-switching, and invokes generation
+ *  of raw data stream for LEDs.
+ *      \li If effect scenarios are changed a crossfading is executed
+ *      \li Rawdatastream for each Color object is generated
+ */
 class EffectSequencer {
   public:
+    /**
+     * @brief Construct a new Effect Sequencer object
+     * @param templateLength Length of waveform template
+     * @param targetCount Count of LEDs to maintain
+     * @param fadeSteps Steps count for cross fade
+     */
     EffectSequencer(uint16_t const templateLength, uint8_t targetCount, uint8_t const fadeSteps);
+
+    /**
+     * @brief Destroy the Effect Sequencer object
+     */
     ~EffectSequencer();
-    void SetEffect(Sequence *sequence, color_t const *sColor = noColor, uint8_t intens = gu8_idleIntensity);
-    Color const * Tick(void);
+
+    /**
+     * @brief Set the Effect sequence
+     * @param sequence reference to sequence that has to be processed next
+     * @param sColor Start color. Use noColor to start with default color
+     * @param intens Idle intensity for effect. Use NULL to start with default intensity
+     */
+    void SetEffect(Sequence *sequence, Color::color_t const *sColor = noColor, uint8_t intens = gu8_idleIntensity);
+
+    /**
+     * @brief Execute step of effect sequencer
+     * @return Reference to color result
+     */
+    Color const *Tick(void);
 
   private:
-    uint8_t _colorSize;
-    Color * _pColor;
-    Color * _pColorOld;
+    /// Current color
+    Color *_pColor;
+    /// Last applied color (used to crossfade in intermediate states)
+    Color *_pColorOld;
+    /// Defines length of cross-fading
     uint8_t _fadeSteps;
+    /// Current count of cross-fading effect
     uint8_t _fadingCnt;
+    /// Target count
     const uint8_t _targetCount;
-    SequenceSM * _EffPV;
-    SequenceSM * _EffPV_old;
+    /// Processing of current effect
+    SequenceSM *_EffPV;
+    /// Processing of last effect (Last effect ist shortly kept alive to conduct cross fading)
+    SequenceSM *_EffPV_old;
 
+    /**
+     * @brief Cross-fade current and last effect
+     * @param k scaling factor for current cross-fade
+     * @return Color* Reference to color result
+     */
     Color *crossFadeColors(uint8_t k);
+
+    /// Constructor for inherited classes
     EffectSequencer();
 };
 

@@ -1,10 +1,15 @@
+/**
+ * @file EffectMacro.cpp
+ * @author Gustice
+ * @brief Predefined Macros
+ * @version 0.1
+ * @date 2021-03-23
+ * 
+ * @copyright Copyright (c) 2021
+ */
 
 #include "Macro.h"
 #include "Waveforms.h"
-
-/************************************************************************/
-/* Predefined effects                                                   */
-/************************************************************************/
 
 namespace Effect {
 

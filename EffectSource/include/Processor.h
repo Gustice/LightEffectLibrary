@@ -16,7 +16,7 @@
 
 namespace Effect {
 
-extern const uint8_t gu8_idleIntensity; // @todo this is bad
+extern const uint8_t gu8_idleIntensity; // @todo this is 11
 
 /**
  * @brief EffectProcessor Class
@@ -27,21 +27,56 @@ extern const uint8_t gu8_idleIntensity; // @todo this is bad
  */
 class EffectProcessor {
   public:
+    /**
+     * @brief Constructor
+     * @param templateLength Length of waveform template
+     * @param fadeSteps Steps count for cross fade
+     */
     EffectProcessor(uint16_t const templateLength, uint8_t const fadeSteps);
+
+    /**
+     * @brief Destroy the Effect Processor object
+     */
     ~EffectProcessor();
-    void SetEffect(Macro_t *sequence, color_t const *sColor = noColor, uint8_t intens = gu8_idleIntensity);
-    Color const * Tick(void);
+
+    /**
+     * @brief Set next effect sequence
+     * @param sequence reference to sequence that has to be processed next
+     * @param sColor Start color. Use noColor to start with default color
+     * @param intens Idle intensity for effect. Use NULL to start with default intensity
+     */
+    void SetEffect(Macro_t *sequence, Color::color_t const *sColor = noColor, uint8_t intens = gu8_idleIntensity);
+
+    /**
+     * @brief Execute step of effect processor
+     * @return Reference to color result
+     */
+    Color const *Tick(void);
 
   private:
+    /// Target count
     uint8_t _colorSize;
-    Color   _pColor;
-    Color   _pColorOld;
+    /// Current color
+    Color _pColor;
+    /// Last applied color (used to crossfade in intermediate states)
+    Color _pColorOld;
+    /// Defines length of cross-fading
     uint8_t _fadeSteps;
+    /// Current count of cross-fading effect
     uint8_t _fadingCnt;
-    EffectSM * _EffPV;
-    EffectSM * _EffPV_old;
+    /// Processing of current effect
+    EffectSM *_EffPV;
+    /// Processing of last effect (Last effect ist shortly kept alive to conduct cross fading)
+    EffectSM *_EffPV_old;
 
+    /**
+     * @brief Cross-fade current and last effect
+     * @param k scaling factor for current cross-fade
+     * @return Color* Reference to color result
+     */
     Color *crossFadeColors(uint8_t k);
+
+    /// Constructor for inherited classes
     EffectProcessor();
 };
 

@@ -14,8 +14,8 @@ static bool CheckColor(Color c1, Color c2) {
     if (c1 == c2)
         return true;
 
-    color_t v1 = c1.GetColor();
-    color_t v2 = c2.GetColor();
+    Color::color_t v1 = c1.GetColor();
+    Color::color_t v2 = c2.GetColor();
     INFO(printf(" rgbw: 0x%02x 0x%02x 0x%02x 0x%02x != 0x%02x 0x%02x 0x%02x 0x%02x\n", v1.red, v1.green, v1.blue,
                 v1.white, v2.red, v2.green, v2.blue, v2.white));
     INFO(printf(" rgbw: %d %d %d %d != %d %d %d %d\n", v1.red, v1.green, v1.blue, v1.white, v2.red, v2.green, v2.blue,
@@ -171,7 +171,7 @@ TEST_CASE("EffectSequencer plots for manual evaluation", "[EffectSequencer, Cons
 
     int i = 0;
     for (; i < 128; i++) {
-        color_t c = dut.Tick()->GetColor();
+        Color::color_t c = dut.Tick()->GetColor();
         sprintf(stream, "%3d,%3.2f,%3.2f,%3.2f,%3.2f,%3.2f", i, (float)c.red / (4 * 0xFF), (float)c.green / (4 * 0xFF),
                 (float)c.blue / (4 * 0xFF), (float)c.white / (4 * 0xFF),
                 (float)((uint16_t)c.red + c.green + c.blue) / (4 * 0xFF / 3));
@@ -180,7 +180,7 @@ TEST_CASE("EffectSequencer plots for manual evaluation", "[EffectSequencer, Cons
 
     dut.SetEffect(effDemo2, noColor, 0x55);
     for (; i < (128 + 64); i++) {
-        color_t c = dut.Tick()->GetColor();
+        Color::color_t c = dut.Tick()->GetColor();
         sprintf(stream, "%3d,%3.2f,%3.2f,%3.2f,%3.2f,%3.2f", i, (float)c.red / (4 * 0xFF), (float)c.green / (4 * 0xFF),
                 (float)c.blue / (4 * 0xFF), (float)c.white / (4 * 0xFF),
                 (float)((uint16_t)c.red + c.green + c.blue) / (4 * 0xFF / 3));
