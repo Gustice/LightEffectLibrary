@@ -2,7 +2,7 @@
  * @file SequenceStepper.h
  * @author Gustice
  * @brief Effect-State-Machine-Class for processing Effect Macros
- * @version 0.1
+ * @version 0.6
  * @date 2021-03-12
  *
  * @copyright Copyright (c) 2021

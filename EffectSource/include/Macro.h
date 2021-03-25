@@ -2,7 +2,7 @@
  * @file Macro.h
  * @author Gustice
  * @brief Predefined effect macros 
- * @version 0.1
+ 61
  * @date 2021-03-21
  * 
  * @copyright Copyright (c) 2021

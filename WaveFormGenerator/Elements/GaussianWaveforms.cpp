@@ -12,7 +12,7 @@
  * @note: Besides the cpp template file also plotfiles are generated that can be 
  *  visualized by PlotOutput.plt Plotscript (Gnuplot must be installed)
  * 
- * @version 0.1
+ * @version 0.6
  * @date 2019-10-15
  * 
  * @copyright Copyright (c) 2019

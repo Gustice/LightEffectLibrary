@@ -4,7 +4,7 @@
  * @brief   Color-Class and color Definitions
  * @details Defintion of Color Class with Predefined Colors as static ressource
  *
- * @version 0.1
+ * @version 0.6
  * @date 2019-09-30
  *
  * @copyright Copyright (c) 2019

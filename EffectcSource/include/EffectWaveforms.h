@@ -2,7 +2,7 @@
  * @file EffectWaveforms.h
  * @author Gustice
  * @brief Predefined Waveforms that can be put together to a complex Waveform
- * @version 0.1
+ * @version 0.6
  * @date 2019-10-01
  *
  * @copyright Copyright (c) 2019
