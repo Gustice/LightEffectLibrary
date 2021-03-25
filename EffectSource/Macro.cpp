@@ -2,7 +2,7 @@
  * @file EffectMacro.cpp
  * @author Gustice
  * @brief Predefined Macros
- * @version 0.1
+ * @version 0.6
  * @date 2021-03-23
  * 
  * @copyright Copyright (c) 2021

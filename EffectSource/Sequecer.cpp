@@ -2,7 +2,7 @@
  * @file Sequecer.cpp
  * @author Gustice
  * @brief Implementation of Effect-Sequencer-Class EffectSequencer.h
- * @version 0.1
+ * @version 0.6
  * @date 2021-03-23
  * 
  * @copyright Copyright (c) 2021

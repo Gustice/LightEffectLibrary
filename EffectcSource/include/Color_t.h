@@ -3,7 +3,7 @@
  * @author Gustice
  * @brief   Color-Class Definitions
   *
- * @version 0.1
+ * @version 0.6
  * @date 11.03.2021
  *
  * @copyright Copyright (c) 2021

@@ -2,7 +2,7 @@
  * @file EffectSequencer.h
  * @author Gustice
  * @brief Effect-Processor-Class for processing effect scenarios and switching actions
- * @version 0.1
+ * @version 0.6
  * @date 2021-03-12
  *
  * @copyright Copyright (c) 2021

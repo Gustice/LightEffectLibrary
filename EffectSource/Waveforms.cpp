@@ -2,7 +2,7 @@
  * @file Waveforms.cpp
  * @author Gustice
  * @brief Implementation of defined Waveforms
- * @version 0.1
+ * @version 0.6
  * @date 2019-10-01
  *
  * @copyright Copyright (c) 2019

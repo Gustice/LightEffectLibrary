@@ -2,7 +2,7 @@
  * @file Color.cpp
  * @author Gustice
  * @brief Implementation of Color-Class Color.h
- * @version 0.1
+ * @version 0.6
  * @date 2019-09-30
  *
  * @copyright Copyright (c) 2019

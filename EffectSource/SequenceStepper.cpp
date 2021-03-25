@@ -2,7 +2,7 @@
  * @file SequenceStepper.cpp
  * @author Gustice
  * @brief Implementation of Effect-State-Machine-Class SequenceStepper.h
- * @version 0.1
+ * @version 0.6
  * @date 2021-03-12
  *
  * @copyright Copyright (c) 2021

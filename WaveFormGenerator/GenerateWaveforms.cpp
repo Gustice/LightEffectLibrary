@@ -3,7 +3,7 @@
  * @author Gustice
  * @brief Generates Template-cpp-files with lookup-tables for waveform templates. 
  *  The waveforms are additionally outputted as data to be plotted with the Gnuplot plot-script.
- * @version 0.1
+ * @version 0.6
  * @date 2019-10-14
  * 
  * @copyright Copyright (c) 2019

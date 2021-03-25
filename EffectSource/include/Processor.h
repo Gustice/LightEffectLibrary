@@ -2,7 +2,7 @@
  * @file EffectProcessor.h
  * @author Gustice
  * @brief Effect-Processor-Class for processing effect scenarios and switching actions
- * @version 0.1
+ * @version 0.6
  * @date 2019-10-03
  *
  * @copyright Copyright (c) 2019
