@@ -5,66 +5,37 @@
     "version": "0.2.0",
     "configurations": [
         {
-            "name": "Python: Aktuelle Datei",
+            "name": "Python: CurrentFile",
             "type": "python",
             "request": "launch",
             "program": "${file}",
             "console": "integratedTerminal",
             "cwd": "${workspaceFolder}",
-            // "args": [ // Testcase: Compile Tests
-            //     "Tests,-In Source,-Ex Source\\SampleApp.cpp",
-            //     "-I Source -I Source\\Modules -I Tests\\Include",
-            // ]
             "args": [ // Testcase: Compile SampleApp
                 "Source",
                 "-I Source -I Source\\Modules",
             ]
-
         },
         {
-            "name": "Launch LEL Demo",
+            "name": "Debug project",
             "type": "cppdbg",
             "request": "launch",
-            "program": "${workspaceFolder}/SampleApp/LEL_Demo.exe",
+            "program": "${workspaceFolder}/build/Tests/tests.exe",
             "args": [],
             "stopAtEntry": false,
             "cwd": "${workspaceFolder}",
             "environment": [],
-            "externalConsole": true,
+            "externalConsole": true, // this somehow needs to be set true.
             "MIMode": "gdb",
-            "miDebuggerPath": "C:\\mingw\\bin\\gdb.exe",
+            "miDebuggerPath": "C:\\MinGW\\bin\\gdb.exe",
             "setupCommands": [
                 {
-                    "description": "Enable pretty-printing for gdb",
+                    "description": "Automatische Strukturierung und Einrückung für \"gdb\" aktivieren",
                     "text": "-enable-pretty-printing",
                     "ignoreFailures": true
                 }
             ],
-            // Gets sure source is compiled before debugging 
-            "preLaunchTask": "SampleApp: Build Project"
+            "preLaunchTask": "CMake: Build Project"
         },
-
-        {
-            "name": "Launch GraphPlotter",
-            "type": "cppdbg",
-            "request": "launch",
-            "program": "${workspaceFolder}/WaveFormGenerator/GenTemplates.exe",
-            "args": [],
-            "stopAtEntry": false,
-            "cwd": "${workspaceFolder}/WaveFormGenerator/Output",
-            "environment": [],
-            "externalConsole": true,
-            "MIMode": "gdb",
-            "miDebuggerPath": "C:\\mingw\\bin\\gdb.exe",
-            "setupCommands": [
-                {
-                    "description": "Enable pretty-printing for gdb",
-                    "text": "-enable-pretty-printing",
-                    "ignoreFailures": true
-                }
-            ],
-            // Gets sure source is compiled before debugging 
-            "preLaunchTask": "TemplateGraphs: Build GraphGenerator"
-        }
     ]
 }

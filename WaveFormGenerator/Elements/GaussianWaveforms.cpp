@@ -12,7 +12,7 @@
  * @note: Besides the cpp template file also plotfiles are generated that can be 
  *  visualized by PlotOutput.plt Plotscript (Gnuplot must be installed)
  * 
- * @version 0.1
+ * @version 0.6
  * @date 2019-10-15
  * 
  * @copyright Copyright (c) 2019
@@ -69,27 +69,27 @@ void PrintGaussianWaveForms2File(GW_Config_t config, ofstream &outputFile) {
 
     PrintSection("Safe offset Pulse");
     outputFile << endl;
-    outputFile << "/// Offset Pulse: Gaussian pulse from background illumination with full scale intensity" << endl;
+    outputFile << "// Offset Pulse: Gaussian pulse from background illumination with full scale intensity" << endl;
     PrintValues("gau8_offsetPulse", pulse, outputFile, true);
 
     PrintSection("Safe full Pulse");
     outputFile << endl;
-    outputFile << "/// Full Pulse: Gaussian pulse from dark to full scale intensity" << endl;
+    outputFile << "// Full Pulse: Gaussian pulse from dark to full scale intensity" << endl;
     PrintValues("gau8_fullPulse", fullPulse, outputFile, true);
 
     PrintSection("Safe init Pulse");
     outputFile << endl;
-    outputFile << "/// Init Slope: Gaussian slope from dark to background brightness" << endl;
+    outputFile << "// Init Slope: Gaussian slope from dark to background brightness" << endl;
     PrintValues("gau8_initSlope", initslope, outputFile);
 
     PrintSection("Safe offset Slope");
-    outputFile << "/// Offset Pulse: Gaussian slope from background illumination to full scale brightness" << endl;
+    outputFile << "// Offset Pulse: Gaussian slope from background illumination to full scale brightness" << endl;
     outputFile << endl;
     PrintValues("gau8_offsetSlope", slope, outputFile);
 
     PrintSection("Safe full Slope");
     outputFile << endl;
-    outputFile << "/// Full Slope: Gaussian slope from dark to full scale brightness" << endl;
+    outputFile << "// Full Slope: Gaussian slope from dark to full scale brightness" << endl;
     PrintValues("gau8_fullSlope", fullSlope, outputFile);
 
 
@@ -140,14 +140,14 @@ void PrintValues(string varName, vector<int> values, ofstream &outputFile, bool 
     char varNameArray[n + 1];
     strcpy(varNameArray, varName.c_str());
 
-    sprintf(sStream, "%s_Plot.txt", varNameArray);
+    sprintf(sStream, "%s_Plot.csv", varNameArray);
 
     ofstream plotFile;
     plotFile.open(sStream);
-    plotFile << "#Cycl value" << std::endl;
+    plotFile << "Cycl,value" << std::endl;
 
     for (int i = 0; i < values.size(); i++) {
-        plotFile << i << "   " << values[i] << std::endl;
+        plotFile << i << "," << values[i] << std::endl;
     }
 
     plotFile.close();

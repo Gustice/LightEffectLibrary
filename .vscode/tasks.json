@@ -3,180 +3,73 @@
     // for the documentation about the tasks.json format
     "version": "2.0.0",
     "tasks": [
-        { // Build Project to manually degbug the SampleApp
-            "label": "SampleApp: Build Project",
-            "type": "shell",
-            "command": "g++",
-            "args": [
-                "-g", 
-                "-o","SampleApp/LEL_Demo.exe",
-                "SampleApp/SampleApp.cpp",
-                "SampleApp/Elements/*.cpp",
-                "Source/Modules/*.cpp",
-                "-I", "Source/Modules", // Includes
-                // "-L", "C:/Program Files/LLVM/lib7libclang.lib",// Library
-            ],
-            // Optional: 
-            // Define this as default Task for Rund-Build-Task-Command -> Shortcut 
-            "group": {
-                "kind": "build",
-                "isDefault": true
-            },
-            // Displays compiler errors in problems output
-            "problemMatcher": "$gcc"
-        },
-        {
-            "label": "SampleApp: Plot Output Files",
-            "type": "shell",
-            "options": {
-                "cwd": "${workspaceFolder}"
-            },
-            "command": "gnuplot",
-            "args": [
-                "--persist",
-                "SampleApp/GnuPlot.plt"
-            ],
-            "problemMatcher": "$gcc", // Otherwise its annoys you with warnings
-        },
-
-        { // Build Project to manually degbug the SampleApp
-            "label": "TemplateGraphs: Build GraphGenerator",
-            "type": "shell",
-            "command": "g++",
-            "args": [
-                "-g", 
-                "-o","WaveFormGenerator/GenTemplates.exe",
-                "WaveFormGenerator/GenerateWaveforms.cpp",
-                "WaveFormGenerator/Elements/*.cpp",
-                //"-I", "Source/Modules", // Includes
-                // "-L", "C:/Program Files/LLVM/lib7libclang.lib",// Library
-            ],
-            // Optional: 
-            // Define this as default Task for Rund-Build-Task-Command -> Shortcut 
-            "group": {
-                "kind": "build",
-                "isDefault": true
-            },
-            // Displays compiler errors in problems output
-            "problemMatcher": "$gcc"
-        },
-
-        { // #1 PyBuild Source
-            "label": "PyBased: build all Source-Parts",
-            "type": "shell",
-            "command": "py ",
-            "args": [
-                "${workspaceFolder}\\CompileSubProject.py",
-                "Source",
-                "-I Source -I Source\\Modules",
-            ],
-            "problemMatcher": "$gcc", // Otherwise its annoys you with warnings
-        },
-        { // #2 PyBuild Test-All
-            "label": "PyBased: build all Test-Parts",
-            "type": "shell",
-            "command": "py ",
-            "args": [
-                "${workspaceFolder}\\CompileSubProject.py",
-                "Tests,-In Source,-Ex Source\\SampleApp.cpp",
-                "-I Source -I Source\\Modules -I Tests\\Include",
-            ],
-            "dependsOn": "PyBased: build all Source-Parts",
-            "problemMatcher": "$gcc", // Otherwise its annoys you with warnings
-        },
-        { // #3 @todo Make it work again
-            "label": "-notFunctional- PyBased: build Test-Parts without main",
-            "type": "shell",
-            "command": "py ",
-            "args": [
-                "${workspaceFolder}\\CompileSubProject.py",
-                "Tests,-In Source,-Ex Source\\SampleApp.cpp",
-                "-I Source -I Source\\Modules -I Tests\\Include",
-            ],
-            "dependsOn": "PyBased: build all Source-Parts",
-            "problemMatcher": "$gcc", // Otherwise its annoys you with warnings
-        },
-        { // #4 Execute Tests
-            "label": "PyBased: Execute Tests",
-            "type": "shell",
-            "command": "${workspaceFolder}\\Tests.exe",
-            // "args": [
-            //     "-h",  // for help output
-            //     "-l",  // to list all tests and results
-            // ],
-            "problemMatcher": "$gcc",
-            "dependsOn": [
-                "build Test-Parts without main"
-            ]
-        },
-
-        {
-            "label": "CMake: Create Configuration",
-            "type": "shell",
-            "options": { 
-                "cwd": "${workspaceFolder}/CMake"
-            },
-            "command": "CMake ..",
-            "problemMatcher": "$gcc", // Otherwise its annoys you with warnings
-        },
-        {
+        // NOTE: It works somehow better if the Configuration is initially startet manuallly
+        //          Hence this task is not needed
+        // { // This is better made by plugin integration
+        //     "label": "CMake: Create Configuration",
+        //     "type": "shell",
+        //     "options": { 
+        //         "cwd": "${workspaceFolder}/build"
+        //     },
+        //     "command": "CMake ..",
+        //     "problemMatcher": "$gcc", // Otherwise its annoys you with warnings
+        // },
+        { // Run Task "Cmake: Configure" once previosly
             "label": "CMake: Build Project",
             "type": "shell",
             "options": {
-                "cwd": "${workspaceFolder}/CMake"
+                "cwd": "${workspaceFolder}/build"
             },
             "command": "CMake --build .",
-            "dependsOn": "CMake: Create Configuration",
+            "group": {
+                "kind": "build",
+                "isDefault": true
+            },
             "problemMatcher": "$gcc", // Otherwise its annoys you with warnings
         },
         {
             "label": "CMake: Run Test Project",
             "type": "shell",
             "options": {
-                "cwd": "${workspaceFolder}/CMake"
+                "cwd": "${workspaceFolder}"
             },
-            "command": "Tests/Debug/tests.exe",
+            "command": "build/Tests/tests.exe",
             "dependsOn": "CMake: Build Project",
+            "group": {
+                "kind": "test",
+                "isDefault": true
+            },
             "problemMatcher": "$gcc", // Otherwise its annoys you with warnings
         },
-
-        
         {
-            "label": "Plot: Sample Output",
+            "label": "Py: Show Test-Plots",
             "type": "shell",
             "options": {
                 "cwd": "${workspaceFolder}"
             },
-            "command": "gnuplot",
-            "args": [
-                "--persist",
-                "Source/GnuPlot.plt"
-            ],
+            "command": "py Tests/Output/PrintOutputs.py",
+            "dependsOn": "CMake: Build Project",
             "problemMatcher": "$gcc", // Otherwise its annoys you with warnings
         },
         {
-            "label": "Plot: Template Graphs",
+            "label": "Create Waveforms",
             "type": "shell",
             "options": {
-                "cwd": "${workspaceFolder}/WaveFormGenerator"
+                "cwd": "${workspaceFolder}/WaveFormGenerator/Output"
             },
-            "command": "gnuplot",
-            "args": [
-                "--persist",
-                "PlotOutput.plt"
-            ],
-            "problemMatcher": "$gcc", // Otherwise its annoys you with warnings
+            "command": "${workspaceFolder}/build/WaveFormGenerator/WaveFormGen.exe",
+            "problemMatcher": []
         },
+
 
         {
             "label": "Doxygen: Create Docs",
             "type": "shell",
-            "command": "C:\\Program Files\\doxygen\\bin\\doxygen.exe",
+            "command": "C:\\Program Files\\doxygen\\bin\\dox ygen.exe",
             "args": [
                 "${workspaceFolder}\\Doc\\LEL.DoxyFile"
             ],
             "problemMatcher": "$gcc"
         },
-        
     ]
 }
