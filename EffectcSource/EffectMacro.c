@@ -23,17 +23,17 @@ EffMacro_t eff_StartIdle[] = {
 };
 
 EffMacro_t eff_Idle[] = {
-    {Light_Idle, (uint8_t *)0, 0xFF, 32, &cColdWhite, 0, 0},
+    {Light_Idle, (uint8_t *)0, 0xFF, 32, NO_COLOR, 0, 0},
 };
 
 EffMacro_t eff_StdPulse[] = {
-    {Light_Idle, (uint8_t *)0, 0, 32, &cColdWhite, 0, 1},
+    {Light_Idle, (uint8_t *)0, 0, 32, NO_COLOR, 0, 1},
     {Light_Wave, gau8_offsetPulse, 0xFF, 32, USEOLD_COLOR, 0, 2},
     {Light_Idle, (uint8_t *)0, 0, 32, USEOLD_COLOR, 0, 0},
 };
 
 EffMacro_t eff_NervousPulse[] = {
-    {Light_Idle, (uint8_t *)0, 0, 4, &cColdWhite, 0, 1},
+    {Light_Idle, (uint8_t *)0, 0, 4, NO_COLOR, 0, 1},
     {Light_Wave, gau8_offsetPulse, 0xFF, 8, USEOLD_COLOR, 0, 2},
     {Light_Idle, (uint8_t *)0, 0, 4, USEOLD_COLOR, 0, 0},
 };

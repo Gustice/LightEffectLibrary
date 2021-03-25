@@ -16,7 +16,7 @@ namespace Effect {
 // EffMacro_type
 // state            wave				FS		duration    color	            repeats     next
 Macro_t macDark[] = {
-    {Light_Idle, (uint8_t *)0, 0, 32, &color_Black, 0, 0},
+    {Light_Blank    , (uint8_t *)0, 0, 32, &color_Black, 0, 0},
 };
 
 Macro_t macStartIdle[] = {
@@ -25,17 +25,17 @@ Macro_t macStartIdle[] = {
 };
 
 Macro_t macIdle[] = {
-    {Light_Idle, (uint8_t *)0, 0xFF, 32, &color_ColdWhite, 0, 0},
+    {Light_Idle, (uint8_t *)0, 0xFF, 32, noColor, 0, 0},
 };
 
 Macro_t macStdPulse[] = {
-    {Light_Idle, (uint8_t *)0, 0, 32, &color_ColdWhite, 0, 1},
+    {Light_Idle, (uint8_t *)0, 0, 32, noColor, 0, 1},
     {Light_Wave, gau8_offsetPulse, 0xFF, 32, oldColor, 0, 2},
     {Light_Idle, (uint8_t *)0, 0, 32, oldColor, 0, 0},
 };
 
 Macro_t macNervousPulse[] = {
-    {Light_Idle, (uint8_t *)0, 0, 4, &color_ColdWhite, 0, 1},
+    {Light_Idle, (uint8_t *)0, 0, 4, noColor, 0, 1},
     {Light_Wave, gau8_offsetPulse, 0xFF, 8, oldColor, 0, 2},
     {Light_Idle, (uint8_t *)0, 0, 4, oldColor, 0, 0},
 };
