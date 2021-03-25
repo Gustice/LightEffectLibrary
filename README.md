@@ -26,6 +26,7 @@ All predefined waveforms are precalculated gaussian-like curves that cry to by p
 This library offers a waveform that is resolved with 128 steps. In my own experience 32 steps 
 already yield a pleasant smooth appearance. However a script is also included to generate different 
 resolutions. Not that the waveforms also can be stepped backwards. 
+
 ![Prepared Waveforms that can be used for macros](./Doc/WaveformBasis.png)
 
 ## Waveforms in series
@@ -34,21 +35,27 @@ intensity. One can also superpose a flash with idle intensity. As the waveforms 
 backwards one can turn the lights smoothly off again.
 The next picture shows all waveforms in a more or less useable series with short interrupts to 
 be able to see the start and end-positions.
+
 ![Series of waveforms](./Doc/ConcatenatedEffectMacros.png)
+
 An other example is shown in the next picture where the small set of predefined effect macros is 
 plotted.
+
 ![Predefined Macros](./Doc/PredefinedMacros.png)
 
-## cross-Fading
+## Cross-Fading
 When the state-machine is set to another effect, one has not to take precautions that it has to be 
 triggered in a convenient moment (however there still could be any). The Processor keeps the old 
 effect alive for the amount of cross-fading steps and gracefully reduces its ratio of the resulting
 output. In the meantime the desired effect is ramped up what results in a pleasant transition 
 between the two effects. This is visualized in the next picture
+
 ![Predefined Macros](./Doc/SwitchVisualization.png)
+
 At least in my own experience there was no case where this (what i call cross-fade)
 lead to an disturbing appearance, even if the fading effect was about to do something spectacular.
 The next picture shows an actual calculated example during unit tests.
+
 ![Predefined Macros](./Doc/SwitchingExample.png)
 
 ## Notes
