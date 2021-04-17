@@ -1,0 +1,4 @@
+Color::color_t refactor to Color_t
+EffectProcessor -> Processor
+StartFull-Macro
+Naming c++ classes not consistant
